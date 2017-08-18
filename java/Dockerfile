@@ -1,10 +1,11 @@
-FROM debian:stable-20170723
+FROM yolean/preferred-from
 
 ENV ZULU_OPENJDK_VERSION="8=8.23.0.3"
 
 RUN set -ex; \
   runDeps=''; \
   buildDeps='gnupg dirmngr'; \
+  export DEBIAN_FRONTEND=noninteractive; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9; \
@@ -16,4 +17,4 @@ RUN set -ex; \
   \
   apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists/*; \
-  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt
+  rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
