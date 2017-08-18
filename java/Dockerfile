@@ -20,3 +20,5 @@ RUN set -ex; \
   apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists/*; \
   rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
+
+ENV JAVA_HOME=/usr/lib/jvm/zulu-8-amd64
