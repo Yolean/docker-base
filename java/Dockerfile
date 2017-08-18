@@ -10,7 +10,9 @@ RUN set -ex; \
   \
   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9; \
   echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list; \
+  mkdir /usr/share/man/man1; \
   apt-get update && apt-get install -y zulu-${ZULU_OPENJDK_VERSION} --no-install-recommends; \
+  rm -rf /usr/share/man/man1; \
   \
   cd /usr/lib/jvm/zulu-8-amd64/; \
   rm -rf demo man sample src.zip; \
