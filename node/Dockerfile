@@ -46,6 +46,4 @@ RUN runtimeDeps='procps' \
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
-RUN npm install npm@latest -g
-
 CMD [ "node" ]
