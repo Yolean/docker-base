@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 8.4.0
+ENV NODE_VERSION 8.5.0
 
 RUN runtimeDeps='procps' \
   && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
@@ -41,6 +41,7 @@ RUN runtimeDeps='procps' \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+  && npm --version \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
