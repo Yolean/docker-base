@@ -1,2 +1,2 @@
 # Before we go wild with this FROM we might want to await a debian with https://github.com/debuerreotype/debuerreotype/releases/tag/0.3
-FROM debian:stretch-slim@sha256:ee1b82157527a9d2d5a5e96b2033ad69ba831058a9bd71288a217b5a1c970553
+FROM debian:stretch-slim@sha256:b4c6e46603728bdc550c9075be78439c45a0d509008770ad3775d097f28b6cca
