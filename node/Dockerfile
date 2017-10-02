@@ -1,10 +1,10 @@
-FROM yolean/preferred-from
+FROM debian:stretch-slim@sha256:b4c6e46603728bdc550c9075be78439c45a0d509008770ad3775d097f28b6cca
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 8.5.0
+ENV NODE_VERSION 8.6.0
 
 RUN runtimeDeps='procps' \
   && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
