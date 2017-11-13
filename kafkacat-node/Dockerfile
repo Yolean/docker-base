@@ -1,7 +1,7 @@
-FROM solsson/kafkacat-fixedkey@sha256:fb27acf4c7ca25eca6a6cffe145cb492ee4d4c87cba0459787fb43f8040f6d7b \
+FROM solsson/kafkacat@sha256:2c539e4f58960ab7872976ebc664dd92de18cf27e7cbbeb296d654a2351f6ca4 \
   as kafkcat-binary
 
-FROM yolean/node@sha256:b16c9154c4e8851f2a1fc31a2da3609284ed2ad65dc15249f9ef9b49bed835fd
+FROM yolean/node@sha256:230b269710a1d09b9ebbdeeea0fc4e69ac1388ab71b0178452e817065f69c700
 
 COPY --from=kafkcat-binary /usr/local/bin/kafkacat /usr/local/bin/kafkacat
 
