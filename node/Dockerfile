@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 8.9.0
+ENV NODE_VERSION 8.9.1
 
 RUN runtimeDeps='procps' \
   && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
@@ -12,7 +12,6 @@ RUN runtimeDeps='procps' \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* \
-  # gpg keys listed at https://github.com/nodejs/node#release-team
   && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
     FD3A5288F042B6850C66B31F09FE44734EB7990E \
