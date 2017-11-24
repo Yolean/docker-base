@@ -47,4 +47,4 @@ RUN runtimeDeps='procps' \
   && npm --version \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
-CMD [ "node" ]
+ENTRYPOINT [ "/usr/local/bin/node" ]
