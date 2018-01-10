@@ -1,0 +1,11 @@
+version: "3.2"
+services:
+
+  node:
+    build: ../node
+    image: yolean/node
+    labels:
+      com.yolean.build-target: ""
+    entrypoint:
+    - echo
+    - "This is just a build job. Exiting."
