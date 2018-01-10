@@ -20,3 +20,17 @@ services:
     entrypoint:
     - echo
     - "This is just a build job. Exiting."
+
+  node-kafka-dependent:
+    depends_on:
+    - node-kafka
+    image: yolean/node-kafka
+    labels:
+      com.yolean.build-contract: ""
+    working_dir: /usr/src
+    entrypoint:
+    - node
+    - -e
+    - >
+      require('node-rdkafka');
+      require('snappy');
