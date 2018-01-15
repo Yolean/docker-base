@@ -34,3 +34,10 @@ services:
     - >
       require('node-rdkafka');
       require('snappy');
+
+  node-kafka-test:
+    depends_on:
+    - node-kafka
+    build: ./node-rdkafka-test
+    labels:
+      com.yolean.build-contract: ""
