@@ -1,0 +1,43 @@
+version: "3.2"
+services:
+
+  node:
+    build: ../node
+    image: yolean/node
+    labels:
+      com.yolean.build-target: ""
+    entrypoint:
+    - echo
+    - "This is just a build job. Exiting."
+
+  node-kafka:
+    depends_on:
+    - node
+    build: ../node-kafka
+    image: yolean/node-kafka
+    labels:
+      com.yolean.build-target: ""
+    entrypoint:
+    - echo
+    - "This is just a build job. Exiting."
+
+  node-kafka-dependent:
+    depends_on:
+    - node-kafka
+    image: yolean/node-kafka
+    labels:
+      com.yolean.build-contract: ""
+    working_dir: /usr/src
+    entrypoint:
+    - node
+    - -e
+    - >
+      require('node-rdkafka');
+      require('snappy');
+
+  node-kafka-test:
+    depends_on:
+    - node-kafka
+    build: ./node-rdkafka-test
+    labels:
+      com.yolean.build-contract: ""
