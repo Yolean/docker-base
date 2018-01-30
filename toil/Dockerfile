@@ -1,7 +1,7 @@
 FROM solsson/kafkacat@sha256:2c539e4f58960ab7872976ebc664dd92de18cf27e7cbbeb296d654a2351f6ca4
 
 RUN set -ex; \
-  runDeps='curl ca-certificates jq git'; \
+  runDeps='curl ca-certificates jq'; \
   buildDeps=''; \
   export DEBIAN_FRONTEND=noninteractive; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
