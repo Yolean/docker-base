@@ -20,6 +20,8 @@ RUN set -ex; \
   \
   chown node ${NODE_PATH}; \
   su node -c "npm install -g node-rdkafka@${NODE_RDKAFKA_VERSION} snappy@${SNAPPY_VERSION} memdown@${MEMDOWN_VERSION}"; \
+  rm -rf /home/node/.npm; \
+  rm -rf /home/node/.node-gyp; \
   \
   apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists/*; \
