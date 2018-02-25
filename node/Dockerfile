@@ -44,6 +44,7 @@ RUN runtimeDeps='procps' \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   && apt-get purge -y --auto-remove $buildDeps \
+  && rm -rf /root/.gnupg \
   && npm --version \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
