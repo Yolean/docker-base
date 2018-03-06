@@ -1,9 +1,9 @@
-FROM yolean/node
+FROM yolean/node:9
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
   NODE_RDKAFKA_VERSION=2.2.3 \
-  SNAPPY_VERSION=5.0.5 \
-  MEMDOWN_VERSION=1.4.1
+  SNAPPY_VERSION=6.0.1 \
+  MEMDOWN_VERSION=2.0.0
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
