@@ -1,4 +1,4 @@
-FROM yolean/node:9
+FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
   NODE_RDKAFKA_VERSION=2.2.3 \
