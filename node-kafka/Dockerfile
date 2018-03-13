@@ -2,8 +2,7 @@ FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
   NODE_RDKAFKA_VERSION=2.2.3 \
-  SNAPPY_VERSION=6.0.1 \
-  MEMDOWN_VERSION=2.0.0
+  SNAPPY_VERSION=6.0.1
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
@@ -19,7 +18,7 @@ RUN set -ex; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   chown node ${NODE_PATH}; \
-  su node -c "npm install -g node-rdkafka@${NODE_RDKAFKA_VERSION} snappy@${SNAPPY_VERSION} memdown@${MEMDOWN_VERSION}"; \
+  su node -c "npm install -g node-rdkafka@${NODE_RDKAFKA_VERSION} snappy@${SNAPPY_VERSION}"; \
   rm -rf /home/node/.npm; \
   rm -rf /home/node/.node-gyp; \
   \
