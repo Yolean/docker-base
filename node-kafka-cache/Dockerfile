@@ -1,6 +1,6 @@
 FROM yolean/node-kafka
 
-ENV KAFKA_CACHE_VERSION=1.1.1
+ENV KAFKA_CACHE_VERSION=1.2.0
 
 RUN set -ex; \
   \
