@@ -4,9 +4,9 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 9.8.0
+ENV NODE_VERSION 9.9.0
 
-RUN runtimeDeps='procps' \
+RUN runtimeDeps='procps git' \
   && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
@@ -22,9 +22,9 @@ RUN runtimeDeps='procps' \
     56730D5401028683275BD23C23EFEFE93C4CFFFE \
     77984A986EBC2AA786BC0F66B01FBB92821C587A \
   ; do \
-    gpg --keyserver pgp.mit.edu --recv-keys "$key" || \
-    gpg --keyserver keyserver.pgp.com --recv-keys "$key" || \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
   && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
