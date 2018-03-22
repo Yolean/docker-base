@@ -6,7 +6,7 @@ RUN groupadd --gid 1000 node \
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 9.9.0
 
-RUN runtimeDeps='procps git' \
+RUN runtimeDeps='procps git ca-certificates' \
   && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
