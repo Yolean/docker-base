@@ -7,7 +7,7 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 9.9.0
 
 RUN runtimeDeps='procps git ca-certificates' \
-  && buildDeps='gnupg dirmngr curl ca-certificates xz-utils' \
+  && buildDeps='gnupg dirmngr curl xz-utils' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
