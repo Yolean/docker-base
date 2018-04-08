@@ -1,4 +1,4 @@
-FROM debian:stretch-slim@sha256:ea42520331a55094b90f6f6663211d4f5a62c5781673935fe17a4dfced777029
+FROM debian:stretch-slim@sha256:613efd414e9818dcef858201484a94603a548a0e04fd4356e77eb758aeb16124
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
