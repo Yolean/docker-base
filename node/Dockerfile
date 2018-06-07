@@ -1,10 +1,10 @@
-FROM debian:stretch-slim@sha256:ea42520331a55094b90f6f6663211d4f5a62c5781673935fe17a4dfced777029
+FROM debian:stretch-slim@sha256:aa33563fd6dc2b14e8cae20cc74f4581d4cb89a3952d87b4cab323707040f035
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 9.9.0
+ENV NODE_VERSION 10.4.0
 
 RUN runtimeDeps='procps git ca-certificates' \
   && buildDeps='gnupg dirmngr curl xz-utils' \
@@ -45,7 +45,8 @@ RUN runtimeDeps='procps git ca-certificates' \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /root/.gnupg \
-  && npm --version \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
+
+#RUN npm --version && npm i -g npm && npm --version
 
 CMD [ "node" ]
