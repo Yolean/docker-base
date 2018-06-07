@@ -45,8 +45,8 @@ RUN runtimeDeps='procps git ca-certificates' \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /root/.gnupg \
-  && npm --version \
-  && npm i -g npm && npm --version \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
+
+RUN npm --version && npm i -g npm && npm --version
 
 CMD [ "node" ]
