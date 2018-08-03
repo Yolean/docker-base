@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 10.4.1
+ENV NODE_VERSION 10.8.0
 
 RUN runtimeDeps='procps git ca-certificates' \
   && buildDeps='gnupg dirmngr curl xz-utils' \
@@ -21,6 +21,7 @@ RUN runtimeDeps='procps git ca-certificates' \
     B9AE9905FFD7803F25714661B63B535A4C206CA9 \
     56730D5401028683275BD23C23EFEFE93C4CFFFE \
     77984A986EBC2AA786BC0F66B01FBB92821C587A \
+    8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
   ; do \
     gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
