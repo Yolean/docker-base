@@ -18,7 +18,7 @@ RUN set -ex; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   chown node ${NODE_PATH}; \
-  su node -c "npm install -g node-rdkafka@${NODE_RDKAFKA_VERSION} snappy@${SNAPPY_VERSION}"; \
+  su node -c "npm install -g --only=prod node-rdkafka@${NODE_RDKAFKA_VERSION} snappy@${SNAPPY_VERSION}"; \
   rm -rf /home/node/.npm; \
   rm -rf /home/node/.node-gyp; \
   \
