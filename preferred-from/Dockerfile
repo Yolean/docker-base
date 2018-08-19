@@ -1,2 +1,2 @@
 # All images in this repo share the same FROM, so update them together
-FROM debian:stretch-slim@sha256:aa33563fd6dc2b14e8cae20cc74f4581d4cb89a3952d87b4cab323707040f035
+FROM debian:stretch-slim@sha256:72b05ba545dcb4f460cdf76049eebca02c593fece48d59fe3a2bd690a3d62597
