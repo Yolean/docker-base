@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 10.8.0
+ENV NODE_VERSION 10.9.0
 
 RUN runtimeDeps='procps git ca-certificates' \
   && buildDeps='gnupg dirmngr curl xz-utils' \
