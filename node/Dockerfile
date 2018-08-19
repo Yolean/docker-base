@@ -48,6 +48,6 @@ RUN runtimeDeps='procps git ca-certificates' \
   && rm -rf /root/.gnupg \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
-#RUN npm --version && npm i -g npm && npm --version
-
 CMD [ "node" ]
+
+RUN npm --version && npm i -g npm && npm --version
