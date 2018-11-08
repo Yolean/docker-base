@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 10.10.0
+ENV NODE_VERSION 10.13.0
 
 RUN runtimeDeps='procps git ca-certificates' \
   && buildDeps='gnupg dirmngr curl xz-utils' \
@@ -50,5 +50,5 @@ RUN runtimeDeps='procps git ca-certificates' \
 
 CMD [ "node" ]
 
-# Node 10.10.0 runs 6.4.1
+# Node 10.13.0 runs 6.4.1
 # RUN npm --version && npm i -g npm && npm --version

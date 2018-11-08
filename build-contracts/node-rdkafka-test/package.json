@@ -7,6 +7,6 @@
   },
   "author": "Yolean AB",
   "dependencies": {
-    "node-rdkafka": "2.4.1"
+    "node-rdkafka": "2.4.2"
   }
 }
