@@ -1,8 +1,8 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=2.4.2 \
-  SNAPPY_VERSION=6.1.0
+  NODE_RDKAFKA_VERSION=Blizzard/node-rdkafka#56c31c4e81f2a042666160338ad65dc4f8f2d87e \
+  SNAPPY_VERSION=6.1.2
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
@@ -14,6 +14,7 @@ RUN set -ex; \
     libssl-dev \
     zlib1g-dev \
     liblz4-dev \
+    git \
   '; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
