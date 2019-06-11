@@ -1,8 +1,8 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=Blizzard/node-rdkafka#17afe4258385bb6df7508afcc59493a8d75a7ace \
-  SNAPPY_VERSION=6.1.2
+  NODE_RDKAFKA_VERSION=Blizzard/node-rdkafka#14f9dc21eefb522691d519515d5c09f852423d34 \
+  SNAPPY_VERSION=6.2.3
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
