@@ -1,4 +1,4 @@
-FROM node:10.15.3-stretch-slim@sha256:5a48598688f771a9140fdef31585dbe67b313b1e29439cbd9b81ebb25aeca517
+FROM node:10.16.0-stretch-slim@sha256:9afe43a8f8944377272e5f000695cc350db8e723639a4a44cf6e5c96c8a0ac9f
 
 RUN runtimeDeps='procps git ca-certificates' \
   && set -ex \
