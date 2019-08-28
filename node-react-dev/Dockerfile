@@ -1,10 +1,6 @@
-FROM node:10.16.3-buster-slim@sha256:043bc1cd3f8ed6abeefa14e2a60a97433f589876e776c194d0b19121b20a2473
+FROM node:10.16.3-alpine@sha256:77c898d0da5e7bfb6e05c9a64de136ba4e03889a72f3c298e95df822a38f450d
 
-RUN runtimeDeps='procps git curl ca-certificates' \
-  && set -ex \
-  && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
-  && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
+RUN apk add --no-cache procps git curl ca-certificates
 
 # basically npx create-react-app@3.1.1 my-app
 RUN set -e; \
