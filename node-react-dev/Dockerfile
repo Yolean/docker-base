@@ -6,4 +6,8 @@ RUN apk add --no-cache procps git curl ca-certificates
 RUN set -e; \
   mkdir -p /usr/src/app; \
   cd /usr/src/app; \
-  npm install react@16.9.0 react-dom@16.9.0 react-scripts@3.1.1
+  npm install \
+    react@16.9.0 \
+    react-dom@16.9.0 \
+    react-scripts@3.1.1 \
+  ;
