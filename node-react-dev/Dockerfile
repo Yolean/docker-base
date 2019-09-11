@@ -10,4 +10,5 @@ RUN set -e; \
     react@16.9.0 \
     react-dom@16.9.0 \
     react-scripts@3.1.1 \
+    node-sass@4.12.0 \
   ;
