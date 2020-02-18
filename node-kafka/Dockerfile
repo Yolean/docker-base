@@ -1,7 +1,7 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=Blizzard/node-rdkafka#14f9dc21eefb522691d519515d5c09f852423d34 \
+  NODE_RDKAFKA_VERSION=tarvip/node-rdkafka#b297f0caf87df7be62eaa7a78aed079e1e802559 \
   SNAPPY_VERSION=6.2.3
 
 RUN set -ex; \
