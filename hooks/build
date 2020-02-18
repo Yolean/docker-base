@@ -12,6 +12,6 @@ for CONTEXT in $CONTEXTS; do
 
   CONTEXT_IMAGE_NAME=$(echo -n $IMAGE_NAME | sed "s|:|:$CONTEXT-|")
 
-  docker build -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+  docker build -t yolean/$CONTEXT -t $CONTEXT_IMAGE_NAME ./$CONTEXT
   docker push $CONTEXT_IMAGE_NAME
 done
