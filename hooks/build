@@ -3,11 +3,13 @@ set -e
 
 docker build -t $IMAGE_NAME .
 
-for CONTEXT in "
-    node
-    node-kafka
-  "; do
-  
+CONTEXTS="
+node
+node-kafka
+"
+
+for CONTEXT in $CONTEXTS; do
+
   CONTEXT_IMAGE_NAME=$(echo -n $IMAGE_NAME | sed "s|:|:$CONTEXT-|")
 
   docker build -t $CONTEXT_IMAGE_NAME ./$CONTEXT
