@@ -1,19 +1,43 @@
-FROM ubuntu:19.04@sha256:1f070d23781c4e0aa3841ae9d7494885283e199e61eddec8337cd1895f864d67
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:9285da611437622492f9ef4229877efe302589f1401bbd4052e9bb261b3d4387
+
+WORKDIR /workspace
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+RUN microdnf install openssl ca-certificates curl procps lz4 bash \
+    && microdnf update \
+    && microdnf clean all
+
+COPY --from=solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221 /usr/local/bin/* /usr/local/bin/
+COPY --from=solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221 bin bin
+
+#COPY --from=edenhill/kafkacat:1.5.0@sha256:05daf8af237495df2bc726427e421d101072cf2d2306fb2379243acbffe40823 /usr/bin/kafkacat /usr/local/bin/
+COPY --from=confluentinc/cp-kafkacat:5.4.0-1-ubi8@sha256:5515cf85f50b1ac260b1067e9cd3ce46f0a9ba9167338d563742605c85b8bea5 /usr/local/bin/kafkacat /usr/local/bin/
+COPY --from=confluentinc/cp-kafkacat:5.4.0-1-ubi8@sha256:5515cf85f50b1ac260b1067e9cd3ce46f0a9ba9167338d563742605c85b8bea5 /usr/lib64/libzstd.so.1* /usr/lib64/
+
+COPY --from=minio/mc:RELEASE.2020-02-25T18-10-03Z@sha256:d122cc5152218b16c79d4950a20910bd2c714ca661544271c5eaff4dfd51bc57 /usr/bin/mc /usr/local/bin/
+
+RUN set -e; \
+  curl -sLS -o /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64; \
+  chmod a+x /usr/local/bin/jq
+
+RUN set -e; \
+  curl -sLS -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/3.1.2/yq_linux_amd64; \
+  chmod a+x /usr/local/bin/yq
+
+USER nobody:nobody
+
+#RUN groupadd -g 65532 nonroot && \
+#  useradd --create-home --home-dir /home/nonroot --uid 65532 --gid 65532 -c nonroot -s /usr/sbin/nologin nonroot
+#USER nonroot:nonroot
+USER nobody:nobody
 
 RUN set -ex; \
-  export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='ca-certificates git curl kafkacat jq procps'; \
-  buildDeps='gnupg2'; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends $runDeps $buildDeps; \
-  \
-  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -; \
-  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list; \
-  apt-get update; \
-  apt-get install -y kubectl; \
-  \
-  apt-get purge -y --auto-remove $buildDeps; \
-  rm -rf /var/lib/apt/lists/*; \
-  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
-
-ENTRYPOINT [ "/bin/bash" ]
+  kafka-topics 2>&1 | head -n 1; \
+  kafka-configs 2>&1 | head -n 1; \
+  kafka-consumer-groups 2>&1 | head -n 1; \
+  openssl version; \
+  curl --version; \
+  mc --version; \
+  jq --version; \
+  yq --version; \
+  kafkacat -V
