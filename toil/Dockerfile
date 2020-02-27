@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:9285da611437622492f9
 WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-RUN microdnf install openssl ca-certificates curl procps lz4 bash \
+RUN microdnf install openssl ca-certificates curl procps lz4 bash tar gzip bind-utils iputils \
     && microdnf update \
     && microdnf clean all
 
@@ -23,6 +23,15 @@ RUN set -e; \
 RUN set -e; \
   curl -sLS -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/3.1.2/yq_linux_amd64; \
   chmod a+x /usr/local/bin/yq
+
+RUN set -e; \
+  F=$(mktemp); \
+  curl -SLs https://dl.k8s.io/v1.15.10/kubernetes-client-linux-amd64.tar.gz \
+    | tee $F \
+    | tar xzf - --strip-components=3 -C /usr/local/bin/; \
+  echo "02037072280ca4697acc6ea9f75e8f21050b740268861cbd9d2aa0b811d7812527140ec48d6eda48bc2b42ac3bd13612efe44456bf7b178848b968b41addf7ab $F" \
+    | sha512sum -c -; \
+  rm $F
 
 USER nobody:nobody
 
