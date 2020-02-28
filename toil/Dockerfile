@@ -3,6 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:9285da611437622492f9
 WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+# To install bash-completion we probably need: -y --enablerepo=rhel-8-for-x86_64-baseos-rpms
 RUN microdnf install openssl ca-certificates curl procps lz4 bash tar gzip bind-utils iputils shadow-utils \
     && microdnf update \
     && microdnf clean all
@@ -38,7 +39,8 @@ RUN set -e; \
 #USER nonroot:nonroot
 RUN set -e; \
   groupadd -g 65532 nonroot; \
-  adduser --uid 65532 --gid 65532 -s /sbin/nologin nonroot
+  adduser --uid 65532 --gid 65532 -s /sbin/nologin nonroot; \
+  chown nonroot /workspace
 USER nonroot:nonroot
 
 RUN set -ex; \
