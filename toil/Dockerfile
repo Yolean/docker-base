@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:9285da611437622492f9
 WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-RUN microdnf install openssl ca-certificates curl procps lz4 bash tar gzip bind-utils iputils \
+RUN microdnf install openssl ca-certificates curl procps lz4 bash tar gzip bind-utils iputils shadow-utils \
     && microdnf update \
     && microdnf clean all
 
@@ -33,12 +33,13 @@ RUN set -e; \
     | sha512sum -c -; \
   rm $F
 
-USER nobody:nobody
-
 #RUN groupadd -g 65532 nonroot && \
 #  useradd --create-home --home-dir /home/nonroot --uid 65532 --gid 65532 -c nonroot -s /usr/sbin/nologin nonroot
 #USER nonroot:nonroot
-USER nobody:nobody
+RUN set -e; \
+  groupadd -g 65532 nonroot; \
+  adduser --uid 65532 --gid 65532 -s /sbin/nologin nonroot
+USER nonroot:nonroot
 
 RUN set -ex; \
   kafka-topics 2>&1 | head -n 1; \
