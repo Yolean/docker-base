@@ -4,6 +4,7 @@ set -e
 docker build -t $IMAGE_NAME .
 
 CONTEXTS="
+java
 node
 node-kafka
 node-kafka-cache
