@@ -1,19 +1,21 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=Blizzard/node-rdkafka#640c4cea2b4467e9feb89c552845b0ceec2662a9 \
+  NODE_RDKAFKA_VERSION=2.8.0 \
   SNAPPY_VERSION=6.2.3
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='libssl1.1 libsasl2-2'; \
+  runDeps='libssl1.1 libsasl2-2 libsnappy1v5 liblz4-1 libzstd1'; \
   buildDeps=' \
     build-essential \
     python \
     libsasl2-dev \
     libssl-dev \
     zlib1g-dev \
+    libsnappy-dev \
     liblz4-dev \
+    libzstd-dev \
     git \
   '; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
