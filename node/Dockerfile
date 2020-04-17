@@ -1,4 +1,4 @@
-FROM node:12.16.1-buster-slim@sha256:fa7e3e05b62b9cfd417e153cfc1ab917744dfc5bb97f540197af99dc660be058
+FROM node:12.16.2-buster-slim@sha256:25ac367b55da515e857d68fe59d2d49eb748f4409f2162adf1091fd16072e861
 
 RUN runtimeDeps='procps git curl ca-certificates' \
   && set -ex \
