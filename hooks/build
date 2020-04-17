@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+[ -z "$IMAGE_NAME" ] && echo "IMAGE_NAME is required" && exit 1;
+
 docker build -t $IMAGE_NAME .
 
 CONTEXTS="
@@ -11,10 +13,16 @@ node-kafka-cache
 toil
 "
 
+PUSH=""
+
 for CONTEXT in $CONTEXTS; do
 
   CONTEXT_IMAGE_NAME=$(echo -n $IMAGE_NAME | sed "s|:|:$CONTEXT-|")
 
   docker build -t yolean/$CONTEXT -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  docker push $CONTEXT_IMAGE_NAME
+  PUSH="$PUSH $CONTEXT_IMAGE_NAME"
 done
+
+echo "PUSH list contains: $PUSH"
+[ -z "$NOPUSH" ] || exit 0
+for P in $PUSH; do docker push $P; done
