@@ -1,21 +1,26 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:9285da611437622492f9ef4229877efe302589f1401bbd4052e9bb261b3d4387
+FROM solsson/kafka:native-cli@sha256:a0b5ad4251dc1f30b36b0d4c5d3409428945b36a2561ea282df37ea1221a1bf9 as kafka-cli
+
+FROM ubuntu:20.04@sha256:8bce67040cd0ae39e0beb55bcb976a824d9966d2ac8d2e4bf6119b45505cee64
+
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='openssl ca-certificates git curl procps netcat-openbsd libsnappy1v5 liblz4-1 libzstd1 kafkacat jq'; \
+  buildDeps=''; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends $runDeps $buildDeps; \
+  \
+  apt-get purge -y --auto-remove $buildDeps; \
+  rm -rf /var/lib/apt/lists/*; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
 WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-# To install bash-completion we probably need: -y --enablerepo=rhel-8-for-x86_64-baseos-rpms
-RUN microdnf install openssl ca-certificates curl procps lz4 bash tar gzip bind-utils iputils shadow-utils \
-    && microdnf update \
-    && microdnf clean all
 
-COPY --from=solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221 /usr/local/bin/* /usr/local/bin/
-COPY --from=solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221 bin bin
+COPY --from=kafka-cli /usr/local/bin/* /usr/local/bin/
+COPY --from=kafka-cli bin bin
 
-#COPY --from=edenhill/kafkacat:1.5.0@sha256:05daf8af237495df2bc726427e421d101072cf2d2306fb2379243acbffe40823 /usr/bin/kafkacat /usr/local/bin/
-COPY --from=confluentinc/cp-kafkacat:5.4.0-1-ubi8@sha256:5515cf85f50b1ac260b1067e9cd3ce46f0a9ba9167338d563742605c85b8bea5 /usr/local/bin/kafkacat /usr/local/bin/
-COPY --from=confluentinc/cp-kafkacat:5.4.0-1-ubi8@sha256:5515cf85f50b1ac260b1067e9cd3ce46f0a9ba9167338d563742605c85b8bea5 /usr/lib64/libzstd.so.1* /usr/lib64/
-
-COPY --from=minio/mc:RELEASE.2020-02-25T18-10-03Z@sha256:d122cc5152218b16c79d4950a20910bd2c714ca661544271c5eaff4dfd51bc57 /usr/bin/mc /usr/local/bin/
+COPY --from=minio/mc:RELEASE.2020-05-16T01-44-37Z@sha256:7d366697e4aae107bd5a84e4bb35cb7b1da773210431c9fa10f038bfd7696d1c /usr/bin/mc /usr/local/bin/
 
 RUN set -e; \
   curl -sLS -o /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64; \
@@ -34,14 +39,9 @@ RUN set -e; \
     | sha512sum -c -; \
   rm $F
 
-#RUN groupadd -g 65532 nonroot && \
-#  useradd --create-home --home-dir /home/nonroot --uid 65532 --gid 65532 -c nonroot -s /usr/sbin/nologin nonroot
-#USER nonroot:nonroot
-RUN set -e; \
-  groupadd -g 65532 nonroot; \
-  adduser --uid 65532 --gid 65532 -s /sbin/nologin nonroot; \
-  chown nonroot /workspace
-USER nonroot:nonroot
+RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
+  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
+USER nonroot:nogroup
 
 RUN set -ex; \
   kafka-topics 2>&1 | head -n 1; \
