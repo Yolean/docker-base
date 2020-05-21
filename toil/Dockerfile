@@ -1,4 +1,4 @@
-FROM solsson/kafka:native-cli@sha256:a0b5ad4251dc1f30b36b0d4c5d3409428945b36a2561ea282df37ea1221a1bf9 as kafka-cli
+FROM solsson/kafka:native-cli@sha256:68b74c11c232bc238701fad9c3fb6cf5c7ebd61f425ae7d91b08b0b772c448c1 as kafka-cli
 
 FROM ubuntu:20.04@sha256:8bce67040cd0ae39e0beb55bcb976a824d9966d2ac8d2e4bf6119b45505cee64
 
