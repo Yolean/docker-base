@@ -1,10 +1,9 @@
 FROM solsson/kafka:native-cli@sha256:68b74c11c232bc238701fad9c3fb6cf5c7ebd61f425ae7d91b08b0b772c448c1 as kafka-cli
-
-FROM ubuntu:20.04@sha256:8bce67040cd0ae39e0beb55bcb976a824d9966d2ac8d2e4bf6119b45505cee64
+USER root
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='openssl ca-certificates git curl procps netcat-openbsd dnsutils libsnappy1v5 liblz4-1 libzstd1 kafkacat jq'; \
+  runDeps='openssl ca-certificates git curl procps netcat-openbsd jq'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
@@ -16,12 +15,6 @@ RUN set -ex; \
 WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-
-COPY --from=kafka-cli /usr/local/bin/*.sh /usr/local/bin/
-RUN for sh in $(find /usr/local/bin/ -name *.sh); do \
-  ln -s $sh $(echo -n $sh | sed 's/\.sh$//'); \
-  done
-COPY --from=kafka-cli bin bin
 
 COPY --from=minio/mc:RELEASE.2020-05-16T01-44-37Z@sha256:7d366697e4aae107bd5a84e4bb35cb7b1da773210431c9fa10f038bfd7696d1c /usr/bin/mc /usr/local/bin/
 
@@ -42,8 +35,6 @@ RUN set -e; \
     | sha512sum -c -; \
   rm $F
 
-RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
-  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
 RUN chown nonroot .
 USER nonroot:nogroup
 
