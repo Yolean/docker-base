@@ -4,7 +4,7 @@ FROM ubuntu:20.04@sha256:8bce67040cd0ae39e0beb55bcb976a824d9966d2ac8d2e4bf6119b4
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='openssl ca-certificates git curl procps netcat-openbsd libsnappy1v5 liblz4-1 libzstd1 kafkacat jq'; \
+  runDeps='openssl ca-certificates git curl procps netcat-openbsd dnsutils libsnappy1v5 liblz4-1 libzstd1 kafkacat jq'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
@@ -17,7 +17,10 @@ WORKDIR /workspace
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-COPY --from=kafka-cli /usr/local/bin/* /usr/local/bin/
+COPY --from=kafka-cli /usr/local/bin/*.sh /usr/local/bin/
+RUN for sh in $(find /usr/local/bin/ -name *.sh); do \
+  ln -s $sh $(echo -n $sh | sed 's/\.sh$//'); \
+  done
 COPY --from=kafka-cli bin bin
 
 COPY --from=minio/mc:RELEASE.2020-05-16T01-44-37Z@sha256:7d366697e4aae107bd5a84e4bb35cb7b1da773210431c9fa10f038bfd7696d1c /usr/bin/mc /usr/local/bin/
