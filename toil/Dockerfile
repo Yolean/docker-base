@@ -41,6 +41,7 @@ RUN set -e; \
 
 RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
   mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
+RUN chown nonroot .
 USER nonroot:nogroup
 
 RUN set -ex; \
