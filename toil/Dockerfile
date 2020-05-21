@@ -32,10 +32,10 @@ RUN set -e; \
 
 RUN set -e; \
   F=$(mktemp); \
-  curl -SLs https://dl.k8s.io/v1.15.10/kubernetes-client-linux-amd64.tar.gz \
+  curl -SLs https://dl.k8s.io/v1.17.5/kubernetes-client-linux-amd64.tar.gz \
     | tee $F \
     | tar xzf - --strip-components=3 -C /usr/local/bin/; \
-  echo "02037072280ca4697acc6ea9f75e8f21050b740268861cbd9d2aa0b811d7812527140ec48d6eda48bc2b42ac3bd13612efe44456bf7b178848b968b41addf7ab $F" \
+  echo "4cf67f972aad3425bccc48af83f8cb59ddcc96de49d3bb21cdbbcbbeee31718ef681e551d13343538a6e70c2a4ea0435e4540bc1f8cf1a91a2f73265f52b9429 $F" \
     | sha512sum -c -; \
   rm $F
 
@@ -49,6 +49,7 @@ RUN set -ex; \
   kafka-consumer-groups 2>&1 | head -n 1; \
   openssl version; \
   curl --version; \
+  kubectl version --client=true; \
   mc --version; \
   jq --version; \
   yq --version; \
