@@ -36,7 +36,6 @@ RUN set -e; \
   rm $F
 
 RUN chown nonroot .
-USER nonroot:nogroup
 
 RUN set -ex; \
   kafka-topics 2>&1 | head -n 1; \

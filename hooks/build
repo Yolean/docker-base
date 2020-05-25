@@ -3,6 +3,15 @@ set -e
 
 [ -z "$IMAGE_NAME" ] && echo "IMAGE_NAME is required" && exit 1;
 
+function imagename {
+  buildname=$1
+  case $IMAGE_NAME in
+    *:latest) echo -n $IMAGE_NAME | sed "s|:latest|:$buildname|" ;;
+    *:*) echo -n $IMAGE_NAME | sed "s|:\(.*\)|:\1-$buildname|" ;;
+    *) echo $IMAGE_NAME:$buildname ;;
+  esac
+}
+
 if [ "$YOLEAN_PROMOTE" != "true" ]; then
   docker build -t $IMAGE_NAME .
 else
@@ -31,15 +40,19 @@ PUSH=""
 
 for CONTEXT in $CONTEXTS; do
 
-  CONTEXT_IMAGE_NAME=$(echo -n $IMAGE_NAME | sed "s|:|:$CONTEXT-|")
+  CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
 
   if [ "$YOLEAN_PROMOTE" != "true" ]; then
-    docker build -t yolean/$CONTEXT -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-    PUSH="$PUSH $CONTEXT_IMAGE_NAME"
+    docker build -t yolean/$CONTEXT -t $CONTEXT_IMAGE_NAME-root ./$CONTEXT
+    cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
+      docker build -f - -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+    PUSH="$PUSH $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root"
   else
     YOLEAN_PROMOTE_NAME=yolean/$CONTEXT:$YOLEAN_PROMOTE_TAG
     docker pull $CONTEXT_IMAGE_NAME
     docker tag $CONTEXT_IMAGE_NAME $YOLEAN_PROMOTE_NAME
+    docker pull $CONTEXT_IMAGE_NAME-root
+    docker tag $CONTEXT_IMAGE_NAME-root $YOLEAN_PROMOTE_NAME-root
     PUSH="$PUSH $YOLEAN_PROMOTE_NAME"
   fi
 done
