@@ -7,3 +7,5 @@ RUN runtimeDeps='procps git curl ca-certificates' \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
 CMD [ "node" ]
+
+RUN chmod g+w /usr/src && chgrp nogroup /usr/src
