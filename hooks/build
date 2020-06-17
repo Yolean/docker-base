@@ -31,7 +31,7 @@ toil
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
 case $IMAGE_NAME in
   *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.20.1-buster-slim@sha256:eab5ca58a53ea5570ef709551c4043c215179acc62c0800bc1e3d67f962052dc/' node/Dockerfile
+    sed -i 's/FROM node:.*/FROM node:10.21.0-buster-slim@sha256:ab8807ef49075f6f10b56b2442b09fb45f959938958817d737b3e69cdfa5323d/' node/Dockerfile
     CONTEXTS="node node-kafka node-kafka-cache"
     ;;
 esac
