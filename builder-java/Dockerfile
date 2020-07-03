@@ -2,9 +2,6 @@ FROM yolean/builder-base
 
 USER root
 
-RUN mkdir /workspace && chgrp nogroup /workspace && chmod g+w /workspace
-WORKDIR /workspace
-
 RUN runtimeDeps='default-jdk-headless maven unzip' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
