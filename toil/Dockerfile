@@ -1,4 +1,4 @@
-FROM solsson/kafka:native-cli@sha256:68b74c11c232bc238701fad9c3fb6cf5c7ebd61f425ae7d91b08b0b772c448c1 as kafka-cli
+FROM solsson/kafka:native-cli@ha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
 USER root
 
 RUN set -ex; \
@@ -28,10 +28,10 @@ RUN set -e; \
 
 RUN set -e; \
   F=$(mktemp); \
-  curl -SLs https://dl.k8s.io/v1.17.5/kubernetes-client-linux-amd64.tar.gz \
+  curl -SLs https://dl.k8s.io/v1.17.9/kubernetes-client-linux-amd64.tar.gz \
     | tee $F \
     | tar xzf - --strip-components=3 -C /usr/local/bin/; \
-  echo "4cf67f972aad3425bccc48af83f8cb59ddcc96de49d3bb21cdbbcbbeee31718ef681e551d13343538a6e70c2a4ea0435e4540bc1f8cf1a91a2f73265f52b9429 $F" \
+  echo "57fe9caf9d40e8b3e9e1b58552af1b74bf3cdccb3bd50fb5e51ba95d3e08263dad831724d79f2b99c0d67b03a1e533667422a20ba4159234b3452cdffbb814d4 $F" \
     | sha512sum -c -; \
   rm $F
 
