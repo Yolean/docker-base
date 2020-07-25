@@ -1,9 +1,9 @@
-FROM solsson/kafka:native-cli@ha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
+FROM solsson/kafka:native-cli@sha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
 USER root
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='openssl ca-certificates git curl procps netcat-openbsd jq'; \
+  runDeps='openssl ca-certificates git curl procps netcat-openbsd jq findutils'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
