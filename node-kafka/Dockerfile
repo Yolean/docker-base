@@ -1,8 +1,8 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=2.9.0 \
-  SNAPPY_VERSION=6.2.3
+  NODE_RDKAFKA_VERSION=2.9.1 \
+  SNAPPY_VERSION=6.3.4
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
