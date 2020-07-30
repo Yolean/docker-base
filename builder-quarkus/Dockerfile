@@ -1,14 +1,19 @@
-FROM yolean/builder-base as base
+FROM yolean/builder-base as builder-base
 
-FROM solsson/kafka:graalvm-nonroot@sha256:28505c768b7f8b44168b9df5bc27dc4735d1be75ea5a12eb94c34af2d661e66a
+FROM solsson/kafka:graalvm@sha256:28505c768b7f8b44168b9df5bc27dc4735d1be75ea5a12eb94c34af2d661e66a
 
 ENV CI=true
 
+# https://github.com/Yolean/ystack/commit/46696ab3300050c6fbad22540a6f0d113717681b#diff-9a949ad7c7f021d1ee63246d4c9011d6R11
+COPY --from=builder-base /usr/local/lib/node_modules/@yolean/ystack /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack
+RUN for B in \
+  tsc ts-node \
+  jest ts-jest \
+  rollup \
+  ; do ln -s -v /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack/node_modules/.bin/$B /opt/graalvm/bin/$B; done
+
 RUN mkdir /workspace && chgrp nogroup /workspace && chmod g+w /workspace
 WORKDIR /workspace
-
-COPY --from=base /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=base /usr/local/bin/* /usr/local/bin/
 
 # Same as github.com/solsson/dockerfiles/tree/master/kafka-nonroot, and ystack's runner.Dockerfile
 RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
