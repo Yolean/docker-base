@@ -8,8 +8,6 @@ RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc
   mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
 USER nonroot:nogroup
 
-COPY y-build-* /usr/local/bin/
-
 ARG quarkus_version=1.6.1.Final
 ARG quarkus_extensions=resteasy-jackson,kafka,hibernate-validator,vertx
 
