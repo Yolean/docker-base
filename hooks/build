@@ -29,6 +29,7 @@ toil
 builder-base
 builder-java
 builder-node
+builder-quarkus
 "
 
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)

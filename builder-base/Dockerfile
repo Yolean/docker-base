@@ -1,4 +1,4 @@
-FROM solsson/ystack-runner@sha256:069e8792c02e2071f2fc8979978ca122c4353c15a7d7fcc61e724917c101608e
+FROM solsson/ystack-runner@sha256:52e5b2b46e334c205a427681714a233d4eb728631c66cc6f0a8db8f858f0deca
 
 USER root
 
