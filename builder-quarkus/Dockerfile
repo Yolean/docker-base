@@ -1,7 +1,14 @@
+FROM yolean/builder-base as base
+
 FROM solsson/kafka:graalvm-nonroot@sha256:28505c768b7f8b44168b9df5bc27dc4735d1be75ea5a12eb94c34af2d661e66a
+
+ENV CI=true
 
 RUN mkdir /workspace && chgrp nogroup /workspace && chmod g+w /workspace
 WORKDIR /workspace
+
+COPY --from=base /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=base /usr/local/bin/* /usr/local/bin/
 
 # Same as github.com/solsson/dockerfiles/tree/master/kafka-nonroot, and ystack's runner.Dockerfile
 RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \

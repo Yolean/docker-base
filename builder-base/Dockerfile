@@ -1,4 +1,6 @@
-FROM solsson/ystack-runner@sha256:52e5b2b46e334c205a427681714a233d4eb728631c66cc6f0a8db8f858f0deca
+FROM solsson/ystack-runner@sha256:912a844a8e4bf67da6134036944a33de403d07e5b3d33b58bd624ac037b3bcf7
+
+ENV CI=true
 
 USER root
 
