@@ -12,13 +12,7 @@ function imagename {
   esac
 }
 
-if [ "$YOLEAN_PROMOTE" != "true" ]; then
-  docker build -t $IMAGE_NAME .
-else
-  YOLEAN_PROMOTE_TAG="$(curl -L 'https://hub.docker.com/api/audit/v1/build/?include_related=true&offset=0&limit=10&object=%2Fapi%2Frepo%2Fv1%2Frepository%2Fsolsson%2Fy-docker-base%2F' | jq -r '.objects[0].commit')"
-  echo "Latest build's git ref is $YOLEAN_PROMOTE_TAG, right?"
-  read -p "Verified? [y/n] " ok && [ "$ok" = "y" ] || exit 1
-fi
+docker build -t $IMAGE_NAME .
 
 CONTEXTS="
 java
@@ -35,7 +29,7 @@ builder-quarkus
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
 case $IMAGE_NAME in
   *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.21.0-buster-slim@sha256:ab8807ef49075f6f10b56b2442b09fb45f959938958817d737b3e69cdfa5323d/' node/Dockerfile
+    sed -i 's/FROM node:.*/FROM node:10.22.0-buster-slim@sha256:268129dcc7484fe3ba346ff9c5c8f0b467edd44c94205521bd4ace4a729b04c1/' node/Dockerfile
     CONTEXTS="node node-kafka node-kafka-cache"
     ;;
 esac
