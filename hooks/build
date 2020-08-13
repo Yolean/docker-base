@@ -42,15 +42,18 @@ for CONTEXT in $CONTEXTS; do
   CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
 
   docker build -t yolean/$CONTEXT \
-    -t yolean/$CONTEXT:$SOURCE_COMMIT-root \
-    -t $CONTEXT_IMAGE_NAME-root ./$CONTEXT
-  cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-    docker build -f - \
     -t yolean/$CONTEXT:$SOURCE_COMMIT \
     -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  PUSH="$PUSH $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root"
-  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT yolean/$CONTEXT:$SOURCE_COMMIT-root"
-
+  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT $CONTEXT_IMAGE_NAME"
+  if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
+    docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
+    docker tag yolean/$CONTEXT:$SOURCE_COMMIT yolean/$CONTEXT:$SOURCE_COMMIT-root
+    PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT-root $CONTEXT_IMAGE_NAME-root"
+    cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
+      docker build -f - \
+      -t yolean/$CONTEXT:$SOURCE_COMMIT \
+      -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+  fi
 done
 
 echo "PUSH list contains: $PUSH"
