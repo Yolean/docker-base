@@ -1,6 +1,6 @@
 FROM yolean/builder-base as builder-base
 
-FROM solsson/kafka:graalvm@sha256:28505c768b7f8b44168b9df5bc27dc4735d1be75ea5a12eb94c34af2d661e66a
+FROM solsson/kafka:graalvm@sha256:4f4abbf331d3e4b86a0e94a166bc796563f3792ab357eccbd039bf0c969d2d2f
 
 ENV CI=true
 
