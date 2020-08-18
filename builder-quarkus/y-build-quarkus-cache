@@ -9,7 +9,7 @@ COPY pom.xml .
 RUN y-build-quarkus-cache
 '
 
-[ "$(find . -maxdepth 1 -mindepth 1)" != "./pom.xml" ] && echo "For this step, workdir should only contain pom.xml" && ls -l && exit 1
+[ -d src ] && echo "For this step, workdir should only contain pom.xml, not src" && ls -l && exit 1
 
 export QUARKUS_VERSION=$(cat pom.xml | grep '<quarkus.platform.version>' | sed 's/.*>\(.*\)<.*/\1/')
 echo "Quarkus version: $QUARKUS_VERSION"
