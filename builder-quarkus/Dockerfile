@@ -4,6 +4,8 @@ FROM solsson/kafka:graalvm@sha256:4f4abbf331d3e4b86a0e94a166bc796563f3792ab357ec
 
 ENV CI=true
 
+COPY --from=builder-base /usr/local/src/ystack/bin/crane /usr/local/bin/crane
+
 # https://github.com/Yolean/ystack/commit/46696ab3300050c6fbad22540a6f0d113717681b#diff-9a949ad7c7f021d1ee63246d4c9011d6R11
 COPY --from=builder-base /usr/local/lib/node_modules/@yolean/ystack /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack
 RUN for B in \
