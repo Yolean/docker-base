@@ -35,3 +35,5 @@ RUN set -e; \
   mvn --batch-mode package -Pnative -Dquarkus.native.additional-build-args=--dry-run -Dmaven.test.skip=true 1>/dev/null || true; \
   cd ..; \
   rm -r builder-cache
+
+COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/

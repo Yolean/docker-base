@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[ -z "$DEBUG" ] || set -x
+
+[ "$1" = "help" ] && echo '
+For in-docker builds, cache dependencies etc:
+
+COPY pom.xml .
+RUN y-build-quarkus-cache
+'
+
+[ "$(find . -maxdepth 1 -mindepth 1)" != "./pom.xml" ] && echo "For this step, workdir should only contain pom.xml" && ls -l && exit 1
+
+export QUARKUS_VERSION=$(cat pom.xml | grep '<quarkus.platform.version>' | sed 's/.*>\(.*\)<.*/\1/')
+echo "Quarkus version: $QUARKUS_VERSION"
+mkdir -p src/test/java/org
+echo 'package org; public class T { @org.junit.jupiter.api.Test public void t() { } }' > src/test/java/org/T.java
+mkdir -p src/main/jsonschema
+echo 'type: object' > src/main/jsonschema/Dummy.yaml
+mvn --batch-mode package
+mvn --batch-mode package -Pnative -Dquarkus.native.additional-build-args=--dry-run \
+  || echo "... Build error is expected. Caching dependencies."
+rm -r src
