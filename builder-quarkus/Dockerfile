@@ -31,7 +31,7 @@ RUN set -e; \
     -DprojectArtifactId=builder-cache \
     -DclassName="org.acme.validation.TempResource" \
     -Dpath="/downloading-dependencies" \
-    -Dextensions="resteasy-jsonb, hibernate-validator"; \
+    -Dextensions="${quarkus_extensions}"; \
   cd builder-cache; \
   mvn --batch-mode package; \
   mvn --batch-mode package -Pnative -Dquarkus.native.additional-build-args=--dry-run -Dmaven.test.skip=true 1>/dev/null || true; \
