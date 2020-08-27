@@ -1,18 +1,28 @@
 FROM yolean/builder-base as builder-base
 
-FROM solsson/kafka:graalvm@sha256:4f4abbf331d3e4b86a0e94a166bc796563f3792ab357eccbd039bf0c969d2d2f
+FROM maven:3.6.3-adoptopenjdk-11@sha256:a32adccbff3a0ad0a6072b76c45cad5cb2e8ed6145660aadaf9ec9a9fd9ffb7a as maven
+
+FROM oracle/graalvm-ce:20.2.0-java11@sha256:e81677e781fa233b49ebb511acc4a43759b9bb66bd19da3ba38b3888fd9185a2
 
 ENV CI=true
 
 COPY --from=builder-base /usr/local/src/ystack/bin/crane /usr/local/bin/crane
 
-# https://github.com/Yolean/ystack/commit/46696ab3300050c6fbad22540a6f0d113717681b#diff-9a949ad7c7f021d1ee63246d4c9011d6R11
-COPY --from=builder-base /usr/local/lib/node_modules/@yolean/ystack /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack
-RUN for B in \
-  tsc ts-node \
-  jest ts-jest \
-  rollup \
-  ; do ln -s -v /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack/node_modules/.bin/$B /opt/graalvm/bin/$B; done
+COPY --from=maven /usr/share/maven /usr/share/maven
+RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+ENV MAVEN_HOME=/usr/share/maven
+ENV MAVEN_CONFIG=/root/.m2
+
+# # https://github.com/Yolean/ystack/commit/46696ab3300050c6fbad22540a6f0d113717681b#diff-9a949ad7c7f021d1ee63246d4c9011d6R11
+# COPY --from=builder-base /usr/local/lib/node_modules/@yolean/ystack /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack
+# RUN for B in \
+#   tsc ts-node \
+#   jest ts-jest \
+#   rollup \
+#   ; do ln -s -v /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack/node_modules/.bin/$B /opt/graalvm/bin/$B; done
+
+# Like ubuntu
+RUN echo 'nogroup:x:65534:' | tee -a /etc/group
 
 RUN mkdir /workspace && chgrp nogroup /workspace && chmod g+w /workspace
 WORKDIR /workspace
