@@ -10,4 +10,4 @@ ENTRYPOINT [ \
 CMD [ \
   "-Djava.util.logging.manager=org.jboss.logmanager.LogManager", \
   "-Dquarkus.http.host=0.0.0.0", \
-  "-Dquarkus.http.port=8090" ]
+  "-Dquarkus.http.port=8080" ]
