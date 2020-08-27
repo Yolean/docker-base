@@ -1,4 +1,4 @@
-FROM debian:10-slim@sha256:44d9b596776ea4efe559079b8ec35422e1b6abcc4de6e211b0085480d76df3bf as libs
+FROM debian:10-slim@sha256:b2cade793f3558c90d018ed386cd61bf5e4ec06bf8ed6761bed3dd7e2c425ecc as libs
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
@@ -8,7 +8,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-FROM gcr.io/distroless/base-debian10:nonroot@sha256:78f2372169e8d9c028da3856bce864749f2bb4bbe39c69c8960a6e40498f8a88
+FROM gcr.io/distroless/base-debian10:nonroot@sha256:f4a1b1083db512748a305a32ede1d517336c8b5bead1c06c6eac2d40dcaab6ad
 
 COPY --from=libs \
   /lib/x86_64-linux-gnu/libz.so.* \
