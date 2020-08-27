@@ -4,6 +4,8 @@ FROM maven:3.6.3-adoptopenjdk-11@sha256:a32adccbff3a0ad0a6072b76c45cad5cb2e8ed61
 
 FROM oracle/graalvm-ce:20.2.0-java11@sha256:e81677e781fa233b49ebb511acc4a43759b9bb66bd19da3ba38b3888fd9185a2
 
+RUN gu install native-image
+
 ENV CI=true
 
 COPY --from=builder-base /usr/local/src/ystack/bin/crane /usr/local/bin/crane
