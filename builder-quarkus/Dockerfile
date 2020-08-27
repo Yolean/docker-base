@@ -37,7 +37,7 @@ RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc
 USER nonroot:nogroup
 
 ARG quarkus_version=1.7.1.Final
-ARG quarkus_extensions=resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka
+ARG quarkus_extensions=logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka
 
 RUN set -e; \
   mvn --batch-mode io.quarkus:quarkus-maven-plugin:${quarkus_version}:create \
