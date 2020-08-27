@@ -11,7 +11,11 @@ COPY --from=builder-base /usr/local/src/ystack/bin/crane /usr/local/bin/crane
 COPY --from=maven /usr/share/maven /usr/share/maven
 RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 ENV MAVEN_HOME=/usr/share/maven
-ENV MAVEN_CONFIG=/root/.m2
+ENV MAVEN_CONFIG=/home/nonroot/.m2
+
+RUN set -e; \
+  mkdir -p /root/.m2 && chmod 500 /root/.m2; \
+  mkdir -p /tekton/home/.m2 && chmod 500 /tekton/home/.m2
 
 # # https://github.com/Yolean/ystack/commit/46696ab3300050c6fbad22540a6f0d113717681b#diff-9a949ad7c7f021d1ee63246d4c9011d6R11
 # COPY --from=builder-base /usr/local/lib/node_modules/@yolean/ystack /opt/graalvm/languages/js/lib/node_modules/@yolean/ystack
