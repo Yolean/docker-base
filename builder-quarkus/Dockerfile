@@ -32,7 +32,7 @@ RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc
   mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
 USER nonroot:nogroup
 
-ARG quarkus_version=1.7.0.Final
+ARG quarkus_version=1.7.1.Final
 ARG quarkus_extensions=resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka
 
 RUN set -e; \
