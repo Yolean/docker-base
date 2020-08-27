@@ -2,12 +2,23 @@ FROM maven:3.6.3-adoptopenjdk-11@sha256:a32adccbff3a0ad0a6072b76c45cad5cb2e8ed61
 
 FROM yolean/builder-base as builder-base
 
+USER root
+
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='libsnappy1v5 liblz4-1 libzstd1'; \
+  buildDeps='gcc libc6-dev zlib1g-dev libsnappy-dev liblz4-dev libzstd-dev'; \
+  apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
+  \
+  # Keeping build deps for native compile
+  #apt-get purge -y --auto-remove $buildDeps; \
+  rm -rf /var/lib/apt/lists; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+
 ARG graalvm_version=20.2.0
 ARG graalvm_variant=java11
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=
-
-USER root
 
 RUN set -ex; \
   cd /opt; \
