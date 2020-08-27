@@ -35,7 +35,7 @@ RUN set -e; \
 USER nonroot:nogroup
 
 ARG quarkus_version=1.7.1.Final
-ARG quarkus_extensions=logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka
+ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
   mvn --batch-mode io.quarkus:quarkus-maven-plugin:${quarkus_version}:create \
@@ -53,6 +53,7 @@ RUN set -e; \
 ARG additional_dependencies=" \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
+  com.salesforce.kafka.test:kafka-junit-core:3.2.2:jar \
 "
 RUN set -e; \
   for A in ${additional_dependencies}; do mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get -Dartifact=$A; done
