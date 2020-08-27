@@ -20,7 +20,7 @@ COPY --from=libs \
   /usr/lib/x86_64-linux-gnu/liblz4.so.* \
   /usr/lib/x86_64-linux-gnu/
 
-ENTRYPOINT ["/usr/local/bin/runner", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager"]
+ENTRYPOINT ["/usr/local/bin/quarkus", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager"]
 CMD ["-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=8080"]
 
-# What should remain now is to copy the native binary to /usr/local/bin/runner
+# What should remain now is to copy the native binary to /usr/local/bin/quarkus
