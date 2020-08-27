@@ -50,4 +50,11 @@ RUN set -e; \
   cd ..; \
   rm -r builder-cache
 
+ARG additional_dependencies=" \
+  org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
+  io.radanalytics:abstract-operator-annotator:0.6.7:jar \
+"
+RUN set -e; \
+  for A in ${additional_dependencies}; do mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get -Dartifact=$A; done
+
 COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/
