@@ -1,12 +1,24 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1@sha256:df6f9e5d689e4a0b295ff12abc6e2ae2932a1f3e479ae1124ab76cf40c3a8cdd
+FROM debian:10-slim@sha256:44d9b596776ea4efe559079b8ec35422e1b6abcc4de6e211b0085480d76df3bf as libs
 
-# Like ubuntu
-RUN echo 'nogroup:x:65534:' | tee -a /etc/group
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='ca-certificates libsnappy1v5 liblz4-1 libzstd1'; \
+  apt-get update && apt-get install -y $runDeps --no-install-recommends; \
+  \
+  rm -rf /var/lib/apt/lists; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-# Same as github.com/solsson/dockerfiles/tree/master/kafka-nonroot, and ystack's runner.Dockerfile
-RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
-  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
-USER nonroot:nogroup
+FROM gcr.io/distroless/base-debian10:nonroot@sha256:78f2372169e8d9c028da3856bce864749f2bb4bbe39c69c8960a6e40498f8a88
+
+COPY --from=libs \
+  /lib/x86_64-linux-gnu/libz.so.* \
+  /lib/x86_64-linux-gnu/
+
+COPY --from=libs \
+  /usr/lib/x86_64-linux-gnu/libzstd.so.* \
+  /usr/lib/x86_64-linux-gnu/libsnappy.so.* \
+  /usr/lib/x86_64-linux-gnu/liblz4.so.* \
+  /usr/lib/x86_64-linux-gnu/
 
 ENTRYPOINT ["/usr/local/bin/runner", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager"]
 CMD ["-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=8080"]
