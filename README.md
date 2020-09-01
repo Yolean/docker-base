@@ -7,3 +7,9 @@ but that [autobuilds](./hooks/build) append a [nonroot](./nonroot-footer.Dockerf
 
 Autobuilds are at https://hub.docker.com/r/solsson/y-docker-base
 but push with git ref tags to https://hub.docker.com/r/yolean/<name>.
+
+## build locally
+
+```
+SOURCE_COMMIT=$(git rev-parse HEAD) NOPUSH=true IMAGE_NAME=solsson/y-docker-base:latest ./hooks/build
+```
