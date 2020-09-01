@@ -14,7 +14,4 @@ COPY --from=libs \
 ENTRYPOINT ["/usr/local/bin/quarkus", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager"]
 CMD ["-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=8080"]
 
-COPY --from=libs \
-  /usr/local/src/ystack/bin/deno /deno
-
 # What should remain now is to copy the native binary to /usr/local/bin/quarkus
