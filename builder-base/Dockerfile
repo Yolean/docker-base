@@ -1,4 +1,4 @@
-FROM solsson/ystack-runner:3c16b67ac1929e0566ca39d6f9500363ccb00220@sha256:5f22dbb7cffe7d381afcb327ee1ade5aeef658642f46995ebc3d3b5eef930a5a
+FROM solsson/ystack-runner:3c16b67ac1929e0566ca39d6f9500363ccb00220@sha256:6925026846d13dbaa5abd635e64f2f6a6697023afdc9cdaf538a6925f185a55c
 
 ENV CI=true
 
