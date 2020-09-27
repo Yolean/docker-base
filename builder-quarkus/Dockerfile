@@ -25,7 +25,8 @@ RUN set -ex; \
   curl -sLS -o graalvm.tar.gz https://github.com/${graalvm_releases}/releases/download/vm-${graalvm_version}${graalvm_build}/graalvm-ce-${graalvm_variant}-linux-amd64-${graalvm_version}.tar.gz; \
   tar xvzf graalvm.tar.gz; \
   mv graalvm-ce-${graalvm_variant}-${graalvm_version} graalvm; \
-  rm graalvm.tar.gz
+  rm graalvm.tar.gz; \
+  rm graalvm/lib/src.zip
 
 RUN [ "$PATH" = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin" ]
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin:/opt/graalvm/bin
