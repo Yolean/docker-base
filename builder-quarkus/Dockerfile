@@ -1,6 +1,6 @@
 FROM maven:3.6.3-adoptopenjdk-11@sha256:a32adccbff3a0ad0a6072b76c45cad5cb2e8ed6145660aadaf9ec9a9fd9ffb7a as maven
 
-FROM yolean/builder-base as builder-base
+FROM yolean/builder-base
 
 USER root
 
@@ -19,14 +19,16 @@ ARG graalvm_version=20.2.0
 ARG graalvm_variant=java11
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=
+ENV graalvm_dist=https://github.com/${graalvm_releases}/releases/download/vm-${graalvm_version}${graalvm_build}/graalvm-ce-${graalvm_variant}-linux-amd64-${graalvm_version}.tar.gz
 
 RUN set -ex; \
-  cd /opt; \
-  curl -sLS -o graalvm.tar.gz https://github.com/${graalvm_releases}/releases/download/vm-${graalvm_version}${graalvm_build}/graalvm-ce-${graalvm_variant}-linux-amd64-${graalvm_version}.tar.gz; \
-  tar xvzf graalvm.tar.gz; \
-  mv graalvm-ce-${graalvm_variant}-${graalvm_version} graalvm; \
-  rm graalvm.tar.gz; \
-  rm graalvm/lib/src.zip
+  mkdir /opt/graalvm; \
+  curl -sLS $graalvm_dist | \
+    tar xzf - --strip-components=1 -C /opt/graalvm; \
+  rm /opt/graalvm/lib/src.zip; \
+  rm -r /opt/graalvm/lib/polyglot; \
+  rm -r /opt/graalvm/lib/visualvm; \
+  rm -r /opt/graalvm/tools
 
 RUN [ "$PATH" = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin" ]
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin:/opt/graalvm/bin
