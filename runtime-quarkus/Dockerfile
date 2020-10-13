@@ -1,6 +1,6 @@
 FROM yolean/builder-quarkus as libs
 
-FROM gcr.io/distroless/base-debian10:nonroot@sha256:f4a1b1083db512748a305a32ede1d517336c8b5bead1c06c6eac2d40dcaab6ad
+FROM gcr.io/distroless/base-debian10:nonroot@sha256:00745f221ff47557e777d9044929f766312fd5fe5affe27b73c0ad9cde2b3f6e
 
 COPY --from=libs \
   /usr/lib/x86_64-linux-gnu/libgcc_s.so.* \
