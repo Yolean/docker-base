@@ -1,4 +1,4 @@
-FROM docker.io/solsson/ystack-runner:2ed4bdc392fe01fa8536a25bb6747ddf1b3f9432@sha256:2b0df5d9f1b033ccdd757a1671c1b5248931d7d2d18ef5b15f33a03694f052e9
+FROM docker.io/solsson/ystack-runner:a128d7028c7857c1dec008fa0c8b65111193506d@sha256:9d1de12426d354b71a2c30afce19df6bb0e71603cebbe884337ad50c45b1030f
 
 ENV CI=true
 
