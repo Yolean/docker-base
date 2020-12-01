@@ -33,10 +33,12 @@ runtime-deno
 "
 
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
+XTAG=""
 case $IMAGE_NAME in
   *:node10)
     sed -i 's/FROM node:.*/FROM node:10.23.0-buster-slim@sha256:876ae4b59f1e356278be60b681dfe454887d3885c41cfaa2876e43272bbd159b/' node/Dockerfile
     CONTEXTS="node node-kafka node-kafka-cache"
+    XTAG="-node10"
     ;;
 esac
 
@@ -49,11 +51,11 @@ for CONTEXT in $CONTEXTS; do
   docker build -t yolean/$CONTEXT \
     -t yolean/$CONTEXT:$SOURCE_COMMIT \
     -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT $CONTEXT_IMAGE_NAME"
+  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
   if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
     docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
     docker tag yolean/$CONTEXT:$SOURCE_COMMIT yolean/$CONTEXT:$SOURCE_COMMIT-root
-    PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT-root $CONTEXT_IMAGE_NAME-root"
+    PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
       docker build -f - \
       -t yolean/$CONTEXT:$SOURCE_COMMIT \
