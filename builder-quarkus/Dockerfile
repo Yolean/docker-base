@@ -50,7 +50,7 @@ RUN set -e; \
 
 USER nonroot:nogroup
 
-ARG quarkus_version=1.10.0.Final
+ARG quarkus_version=1.10.1.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,smallrye-metrics,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
@@ -70,7 +70,7 @@ ARG additional_dependencies=" \
   com.networknt:json-schema-validator:1.0.45 \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
-  io.cloudevents:cloudevents-kafka:2.0.0-milestone4:jar \
+  io.cloudevents:cloudevents-kafka:2.0.0-RC1:jar \
   com.salesforce.kafka.test:kafka-junit-core:3.2.2:jar \
 "
 RUN set -e; \
