@@ -15,7 +15,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-ARG graalvm_version=20.2.0
+ARG graalvm_version=20.3.0
 ARG graalvm_variant=java11
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=
