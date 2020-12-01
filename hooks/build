@@ -35,7 +35,7 @@ runtime-deno
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
 case $IMAGE_NAME in
   *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.22.0-buster-slim@sha256:268129dcc7484fe3ba346ff9c5c8f0b467edd44c94205521bd4ace4a729b04c1/' node/Dockerfile
+    sed -i 's/FROM node:.*/FROM node:10.23.0-buster-slim@sha256:876ae4b59f1e356278be60b681dfe454887d3885c41cfaa2876e43272bbd159b/' node/Dockerfile
     CONTEXTS="node node-kafka node-kafka-cache"
     ;;
 esac
