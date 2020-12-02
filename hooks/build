@@ -49,16 +49,16 @@ for CONTEXT in $CONTEXTS; do
   CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
 
   docker build -t yolean/$CONTEXT \
-    -t yolean/$CONTEXT:$SOURCE_COMMIT \
+    -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
     -t $CONTEXT_IMAGE_NAME ./$CONTEXT
   PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
   if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
     docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
-    docker tag yolean/$CONTEXT:$SOURCE_COMMIT yolean/$CONTEXT:$SOURCE_COMMIT-root
+    docker tag yolean/$CONTEXT:$SOURCE_COMMIT$XTAG yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root
     PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
       docker build -f - \
-      -t yolean/$CONTEXT:$SOURCE_COMMIT \
+      -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
       -t $CONTEXT_IMAGE_NAME ./$CONTEXT
   fi
 done
