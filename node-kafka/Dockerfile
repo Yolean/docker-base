@@ -1,7 +1,7 @@
 FROM yolean/node
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=2.9.1 \
+  NODE_RDKAFKA_VERSION=2.10.0 \
   SNAPPY_VERSION=6.3.5
 
 RUN set -ex; \
