@@ -1,6 +1,6 @@
 FROM yolean/node-kafka
 
-ENV KAFKA_CACHE_VERSION=Yolean/kafka-cache#571d307305de1e78e1c9d81eb6d8195a22729ae4
+ENV KAFKA_CACHE_VERSION=Yolean/kafka-cache#1efd2b3dd20cf072dfcbb2b5f982ce5d05f4037a
 
 # There's no indication that libleveldb1d is used, it's here because we had build problems
 
