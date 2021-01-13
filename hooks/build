@@ -18,7 +18,6 @@ CONTEXTS="
 java
 node
 node-kafka
-node-kafka-cache
 toil
 git-init
 builder-base
