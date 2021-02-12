@@ -7,4 +7,6 @@ USER root
 RUN mkdir /workspace && chgrp nogroup /workspace && chmod g+w /workspace
 WORKDIR /workspace
 
+RUN chown nonroot /usr/local/src/ystack/bin
+
 USER nonroot:nogroup
