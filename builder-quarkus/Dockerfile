@@ -15,7 +15,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-ARG graalvm_version=20.3.1
+ARG graalvm_version=21.0.0.2
 ARG graalvm_variant=java11
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=
@@ -50,7 +50,7 @@ RUN set -e; \
 
 USER nonroot:nogroup
 
-ARG quarkus_version=1.11.3.Final
+ARG quarkus_version=1.11.4.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,micrometer,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
@@ -70,7 +70,7 @@ ARG additional_dependencies=" \
   com.networknt:json-schema-validator:1.0.45 \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
-  io.cloudevents:cloudevents-kafka:2.0.0.RC2:jar \
+  io.cloudevents:cloudevents-kafka:2.0.0:jar \
   com.salesforce.kafka.test:kafka-junit-core:3.2.2:jar \
 "
 RUN set -e; \
