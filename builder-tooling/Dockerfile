@@ -4,7 +4,7 @@ FROM yolean/builder-base
 
 USER root
 
-RUN runtimeDeps='gcc' \
+RUN runtimeDeps='gcc libc-dev' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
