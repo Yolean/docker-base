@@ -45,8 +45,7 @@ ENV MAVEN_CONFIG=/home/nonroot/.m2
 RUN set -e; \
   mkdir -p /home/nonroot/.m2/builder-repository && ln -s /home/nonroot/.m2/builder-repository /home/nonroot/.m2/repository && chown -R nonroot:nogroup /home/nonroot/.m2; \
   mkdir -p /root/.m2 && chmod 500 /root/.m2; \
-  mkdir -p /tekton/home/.m2 && chmod 500 /tekton/home/.m2; \
-  ln -sv /usr/local/src/ystack/bin/deno /deno # for runtime-quarkus-dev to match runtime-quarkus-deno
+  mkdir -p /tekton/home/.m2 && chmod 500 /tekton/home/.m2
 
 USER nonroot:nogroup
 

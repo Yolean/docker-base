@@ -1,5 +1,7 @@
 FROM yolean/builder-quarkus as libs
 
+RUN y-deno -V
+
 FROM gcr.io/distroless/base-debian10:nonroot@sha256:4734b55c73dc008f59e4f6b0275e6a1b2840d8db70f6a89c59c8fc23e1c6edd0
 
 COPY --from=libs \
