@@ -49,7 +49,7 @@ RUN set -e; \
 
 USER nonroot:nogroup
 
-ARG quarkus_version=1.11.5.Final
+ARG quarkus_version=1.12.2.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,micrometer,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
@@ -66,7 +66,7 @@ RUN set -e; \
   rm -r builder-cache
 
 ARG additional_dependencies=" \
-  com.networknt:json-schema-validator:1.0.45 \
+  com.networknt:json-schema-validator:1.0.50 \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
   io.cloudevents:cloudevents-kafka:2.0.0:jar \
