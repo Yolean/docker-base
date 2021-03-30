@@ -1,4 +1,4 @@
-FROM docker.io/yolean/ystack-runner:613d57c58678dc9d6b83b774377ffed75c8e6ed1@sha256:106df944cf0d94e6bccef48513fbecd615166e98ff4982d7fcb044f9ee9c4ef1
+FROM docker.io/yolean/ystack-runner:a5c9d6f38a4899e3291ffe678a808c91bc7f729d@sha256:a0a408854fd2d626a520859adfae18cab93370e0b2f8dbc2d05a534145ab0f3b
 
 ENV CI=true
 
