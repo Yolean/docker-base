@@ -27,6 +27,7 @@ builder-node
 builder-quarkus
 builder-quarkus-polyglot
 runtime-quarkus
+runtime-quarkus-ubuntu
 runtime-quarkus-dev
 runtime-quarkus-deno
 runtime-deno

@@ -6,8 +6,8 @@ USER root
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='libsnappy1v5 liblz4-1 libzstd1'; \
-  buildDeps='build-essential zlib1g-dev libsnappy-dev libsnappy-jni liblz4-dev libzstd-dev'; \
+  runDeps='libsnappy1v5 libsnappy-jni liblz4-1 libzstd1'; \
+  buildDeps='build-essential zlib1g-dev libsnappy-dev liblz4-dev libzstd-dev'; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   # Keeping build deps for native compile
