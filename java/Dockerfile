@@ -1,1 +1,1 @@
-FROM adoptopenjdk:11.0.9_11-jre-hotspot-focal@sha256:f20df8e98a28a75b69f770be59b8431c2f878c29156fc8453fa0c5978857f3aa
+FROM adoptopenjdk:11.0.10_9-jre-hotspot-focal@sha256:c365d39341f54bd64f4eadce7aa2f2251743dba4bfb7bd2e0a6fc7b76eeba25e

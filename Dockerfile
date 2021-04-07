@@ -1,2 +1,1 @@
-# This is a dummy dockerfile for autobuild, see ./hooks for the actual builds
-FROM debian:buster-slim@sha256:47bde1681ab5258dceb05ffcd7d8ef1d367ce5c6631075599fb74ab2101cd151
+FROM ubuntu:20.04@sha256:3c9c713e0979e9bd6061ed52ac1e9e1f246c9495aa063619d9d695fb8039aa1f
