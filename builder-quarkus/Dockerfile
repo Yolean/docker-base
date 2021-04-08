@@ -66,8 +66,8 @@ RUN set -e; \
   rm -r builder-cache
 
 ARG additional_dependencies=" \
-  com.networknt:json-schema-validator:1.0.50 \
-  org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.0.2:jar \
+  com.networknt:json-schema-validator:1.0.51 \
+  org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.1.0:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
   io.cloudevents:cloudevents-kafka:2.0.0:jar \
   com.salesforce.kafka.test:kafka-junit-core:3.2.2:jar \
