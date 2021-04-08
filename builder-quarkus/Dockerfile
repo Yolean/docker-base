@@ -49,7 +49,7 @@ RUN set -e; \
 
 USER nonroot:nogroup
 
-ARG quarkus_version=1.13.0.Final
+ARG quarkus_version=1.13.1.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,micrometer,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
