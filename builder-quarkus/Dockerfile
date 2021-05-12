@@ -1,4 +1,4 @@
-FROM maven:3.6.3-adoptopenjdk-11@sha256:a77fd5bdeebda213749e5050ae68f53aa39dcfb7efb5ad507c70c9db6d0909b2 as maven
+FROM maven:3.8.1-adoptopenjdk-11@sha256:e660503aa1fb090c9e8e3e45af43092a1d9decd62f58504301fb4df44747a70f as maven
 
 FROM yolean/builder-base
 
