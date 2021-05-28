@@ -49,7 +49,7 @@ RUN set -e; \
 
 USER nonroot:nogroup
 
-ARG quarkus_version=1.13.4.Final
+ARG quarkus_version=1.13.6.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,micrometer,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
@@ -66,11 +66,10 @@ RUN set -e; \
   rm -r builder-cache
 
 ARG additional_dependencies=" \
-  com.networknt:json-schema-validator:1.0.52 \
+  com.networknt:json-schema-validator:1.0.53 \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.1.1:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
   io.cloudevents:cloudevents-kafka:2.1.1:jar \
-  com.salesforce.kafka.test:kafka-junit-core:3.2.2:jar \
 "
 RUN set -e; \
   for A in ${additional_dependencies}; do mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get -Dartifact=$A; done
