@@ -66,10 +66,10 @@ RUN set -e; \
   rm -r builder-cache
 
 ARG additional_dependencies=" \
-  com.networknt:json-schema-validator:1.0.53 \
+  com.networknt:json-schema-validator:1.0.55 \
   org.jsonschema2pojo:jsonschema2pojo-maven-plugin:1.1.1:jar \
   io.radanalytics:abstract-operator-annotator:0.6.7:jar \
-  io.cloudevents:cloudevents-kafka:2.1.1:jar \
+  io.cloudevents:cloudevents-kafka:2.2.0:jar \
 "
 RUN set -e; \
   for A in ${additional_dependencies}; do mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get -Dartifact=$A; done
