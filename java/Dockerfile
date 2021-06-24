@@ -1,4 +1,4 @@
-FROM adoptopenjdk:11.0.11_9-jre-hotspot-focal@sha256:159de1ea7c06ae8fbfcdda68a1ddf352778364ef2fc61b095923f075766c99e2
+FROM adoptopenjdk:11.0.11_9-jre-hotspot-focal@sha256:1d8c1bf39aed8e5fc738bb26443e8c9693fe0e1a1fac2374a478b1070d149ba3
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
