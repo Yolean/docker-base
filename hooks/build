@@ -37,7 +37,7 @@ runtime-deno
 XTAG=""
 case $IMAGE_NAME in
   *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.24.1-buster-slim@sha256:a77de8aad32e2db77e62dc45604a602cc28d4bc80d1bcc10279a81a873af89ff/' node/Dockerfile
+    sed -i 's/FROM node:.*/FROM node:10.24.1-buster-slim@sha256:6ff486f039c4574a6b2d2e20056228f3d4a36cf451c3291509a6afd42c7849ba/' node/Dockerfile
     CONTEXTS="node node-kafka node-kafka-cache"
     XTAG="-node10"
     ;;
