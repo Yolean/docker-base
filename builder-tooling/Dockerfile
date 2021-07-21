@@ -1,4 +1,4 @@
-FROM golang:1.16.5-buster@sha256:ff1931f625a79c1030d01979d8a70fa31a78d3827a69fc48f403cd5d8dbf9861 as golang
+FROM golang:1.16.6-buster@sha256:777d13e40bc15456dceac9b37f926bd7b4c237645da9ff8e3c94d7a4916a909b as golang
 
 FROM yolean/builder-base
 
