@@ -27,6 +27,7 @@ builder-java
 builder-node
 builder-quarkus
 builder-quarkus-polyglot
+builder-quarkus-mvncache
 runtime-quarkus
 runtime-quarkus-ubuntu
 runtime-quarkus-dev
