@@ -13,4 +13,5 @@ RUN runtimeDeps='gcc libc-dev' \
 USER nonroot:nogroup
 
 COPY --from=golang /usr/local/go /usr/local/go
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin:/usr/local/go/bin
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin:/usr/local/go/bin \
+  GOPATH=/home/nonroot/.cache/go
