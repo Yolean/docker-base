@@ -1,6 +1,6 @@
 FROM yolean/builder-quarkus
 
-ARG quarkus_version=1.13.7.Final
+ARG quarkus_version=2.1.0.Final
 ARG quarkus_extensions=smallrye-openapi,swagger-ui,logging-json,resteasy-jackson,hibernate-validator,vertx,smallrye-health,micrometer,smallrye-fault-tolerance,smallrye-reactive-messaging-kafka,kubernetes-client
 
 RUN set -e; \
