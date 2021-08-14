@@ -1,44 +1,38 @@
 FROM solsson/kafka:native-cli@sha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
-USER root
 
-RUN set -ex; \
-  export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='openssl ca-certificates git curl procps netcat-openbsd jq findutils'; \
-  buildDeps=''; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends $runDeps $buildDeps; \
-  \
-  apt-get purge -y --auto-remove $buildDeps; \
-  rm -rf /var/lib/apt/lists/*; \
-  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+FROM liftm/kafkacat@sha256:0845a52f6c9c8f96042ba64c67dd16b216820ab8f92e05552d9664e8ad3550c2 as kafkacat-static
 
-WORKDIR /workspace
+FROM grafana/logcli:2.3.0-amd64@sha256:ba1d4380e621b079647f88622e1c2f2d40181e514a1d93167de0299aa8d4302c as logcli
+
+FROM minio/mc:RELEASE.2021-07-27T06-46-19Z@sha256:4ee74e7e471a39bc695907b7a4f06ae273fd660a1d919253308d1f0566de7a14 as mc
+
+FROM yolean/builder-base
+
+# RUN set -ex; \
+#   export DEBIAN_FRONTEND=noninteractive; \
+#   runDeps='openssl ca-certificates git curl procps netcat-openbsd jq findutils'; \
+#   buildDeps=''; \
+#   apt-get update; \
+#   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
+#   \
+#   apt-get purge -y --auto-remove $buildDeps; \
+#   rm -rf /var/lib/apt/lists/*; \
+#   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-COPY --from=minio/mc:RELEASE.2020-05-16T01-44-37Z@sha256:7d366697e4aae107bd5a84e4bb35cb7b1da773210431c9fa10f038bfd7696d1c /usr/bin/mc /usr/local/bin/
+COPY --from=kafka-cli /usr/local/bin /usr/local/bin
+COPY --from=kafkacat-static / /usr
+COPY --from=logcli /usr/bin/logcli /usr/local/bin/
+COPY --from=mc /usr/bin/mc /usr/local/bin/
 
 RUN set -e; \
-  curl -sLS -o /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64; \
-  chmod a+x /usr/local/bin/jq
-
-RUN set -e; \
-  curl -sLS -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/3.1.2/yq_linux_amd64; \
-  chmod a+x /usr/local/bin/yq
-
-RUN set -e; \
-  F=$(mktemp); \
-  curl -SLs https://dl.k8s.io/v1.17.9/kubernetes-client-linux-amd64.tar.gz \
-    | tee $F \
-    | tar xzf - --strip-components=3 -C /usr/local/bin/; \
-  echo "57fe9caf9d40e8b3e9e1b58552af1b74bf3cdccb3bd50fb5e51ba95d3e08263dad831724d79f2b99c0d67b03a1e533667422a20ba4159234b3452cdffbb814d4 $F" \
-    | sha512sum -c -; \
-  rm $F
-
-RUN chown nonroot .
+  y-yq; \
+  y-rpk;
 
 RUN set -ex; \
   kafka-topics 2>&1 | head -n 1; \
+  kafka-topics_ifnotexists 2>&1 | head -n 1; \
   kafka-configs 2>&1 | head -n 1; \
   kafka-consumer-groups 2>&1 | head -n 1; \
   openssl version; \
@@ -47,4 +41,6 @@ RUN set -ex; \
   mc --version; \
   jq --version; \
   yq --version; \
-  kafkacat -V
+  logcli --version; \
+  kafkacat -V; \
+  pwd && touch workspace-file && rm workspace-file
