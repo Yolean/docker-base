@@ -6,18 +6,20 @@ FROM grafana/logcli:2.3.0-amd64@sha256:ba1d4380e621b079647f88622e1c2f2d40181e514
 
 FROM minio/mc:RELEASE.2021-07-27T06-46-19Z@sha256:4ee74e7e471a39bc695907b7a4f06ae273fd660a1d919253308d1f0566de7a14 as mc
 
-FROM yolean/builder-base
+FROM yolean/builder-base as apt
 
-# RUN set -ex; \
-#   export DEBIAN_FRONTEND=noninteractive; \
-#   runDeps='openssl ca-certificates git curl procps netcat-openbsd jq findutils'; \
-#   buildDeps=''; \
-#   apt-get update; \
-#   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
-#   \
-#   apt-get purge -y --auto-remove $buildDeps; \
-#   rm -rf /var/lib/apt/lists/*; \
-#   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='procps netcat-openbsd dnsutils findutils'; \
+  buildDeps=''; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends $runDeps $buildDeps; \
+  \
+  apt-get purge -y --auto-remove $buildDeps; \
+  rm -rf /var/lib/apt/lists/*; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+
+FROM yolean/builder-base
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
