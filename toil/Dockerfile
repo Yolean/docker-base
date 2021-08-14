@@ -8,9 +8,10 @@ FROM minio/mc:RELEASE.2021-07-27T06-46-19Z@sha256:4ee74e7e471a39bc695907b7a4f06a
 
 FROM yolean/builder-base as apt
 
+USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='procps netcat-openbsd dnsutils findutils'; \
+  runDeps='netcat-openbsd dnsutils findutils'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
@@ -23,6 +24,29 @@ FROM yolean/builder-base
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
+COPY --from=apt \
+  /usr/lib/x86_64-linux-gnu/libbsd.so.* \
+  /usr/lib/x86_64-linux-gnu/libedit.so.* \
+  /usr/lib/x86_64-linux-gnu/libdns.so.* \
+  /usr/lib/x86_64-linux-gnu/libirs.so.* \
+  /usr/lib/x86_64-linux-gnu/libbind9.so.* \
+  /usr/lib/x86_64-linux-gnu/libisccfg.so.* \
+  /usr/lib/x86_64-linux-gnu/libisc.so.* \
+  /usr/lib/x86_64-linux-gnu/libjson-c.so.* \
+  /usr/lib/x86_64-linux-gnu/libxml2.so.* \
+  /usr/lib/x86_64-linux-gnu/libmaxminddb.so.* \
+  /usr/lib/x86_64-linux-gnu/liblmdb.so.* \
+  /usr/lib/x86_64-linux-gnu/libns.so.* \
+  /usr/lib/x86_64-linux-gnu/libuv.so.* \
+  /usr/lib/x86_64-linux-gnu/libicuuc.so.* \
+  /usr/lib/x86_64-linux-gnu/libicudata.so.* \
+  /usr/lib/x86_64-linux-gnu/
+COPY --from=apt /usr/bin/nc* \
+  /usr/bin/nslookup \
+  /usr/bin/find \
+  /usr/bin/xargs \
+  /usr/bin/
+
 COPY --from=kafka-cli /usr/local/bin /usr/local/bin
 COPY --from=kafkacat-static / /usr
 COPY --from=logcli /usr/bin/logcli /usr/local/bin/
@@ -33,6 +57,8 @@ RUN set -e; \
   y-rpk;
 
 RUN set -ex; \
+  nslookup localhost; \
+  find /usr/bin -name find; \
   kafka-topics 2>&1 | head -n 1; \
   kafka-topics_ifnotexists 2>&1 | head -n 1; \
   kafka-configs 2>&1 | head -n 1; \
