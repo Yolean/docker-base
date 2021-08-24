@@ -58,7 +58,6 @@ RUN set -e; \
   y-rpk;
 
 RUN set -ex; \
-  nslookup localhost; \
   find /usr/bin -name find; \
   kafka-topics 2>&1 | head -n 1; \
   kafka-topics_ifnotexists 2>&1 | head -n 1; \
