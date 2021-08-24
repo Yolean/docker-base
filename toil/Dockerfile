@@ -1,6 +1,6 @@
 FROM solsson/kafka:native-cli@sha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
 
-FROM liftm/kafkacat@sha256:0845a52f6c9c8f96042ba64c67dd16b216820ab8f92e05552d9664e8ad3550c2 as kafkacat-static
+FROM liftm/kafkacat:1.7.0@sha256:7545a6199bcbd07961fb8a2dee4ddee5e2e9556eaffc7324b126a7a6db6ffebb as kafkacat-static
 
 FROM grafana/logcli:2.3.0-amd64@sha256:ba1d4380e621b079647f88622e1c2f2d40181e514a1d93167de0299aa8d4302c as logcli
 
@@ -48,7 +48,8 @@ COPY --from=apt /usr/bin/nc* \
   /usr/bin/
 
 COPY --from=kafka-cli /usr/local/bin /usr/local/bin
-COPY --from=kafkacat-static / /usr
+COPY --from=kafkacat-static / /usr/local
+COPY kafkacat /usr/local/bin/kafkacat
 COPY --from=logcli /usr/bin/logcli /usr/local/bin/
 COPY --from=mc /usr/bin/mc /usr/local/bin/
 
@@ -71,4 +72,5 @@ RUN set -ex; \
   yq --version; \
   logcli --version; \
   kafkacat -V; \
+  kcat -V; \
   pwd && touch workspace-file && rm workspace-file

@@ -1,0 +1,3 @@
+#!/bin/sh
+>&2 echo "The kafkacat name is deprecated in favor of kcat"
+kcat $@
