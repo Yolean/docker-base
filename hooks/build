@@ -23,7 +23,6 @@ git-init
 builder-base
 toil
 builder-tooling
-builder-java
 builder-node
 builder-quarkus
 builder-quarkus-mvncache
