@@ -23,6 +23,7 @@ node-kafka-cache
 git-init
 builder-base
 toil
+builder-base-gcc
 builder-tooling
 builder-node
 builder-quarkus
