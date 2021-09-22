@@ -6,7 +6,7 @@ USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
   runDeps='libsnappy1v5 libsnappy-jni liblz4-1 liblz4-jni libzstd1'; \
-  buildDeps='gcc libc-dev make zlib1g-dev libsnappy-dev liblz4-dev libzstd-dev'; \
+  buildDeps='gcc g++ libc-dev make zlib1g-dev libsnappy-dev liblz4-dev libzstd-dev'; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   rm -rf /var/lib/apt/lists; \
