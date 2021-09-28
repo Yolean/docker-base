@@ -1,4 +1,4 @@
-FROM yolean/builder-quarkus
+FROM yolean/builder-quarkus-mvncache
 
 WORKDIR /workspace
 
