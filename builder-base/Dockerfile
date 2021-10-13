@@ -1,4 +1,4 @@
-FROM docker.io/yolean/ystack-runner:f09edb8ea305d3231912136ff4b9110937933ec9@sha256:ae0f4d57f3879727ca458f5b9d4f50964dae6e39dbda277eacaf032e5bc034f0 as base
+FROM docker.io/yolean/ystack-runner:72fbd593e11e6b9502350927dd95ce1751a18060@sha256:ccd19551c1c7ea9df0186187b5112e31febe7b5fbfce6fe618780ad3fe938e71 as base
 
 FROM base as nonroot
 USER root

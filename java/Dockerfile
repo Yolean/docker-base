@@ -1,1 +1,1 @@
-FROM eclipse-temurin:11.0.12_7-jre-focal@sha256:23d5cad605d1d2ef79098016397e1c8fb993d28df79cf41c40a6904ae779f4ec
+FROM eclipse-temurin:11.0.12_7-jre-focal@sha256:2b570aaf2cfd3ecafd78c9ebb67d872d23bf545342821fec1ec8742edaa68e36
