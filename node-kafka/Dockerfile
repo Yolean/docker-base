@@ -10,7 +10,7 @@ RUN set -ex; \
   runDeps='libssl1.1 libsasl2-2 zlib1g libsnappy1v5 liblz4-1 libzstd1'; \
   buildDeps=' \
     build-essential \
-    python \
+    python3 \
     libsasl2-dev \
     libssl-dev \
     zlib1g-dev \
