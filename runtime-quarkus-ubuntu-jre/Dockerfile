@@ -1,8 +1,8 @@
-FROM java as jre
+FROM yolean/java as jre
 
 RUN echo "JAVA_VERSION=$JAVA_VERSION"
 
-FROM runtime-quarkus-ubuntu
+FROM yolean/runtime-quarkus-ubuntu
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus + $JAVA_HOME/bin
