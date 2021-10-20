@@ -30,6 +30,7 @@ builder-quarkus
 builder-quarkus-mvncache
 runtime-quarkus
 runtime-quarkus-ubuntu
+runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
 runtime-quarkus-deno
 runtime-deno
