@@ -1,6 +1,6 @@
 FROM maven:3.8.1-adoptopenjdk-11@sha256:34bd76497d79aeda09b3c69db6af1633e3c155b45dae771f0855824b4dfc2948 as maven
 
-FROM quay.io/quarkus/ubi-quarkus-mandrel:21.3.0.0-Final-java11@sha256:313fabf8a25d3deb192baa35436ee20936c3aeb59ff4217a73ee50de95f2dbf1 as mandrel
+FROM quay.io/quarkus/ubi-quarkus-mandrel:21.3-java11@sha256:73df847c7bbecaae99b860547a64b02f29ba27e42e6de5fc26d4d5504357c15c as mandrel
 
 FROM yolean/builder-base-gcc
 
