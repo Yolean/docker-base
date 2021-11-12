@@ -9,6 +9,11 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
+COPY httpd.conf conf/httpd.conf
+
+VOLUME /srv/git
+
 RUN echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
-  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot
+  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot && \
+  chown nonroot /usr/local/apache2/logs
 USER nonroot:nogroup
