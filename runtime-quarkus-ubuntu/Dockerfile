@@ -1,5 +1,5 @@
 # ystack/runner
-FROM ubuntu:20.04@sha256:a0d9e826ab87bd665cfc640598a871b748b4b70a01a4f3d174d4fb02adad07a9
+FROM ubuntu:20.04@sha256:b5a61709a9a44284d88fb12e5c48db0409cfad5b69d4ff8224077c57302df9cf
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \

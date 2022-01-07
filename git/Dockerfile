@@ -1,4 +1,4 @@
-FROM debian:stretch-slim@sha256:b4c6e46603728bdc550c9075be78439c45a0d509008770ad3775d097f28b6cca
+FROM debian:bullseye-slim@sha256:b0d53c872fd640c2af2608ba1e693cfc7dedea30abcd8f584b23d583ec6dadc7
 
 RUN groupadd --gid 1000 git \
   && useradd --uid 1000 --gid git --shell /bin/bash --create-home git

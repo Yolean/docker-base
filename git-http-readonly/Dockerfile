@@ -1,4 +1,4 @@
-FROM httpd:2.4.51-bullseye@sha256:f70876d78442771406d7245b8d3425e8b0a86891c79811af94fb2e12af0fadeb
+FROM httpd:2.4.52-bullseye@sha256:0954cc1af252d824860b2c5dc0a10720af2b7a3d3435581ca788dff8480c7b32
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
