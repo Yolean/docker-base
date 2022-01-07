@@ -72,6 +72,4 @@ RUN set -ex; \
   jq --version; \
   yq --version; \
   logcli --version; \
-  kafkacat -V; \
-  kcat -V; \
   pwd && touch workspace-file && rm workspace-file
