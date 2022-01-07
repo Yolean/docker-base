@@ -27,22 +27,22 @@ FROM --platform=$TARGETPLATFORM yolean/builder-base
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 COPY --from=apt \
-  /usr/lib/x86_64-linux-gnu/libbsd.so.* \
-  /usr/lib/x86_64-linux-gnu/libedit.so.* \
-  /usr/lib/x86_64-linux-gnu/libdns.so.* \
-  /usr/lib/x86_64-linux-gnu/libirs.so.* \
-  /usr/lib/x86_64-linux-gnu/libbind9.so.* \
-  /usr/lib/x86_64-linux-gnu/libisccfg.so.* \
-  /usr/lib/x86_64-linux-gnu/libisc.so.* \
-  /usr/lib/x86_64-linux-gnu/libjson-c.so.* \
-  /usr/lib/x86_64-linux-gnu/libxml2.so.* \
-  /usr/lib/x86_64-linux-gnu/libmaxminddb.so.* \
-  /usr/lib/x86_64-linux-gnu/liblmdb.so.* \
-  /usr/lib/x86_64-linux-gnu/libns.so.* \
-  /usr/lib/x86_64-linux-gnu/libuv.so.* \
-  /usr/lib/x86_64-linux-gnu/libicuuc.so.* \
-  /usr/lib/x86_64-linux-gnu/libicudata.so.* \
-  /usr/lib/x86_64-linux-gnu/
+  /usr/lib/aarch64-linux-gnu/libbsd.so.* \
+  /usr/lib/aarch64-linux-gnu/libedit.so.* \
+  /usr/lib/aarch64-linux-gnu/libdns.so.* \
+  /usr/lib/aarch64-linux-gnu/libirs.so.* \
+  /usr/lib/aarch64-linux-gnu/libbind9.so.* \
+  /usr/lib/aarch64-linux-gnu/libisccfg.so.* \
+  /usr/lib/aarch64-linux-gnu/libisc.so.* \
+  /usr/lib/aarch64-linux-gnu/libjson-c.so.* \
+  /usr/lib/aarch64-linux-gnu/libxml2.so.* \
+  /usr/lib/aarch64-linux-gnu/libmaxminddb.so.* \
+  /usr/lib/aarch64-linux-gnu/liblmdb.so.* \
+  /usr/lib/aarch64-linux-gnu/libns.so.* \
+  /usr/lib/aarch64-linux-gnu/libuv.so.* \
+  /usr/lib/aarch64-linux-gnu/libicuuc.so.* \
+  /usr/lib/aarch64-linux-gnu/libicudata.so.* \
+  /usr/lib/aarch64-linux-gnu/
 COPY --from=apt /usr/bin/nc* \
   /usr/bin/nslookup \
   /usr/bin/find \
