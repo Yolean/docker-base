@@ -34,6 +34,7 @@ runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
 runtime-quarkus-deno
 runtime-deno
+git-http-readonly
 "
 
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
