@@ -4,6 +4,8 @@ set -e
 
 [ -z "$IMAGE_NAME" ] && echo "IMAGE_NAME is required" && exit 1;
 
+[ -n "$PLATFORM" ] || PLATFORM="--platform=linux/amd64,linux/arm64"
+
 function imagename {
   buildname=$1
   case $IMAGE_NAME in
@@ -36,7 +38,7 @@ for CONTEXT in $CONTEXTS; do
 
   CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
 
-  docker build -t yolean/$CONTEXT \
+  docker buildx build --push --progress=plain $PLATFORM -t yolean/$CONTEXT \
     -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
     -t $CONTEXT_IMAGE_NAME ./$CONTEXT
   PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
@@ -45,7 +47,7 @@ for CONTEXT in $CONTEXTS; do
     docker tag yolean/$CONTEXT:$SOURCE_COMMIT$XTAG yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root
     PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-      docker build -f - \
+      docker buildx build --push --progress=plain $PLATFORM -f - \
       -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
       -t $CONTEXT_IMAGE_NAME ./$CONTEXT
   fi
