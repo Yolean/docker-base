@@ -22,32 +22,38 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
+RUN set -e; \
+  PKG_PREFIX="$(uname -m)-linux-gnu"; \
+  mkdir -p /opt/toil/lib/$PKG_PREFIX /opt/toil/bin; \
+  cp -dav \
+    /usr/lib/$PKG_PREFIX/libbsd.so.* \
+    /usr/lib/$PKG_PREFIX/libedit.so.* \
+    /usr/lib/$PKG_PREFIX/libdns.so.* \
+    /usr/lib/$PKG_PREFIX/libirs.so.* \
+    /usr/lib/$PKG_PREFIX/libbind9.so.* \
+    /usr/lib/$PKG_PREFIX/libisccfg.so.* \
+    /usr/lib/$PKG_PREFIX/libisc.so.* \
+    /usr/lib/$PKG_PREFIX/libjson-c.so.* \
+    /usr/lib/$PKG_PREFIX/libxml2.so.* \
+    /usr/lib/$PKG_PREFIX/libmaxminddb.so.* \
+    /usr/lib/$PKG_PREFIX/liblmdb.so.* \
+    /usr/lib/$PKG_PREFIX/libns.so.* \
+    /usr/lib/$PKG_PREFIX/libuv.so.* \
+    /usr/lib/$PKG_PREFIX/libicuuc.so.* \
+    /usr/lib/$PKG_PREFIX/libicudata.so.* \
+    /opt/toil/lib/$PKG_PREFIX/; \
+  cp \
+    /usr/bin/nc* \
+    /usr/bin/nslookup \
+    /usr/bin/find \
+    /usr/bin/xargs \
+    /opt/toil/bin/;
+
 FROM --platform=$TARGETPLATFORM yolean/builder-base
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-COPY --from=apt \
-  /usr/lib/aarch64-linux-gnu/libbsd.so.* \
-  /usr/lib/aarch64-linux-gnu/libedit.so.* \
-  /usr/lib/aarch64-linux-gnu/libdns.so.* \
-  /usr/lib/aarch64-linux-gnu/libirs.so.* \
-  /usr/lib/aarch64-linux-gnu/libbind9.so.* \
-  /usr/lib/aarch64-linux-gnu/libisccfg.so.* \
-  /usr/lib/aarch64-linux-gnu/libisc.so.* \
-  /usr/lib/aarch64-linux-gnu/libjson-c.so.* \
-  /usr/lib/aarch64-linux-gnu/libxml2.so.* \
-  /usr/lib/aarch64-linux-gnu/libmaxminddb.so.* \
-  /usr/lib/aarch64-linux-gnu/liblmdb.so.* \
-  /usr/lib/aarch64-linux-gnu/libns.so.* \
-  /usr/lib/aarch64-linux-gnu/libuv.so.* \
-  /usr/lib/aarch64-linux-gnu/libicuuc.so.* \
-  /usr/lib/aarch64-linux-gnu/libicudata.so.* \
-  /usr/lib/aarch64-linux-gnu/
-COPY --from=apt /usr/bin/nc* \
-  /usr/bin/nslookup \
-  /usr/bin/find \
-  /usr/bin/xargs \
-  /usr/bin/
+COPY --from=apt /opt/toil/* /usr/
 
 COPY --from=kafka-cli /usr/local/bin /usr/local/bin
 COPY --from=kafkacat-static / /usr/local
