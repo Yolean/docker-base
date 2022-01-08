@@ -49,11 +49,17 @@ RUN set -e; \
     /usr/bin/xargs \
     /opt/toil/bin/;
 
+# TODO verify that symlinks are preserved
+#RUN ls -l /opt/toil/lib/$(uname -m)-linux-gnu/libxml2* && false
+
 FROM --platform=$TARGETPLATFORM yolean/builder-base
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-COPY --from=apt /opt/toil/* /usr/
+COPY --from=apt /opt/toil /usr/
+
+# TODO verify that symlinks are preserved
+#RUN ls -l /usr/lib/$(uname -m)-linux-gnu/libxml2* && false
 
 COPY --from=kafka-cli /usr/local/bin /usr/local/bin
 COPY --from=kafkacat-static / /usr/local
