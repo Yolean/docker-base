@@ -18,8 +18,25 @@ function imagename {
 docker build -t $IMAGE_NAME .
 
 CONTEXTS="
+java
+node
+node-kafka
+node-kafka-cache
+git-init
 builder-base
 toil
+builder-base-gcc
+builder-tooling
+builder-node
+builder-quarkus
+builder-quarkus-mvncache
+runtime-quarkus
+runtime-quarkus-ubuntu
+runtime-quarkus-ubuntu-jre
+runtime-quarkus-dev
+runtime-quarkus-deno
+runtime-deno
+git-http-readonly
 "
 
 # Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
