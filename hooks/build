@@ -71,13 +71,13 @@ PUSH=""
 
 for CONTEXT in $AMD64ONLY; do
   IMAGE=${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG
-  docker build -t -t yolean/$CONTEXT $IMAGE ./$CONTEXT
+  docker build --platform=linux/amd64 -t yolean/$CONTEXT -t $IMAGE ./$CONTEXT
   PUSH="$PUSH $IMAGE"
   if [ "" = "$(docker image inspect -f='{{.Config.User}}' $IMAGE)" ]; then
     docker tag $IMAGE $IMAGE-root
     PUSH="$PUSH $IMAGE-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-      docker build -f - -t yolean/$CONTEXT -t $IMAGE ./$CONTEXT
+      docker build --platform=linux/amd64 -f - -t yolean/$CONTEXT -t $IMAGE ./$CONTEXT
   fi
 done
 
