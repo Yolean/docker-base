@@ -1,4 +1,4 @@
-FROM golang:1.17.2-bullseye@sha256:0ab91ed22604fea9e13ca4f03a545ec7ab48129b0030438dcf8c20f4f3e96fa5 as golang
+FROM golang:1.17.7-bullseye@sha256:f89b6b9ec155b8c5e04d18fc23f6cb915e17ad8fe3f1cf7e9c7b7122a6c509a9 as golang
 
 FROM yolean/builder-base-gcc
 
