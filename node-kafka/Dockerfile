@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM yolean/node
+FROM --platform=$TARGETPLATFORM yolean/node:root
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
   NODE_RDKAFKA_VERSION=v2.12.0 \
