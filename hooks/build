@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 [ -z "$DEBUG" ] || set -x
-set -e
+set -eo pipefail
 
 [ -z "$IMAGE_NAME" ] && echo "IMAGE_NAME is required" && exit 1;
 
-[ -n "$PLATFORM" ] || PLATFORM="--platform=linux/amd64,linux/arm64"
+[ -n "$PLATFORM" ] || PLATFORM="--platform=linux/amd64,linux/arm64/v8"
 
 function imagename {
   buildname=$1
@@ -15,19 +15,23 @@ function imagename {
   esac
 }
 
-docker build -t $IMAGE_NAME .
+MULTIARCH_NONROOT="
+builder-base
+builder-base-gcc
+builder-tooling
+builder-node
+toil
+"
 
-CONTEXTS="
+MULTIARCH_TONONROOT="
 java
 node
 node-kafka
 node-kafka-cache
+"
+
+AMD64ONLY="
 git-init
-builder-base
-toil
-builder-base-gcc
-builder-tooling
-builder-node
 builder-quarkus
 builder-quarkus-mvncache
 runtime-quarkus
@@ -39,37 +43,52 @@ runtime-deno
 git-http-readonly
 "
 
-# Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
 XTAG=""
-case $IMAGE_NAME in
-  *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.24.1-buster-slim@sha256:6ff486f039c4574a6b2d2e20056228f3d4a36cf451c3291509a6afd42c7849ba/' node/Dockerfile
-    CONTEXTS="node node-kafka node-kafka-cache"
-    XTAG="-node10"
-    ;;
-esac
+
+[ -n "$NOPUSH" ] || BUILDX_PUSH="--push"
+
+cat ./Dockerfile | \
+  docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM \
+  -t $IMAGE_NAME -
+
+for CONTEXT in $MULTIARCH_NONROOT; do
+  CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
+
+  cat ./$CONTEXT/Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
+    -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+done
+
+for CONTEXT in $MULTIARCH_TONONROOT; do
+  CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
+
+  cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
+    -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+done
 
 PUSH=""
 
-for CONTEXT in $CONTEXTS; do
-
+for CONTEXT in $AMD64ONLY; do
   CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
 
-  # docker buildx build --push --progress=plain $PLATFORM -t yolean/$CONTEXT \
-  #   -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
-  #   -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  # PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
-  # if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
-  #   docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
-  #   docker tag yolean/$CONTEXT:$SOURCE_COMMIT$XTAG yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root
-  #   PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
+  docker build -t yolean/$CONTEXT \
+    -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
+    -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
+  if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
+    docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
+    docker tag yolean/$CONTEXT:$SOURCE_COMMIT$XTAG yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root
+    PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-      docker buildx build --push --progress=plain $PLATFORM -f - \
+      docker build -f - \
       -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
       -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  # fi
+  fi
 done
 
-echo "PUSH list contains: $PUSH"
+echo "amd64-only PUSH list contains: $PUSH"
 [ -z "$NOPUSH" ] || exit 0
 for P in $PUSH; do docker push $P; done

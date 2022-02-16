@@ -11,5 +11,7 @@ but push with git ref tags to https://hub.docker.com/r/yolean/<name>.
 ## build locally
 
 ```
-SOURCE_COMMIT=$(git rev-parse HEAD) NOPUSH=true IMAGE_NAME=yolean/docker-base:latest ./hooks/build
+# Nopush is broken for multi-arch builds until we find a way to depend on local builds
+# SOURCE_COMMIT=$(git rev-parse HEAD) NOPUSH=true IMAGE_NAME=yolean/docker-base:latest ./hooks/build
+SOURCE_COMMIT=$(git rev-parse HEAD) IMAGE_NAME=yolean/docker-base:latest ./hooks/build
 ```
