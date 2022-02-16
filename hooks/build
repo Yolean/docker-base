@@ -32,7 +32,6 @@ node-kafka-cache
 AMD64ONLY="
 git-init
 builder-quarkus
-builder-quarkus-mvncache
 runtime-quarkus
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
