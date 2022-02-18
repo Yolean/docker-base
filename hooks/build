@@ -50,12 +50,14 @@ cat ./Dockerfile | \
   -t yolean/docker-base -t ${PREFIX}yolean/docker-base:$SOURCE_COMMIT$XTAG -
 
 for CONTEXT in $MULTIARCH_NONROOT; do
+  ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
   cat ./$CONTEXT/Dockerfile | \
     docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
     -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
 done
 
 for CONTEXT in $MULTIARCH_TONONROOT; do
+  ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
   cat ./$CONTEXT/Dockerfile | \
     docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
     -t yolean/$CONTEXT:root -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root ./$CONTEXT
