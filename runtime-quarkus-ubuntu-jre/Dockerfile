@@ -1,8 +1,8 @@
-FROM --platform=$TARGETPLATFORM yolean/java as jre
+FROM --platform=$TARGETPLATFORM yolean/java:root as jre
 
 RUN echo "JAVA_VERSION=$JAVA_VERSION"
 
-FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu
+FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus + $JAVA_HOME/bin

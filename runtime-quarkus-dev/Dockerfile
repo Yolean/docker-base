@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM eclipse-temurin:11.0.14.1_1-jdk-focal@sha256:e1b
 
 RUN echo "JAVA_VERSION=$JAVA_VERSION"
 
-FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu
+FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus + $JAVA_HOME/bin
