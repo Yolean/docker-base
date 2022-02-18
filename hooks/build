@@ -1,73 +1,87 @@
-#!/bin/bash
+#!/usr/bin/env bash
 [ -z "$DEBUG" ] || set -x
-set -e
+set -eo pipefail
 
-[ -z "$IMAGE_NAME" ] && echo "IMAGE_NAME is required" && exit 1;
+[ -n "$PLATFORM" ] || PLATFORM="--platform=linux/amd64,linux/arm64/v8"
 
-function imagename {
-  buildname=$1
-  case $IMAGE_NAME in
-    *:latest) echo -n $IMAGE_NAME | sed "s|:latest|:$buildname|" ;;
-    *:*) echo -n $IMAGE_NAME | sed "s|:\(.*\)|:\1-$buildname|" ;;
-    *) echo $IMAGE_NAME:$buildname ;;
-  esac
-}
+[ -z "$REGISTRY" ] || PREFIX="$REGISTRY/"
 
-docker build -t $IMAGE_NAME .
+SOURCE_COMMIT=$(git rev-parse --verify HEAD 2>/dev/null || echo '')
+if [[ ! -z "$SOURCE_COMMIT" ]]; then
+  GIT_STATUS=$(git status --untracked-files=normal --porcelain=v2)
+  if [[ ! -z "$GIT_STATUS" ]]; then
+    SOURCE_COMMIT="$SOURCE_COMMIT-dirty"
+  fi
+fi
 
-CONTEXTS="
+MULTIARCH_NONROOT="
+builder-base
+builder-base-gcc
+builder-tooling
+builder-node
+toil
+"
+
+MULTIARCH_TONONROOT="
 java
 node
 node-kafka
 node-kafka-cache
-git-init
-builder-base
-toil
-builder-base-gcc
-builder-tooling
-builder-node
-builder-quarkus
-builder-quarkus-mvncache
-runtime-quarkus
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
+"
+
+AMD64ONLY="
+git-init
+builder-quarkus
+runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
 git-http-readonly
 "
 
-# Hack so we can get node-kafka-cache on Node 10.x as well (gracefulfs legacy)
 XTAG=""
-case $IMAGE_NAME in
-  *:node10)
-    sed -i 's/FROM node:.*/FROM node:10.24.1-buster-slim@sha256:6ff486f039c4574a6b2d2e20056228f3d4a36cf451c3291509a6afd42c7849ba/' node/Dockerfile
-    CONTEXTS="node node-kafka node-kafka-cache"
-    XTAG="-node10"
-    ;;
-esac
+
+[ -n "$NOPUSH" ] || BUILDX_PUSH="--push"
+
+cat ./Dockerfile | \
+  docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM \
+  -t yolean/docker-base -t ${PREFIX}yolean/docker-base:$SOURCE_COMMIT$XTAG -
+
+for CONTEXT in $MULTIARCH_NONROOT; do
+  ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
+  cat ./$CONTEXT/Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
+done
+
+for CONTEXT in $MULTIARCH_TONONROOT; do
+  ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
+  cat ./$CONTEXT/Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    -t yolean/$CONTEXT:root -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root ./$CONTEXT
+done
+for CONTEXT in $MULTIARCH_TONONROOT; do
+  cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
+done
 
 PUSH=""
 
-for CONTEXT in $CONTEXTS; do
-
-  CONTEXT_IMAGE_NAME=$(imagename $CONTEXT)
-
-  docker build -t yolean/$CONTEXT \
-    -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
-    -t $CONTEXT_IMAGE_NAME ./$CONTEXT
-  PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG $CONTEXT_IMAGE_NAME"
-  if [ "" = "$(docker image inspect -f='{{.Config.User}}' $CONTEXT_IMAGE_NAME)" ]; then
-    docker tag $CONTEXT_IMAGE_NAME $CONTEXT_IMAGE_NAME-root
-    docker tag yolean/$CONTEXT:$SOURCE_COMMIT$XTAG yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root
-    PUSH="$PUSH yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root $CONTEXT_IMAGE_NAME-root"
+for CONTEXT in $AMD64ONLY; do
+  IMAGE=${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG
+  docker build --platform=linux/amd64 -t yolean/$CONTEXT -t $IMAGE ./$CONTEXT
+  PUSH="$PUSH $IMAGE"
+  if [ "" = "$(docker image inspect -f='{{.Config.User}}' $IMAGE)" ]; then
+    docker tag $IMAGE $IMAGE-root
+    PUSH="$PUSH $IMAGE-root"
     cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-      docker build -f - \
-      -t yolean/$CONTEXT:$SOURCE_COMMIT$XTAG \
-      -t $CONTEXT_IMAGE_NAME ./$CONTEXT
+      docker build --platform=linux/amd64 -f - -t yolean/$CONTEXT -t $IMAGE ./$CONTEXT
   fi
 done
 
-echo "PUSH list contains: $PUSH"
+echo "amd64-only PUSH list contains: $PUSH"
 [ -z "$NOPUSH" ] || exit 0
 for P in $PUSH; do docker push $P; done

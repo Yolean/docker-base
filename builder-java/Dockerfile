@@ -1,4 +1,7 @@
-FROM yolean/builder-base
+FROM --platform=$TARGETPLATFORM yolean/builder-base
+ARG TARGETARCH
+
+RUN echo "TARGETARCH $TARGETARCH" && false
 
 USER root
 

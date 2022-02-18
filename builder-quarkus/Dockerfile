@@ -1,6 +1,6 @@
-FROM maven:3.8.4-eclipse-temurin-11@sha256:3aa27fd4c83c86357477daf9ac23dc67708b567c70047fa73f57fb919563ec6d as maven
+FROM maven:3.8.4-eclipse-temurin-11@sha256:ac478e512f8665c3fd5f853ea89e68a455a826996b4ed00712dfc9810a2b1f2d as maven
 
-FROM quay.io/quarkus/ubi-quarkus-mandrel:21.3-java11@sha256:43441b01da9a32a0bdc12bd9b033b99f4c26494fc54b214d34ef2c31ad18c122 as mandrel
+FROM quay.io/quarkus/ubi-quarkus-mandrel:22.0.0.2-Final-java11@sha256:b0a6375752732eb679dcf5e491537dca7d9403471d7593610d571116bf805a19 as mandrel
 
 FROM yolean/builder-base-gcc
 

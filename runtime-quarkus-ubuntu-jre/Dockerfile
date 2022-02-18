@@ -1,12 +1,12 @@
-FROM yolean/java as jre
+FROM --platform=$TARGETPLATFORM yolean/java:root as jre
 
 RUN echo "JAVA_VERSION=$JAVA_VERSION"
 
-FROM yolean/runtime-quarkus-ubuntu
+FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus + $JAVA_HOME/bin
-ENV JAVA_VERSION=jdk-11.0.12+7 \
+ENV JAVA_VERSION=jdk-11.0.14.1+1 \
   JAVA_HOME=/opt/java/openjdk \
   PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 

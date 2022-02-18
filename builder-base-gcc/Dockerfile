@@ -1,4 +1,4 @@
-FROM yolean/builder-base
+FROM --platform=$TARGETPLATFORM yolean/builder-base
 
 # This image keeps buildDeps for runtime, used by native compile
 
