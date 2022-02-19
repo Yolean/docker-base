@@ -19,6 +19,7 @@ builder-base
 builder-base-gcc
 builder-tooling
 builder-node
+builder-quarkus
 toil
 "
 
@@ -34,7 +35,6 @@ runtime-quarkus-dev
 
 AMD64ONLY="
 git-init
-builder-quarkus
 runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
