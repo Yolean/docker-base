@@ -25,6 +25,7 @@ FROM --platform=$TARGETPLATFORM yolean/builder-base-gcc
 
 COPY --from=maven /usr/share/maven /usr/share/maven
 COPY --from=mandrel /home/nonroot/mandrel /opt/mandrel
+COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/
 
 RUN [ "$PATH" = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin" ]
 ENV \

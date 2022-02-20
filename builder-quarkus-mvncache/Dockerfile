@@ -24,5 +24,3 @@ ARG additional_dependencies=" \
 "
 RUN set -e; \
   for A in ${additional_dependencies}; do mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get -Dartifact=$A; done
-
-COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/
