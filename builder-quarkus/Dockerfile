@@ -1,11 +1,31 @@
-FROM maven:3.8.4-eclipse-temurin-11@sha256:ac478e512f8665c3fd5f853ea89e68a455a826996b4ed00712dfc9810a2b1f2d as maven
+FROM --platform=$TARGETPLATFORM maven:3.8.4-eclipse-temurin-11@sha256:ac478e512f8665c3fd5f853ea89e68a455a826996b4ed00712dfc9810a2b1f2d as maven
 
-FROM quay.io/quarkus/ubi-quarkus-mandrel:22.0.0.2-Final-java11@sha256:b0a6375752732eb679dcf5e491537dca7d9403471d7593610d571116bf805a19 as mandrel
+# FROM quay.io/quarkus/ubi-quarkus-mandrel:22.0.0.2-Final-java11@sha256:b0a6375752732eb679dcf5e491537dca7d9403471d7593610d571116bf805a19 as mandrel
+FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
+ARG TARGETARCH
+ARG JAVA_VERSION=java11
+ARG MANDREL_VERSION=22.0.0.2-Final
 
-FROM yolean/builder-base-gcc
+RUN set -ex; \
+  ARCH=$TARGETARCH; \
+  [ "$TARGETARCH" != "arm64" ] || ARCH=aarch64; \
+  MANDREL_DIST=mandrel-$JAVA_VERSION-linux-$ARCH-$MANDREL_VERSION.tar.gz; \
+  MANDREL_DIST_URL=https://github.com/graalvm/mandrel/releases/download/mandrel-$MANDREL_VERSION/$MANDREL_DIST; \
+  MANDREL_DIST_SHA256=$(curl -sLSf "$MANDREL_DIST_URL.sha256"); \
+  [ -n "$MANDREL_DIST_SHA256" ]; \
+  cd /home/nonroot; \
+  curl -o $MANDREL_DIST -sLSf $MANDREL_DIST_URL; \
+  echo "$MANDREL_DIST_SHA256" | sha256sum -c -; \
+  mkdir ./mandrel; \
+  cat $MANDREL_DIST | tar xzf - --strip-components=1 -C ./mandrel
+
+RUN rm -v /home/nonroot/mandrel/lib/src.zip
+
+FROM --platform=$TARGETPLATFORM yolean/builder-base-gcc
 
 COPY --from=maven /usr/share/maven /usr/share/maven
-COPY --from=mandrel /opt/mandrel /opt/mandrel
+COPY --from=mandrel /home/nonroot/mandrel /opt/mandrel
+COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/
 
 RUN [ "$PATH" = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin" ]
 ENV \
