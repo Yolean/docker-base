@@ -31,6 +31,7 @@ node-kafka-cache
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
+kafka
 "
 
 AMD64ONLY="
