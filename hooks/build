@@ -86,3 +86,8 @@ done
 echo "amd64-only PUSH list contains: $PUSH"
 [ -z "$NOPUSH" ] || exit 0
 for P in $PUSH; do docker push $P; done
+
+# Custom labling
+JRE_MAJOR="$(head -n 1 java/Dockerfile | sed 's/[^:]*:\([[:digit:]]*\).*/\1/')"
+KAFKA_VERSION="$(cat kafka/Dockerfile | grep 'ENV KAFKA_VERSION=' | sed 's/[^=]*=\([^ ]*\)*.*/\1/')"
+crane cp yolean/kafka:latest yolean/kafka:$KAFKA_VERSION-java$JRE_MAJOR
