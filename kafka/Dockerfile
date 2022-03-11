@@ -20,9 +20,12 @@ RUN set -ex; \
   rm kafka_$SCALA_BINARY_VERSION-$KAFKA_VERSION.tgz; \
   \
   rm -rf /opt/kafka/site-docs; \
+  mkdir /opt/kafka/logs && chgrp nogroup /opt/kafka/logs && chmod g+w /opt/kafka/logs; \
   \
   apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
 WORKDIR /opt/kafka
+ENTRYPOINT [ "./bin/kafka-server-start.sh" ]
+CMD [ "config/kraft/server.properties" ]
