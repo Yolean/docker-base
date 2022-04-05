@@ -2,7 +2,8 @@
 [ -z "$DEBUG" ] || set -x
 set -eo pipefail
 
-[ -n "$PLATFORM" ] || PLATFORM="--platform=linux/amd64,linux/arm64/v8"
+[ -n "$PLATFORMS" ] || PLATFORMS="linux/amd64,linux/arm64/v8"
+[ -n "$PLATFORM" ] || PLATFORM="--platform=$PLATFORMS"
 
 [ -z "$REGISTRY" ] || PREFIX="$REGISTRY/"
 
