@@ -22,6 +22,7 @@ builder-tooling
 builder-node
 builder-quarkus
 toil
+node-distroless
 "
 
 MULTIARCH_TONONROOT="
