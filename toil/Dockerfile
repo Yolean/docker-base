@@ -29,16 +29,17 @@ RUN set -e; \
   cp -dav \
     /usr/lib/$PKG_PREFIX/libbsd.so.* \
     /usr/lib/$PKG_PREFIX/libedit.so.* \
-    /usr/lib/$PKG_PREFIX/libdns.so.* \
-    /usr/lib/$PKG_PREFIX/libirs.so.* \
-    /usr/lib/$PKG_PREFIX/libbind9.so.* \
-    /usr/lib/$PKG_PREFIX/libisccfg.so.* \
-    /usr/lib/$PKG_PREFIX/libisc.so.* \
+    /usr/lib/$PKG_PREFIX/libmd.so.* \
+    /usr/lib/$PKG_PREFIX/libdns-*-Ubuntu.so \
+    /usr/lib/$PKG_PREFIX/libirs-*-Ubuntu.so \
+    /usr/lib/$PKG_PREFIX/libbind9-*-Ubuntu.so \
+    /usr/lib/$PKG_PREFIX/libns-*-Ubuntu.so \
+    /usr/lib/$PKG_PREFIX/libisc-*-Ubuntu.so \
+    /usr/lib/$PKG_PREFIX/libisccfg-*-Ubuntu.so \
     /usr/lib/$PKG_PREFIX/libjson-c.so.* \
     /usr/lib/$PKG_PREFIX/libxml2.so.* \
     /usr/lib/$PKG_PREFIX/libmaxminddb.so.* \
     /usr/lib/$PKG_PREFIX/liblmdb.so.* \
-    /usr/lib/$PKG_PREFIX/libns.so.* \
     /usr/lib/$PKG_PREFIX/libuv.so.* \
     /usr/lib/$PKG_PREFIX/libicuuc.so.* \
     /usr/lib/$PKG_PREFIX/libicudata.so.* \
