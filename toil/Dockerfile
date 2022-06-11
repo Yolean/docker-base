@@ -1,12 +1,13 @@
 FROM --platform=linux/amd64 solsson/kafka:native-cli@sha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
 
-FROM --platform=linux/amd64 liftm/kafkacat:1.7.0@sha256:7545a6199bcbd07961fb8a2dee4ddee5e2e9556eaffc7324b126a7a6db6ffebb as kafkacat-static
+FROM --platform=$TARGETPLATFORM liftm/kafkacat:latest@sha256:6f772090bfbd3dfaec7d5685dc5af10d87fffc92ef5a79c4b7fe60f883281a03 as kafkacat-static
 
 # images above do not support arm64
 
-FROM --platform=$TARGETPLATFORM grafana/logcli:2.4.1-amd64@sha256:c5243634a8586178ab29faefbbcb760d96615a8caab79d019c9c65966af49ce1 as logcli
+ARG TARGETARCH
+FROM --platform=$TARGETPLATFORM grafana/logcli:2.5.0-$TARGETARCH as logcli
 
-FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2022-01-07T06-01-38Z@sha256:22cf686789cced8bfbb4643f82faf6b4ccc9b99a5b3ae0b395f0bd70fd815955 as mc
+FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2022-06-10T22-29-12Z@sha256:b15adbe4a9b5de7d4411524a9505befaad071f78267a045feacbb2b9f7b9963b as mc
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as apt
 
