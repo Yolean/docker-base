@@ -1,3 +1,3 @@
-FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs:16
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs:18@sha256:f6d6f0614f16be859e70713c53818503badcd779e6e2dd0636eb389a7f457e38
 
 USER nonroot:nobody
