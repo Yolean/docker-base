@@ -1,10 +1,9 @@
-FROM --platform=$TARGETPLATFORM maven:3.8.4-eclipse-temurin-11@sha256:ac478e512f8665c3fd5f853ea89e68a455a826996b4ed00712dfc9810a2b1f2d as maven
+FROM --platform=$TARGETPLATFORM maven:3.8.6-eclipse-temurin-17-focal@sha256:88f5e6f1c404cde37d392d41cfb0f5f60249f8582b4de908fca9943417255304 as maven
 
-# FROM quay.io/quarkus/ubi-quarkus-mandrel:22.0.0.2-Final-java11@sha256:b0a6375752732eb679dcf5e491537dca7d9403471d7593610d571116bf805a19 as mandrel
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
-ARG JAVA_VERSION=java11
-ARG MANDREL_VERSION=22.0.0.2-Final
+ARG JAVA_VERSION=java17
+ARG MANDREL_VERSION=22.1.0.0-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \

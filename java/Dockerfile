@@ -1,1 +1,1 @@
-FROM --platform=$TARGETPLATFORM eclipse-temurin:11.0.14.1_1-jre-focal@sha256:246f0a07f7ba2c52b48d1879aa6f294d80619575f719ea31eaec0885560b803e
+FROM --platform=$TARGETPLATFORM eclipse-temurin:17.0.3_7-jre-focal@sha256:4ca578c1685435b134d228c3631fb94bb3d94567f9bcc4bc2b04f2afcdeabdcf
