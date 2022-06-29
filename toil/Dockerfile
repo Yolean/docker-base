@@ -14,7 +14,7 @@ FROM --platform=$TARGETPLATFORM yolean/builder-base as apt
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='netcat-openbsd dnsutils findutils'; \
+  runDeps='netcat-openbsd dnsutils findutils bsdextrautils'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
