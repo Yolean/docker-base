@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM docker.io/yolean/ystack-runner:10c840d8daed3702619789992099ed3686752432@sha256:89ddff6d11a7830e5c164abd6698e7b2b666aada6e227ef2b72db3e24784afff \
+FROM --platform=$TARGETPLATFORM docker.io/yolean/ystack-runner:496eafd80f5b1598f992bbe1f1bf1ac58e66594a@sha256:1e406515ee681e547832780787283d6b78951a5dc7878075b665195bf04eee9c \
   as base
 
 FROM base as nonroot
