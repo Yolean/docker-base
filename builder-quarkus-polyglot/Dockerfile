@@ -15,8 +15,8 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-ARG graalvm_version=21.1.0
-ARG graalvm_variant=java11
+ARG graalvm_version=22.2.0
+ARG graalvm_variant=java17
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=
 ENV graalvm_dist=https://github.com/${graalvm_releases}/releases/download/vm-${graalvm_version}${graalvm_build}/graalvm-ce-${graalvm_variant}-linux-amd64-${graalvm_version}.tar.gz
