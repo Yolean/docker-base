@@ -9,7 +9,7 @@ set -eo pipefail
 
 SOURCE_COMMIT=$(git rev-parse --verify HEAD 2>/dev/null || echo '')
 if [[ ! -z "$SOURCE_COMMIT" ]]; then
-  GIT_STATUS=$(git status --untracked-files=normal --porcelain=v2)
+  GIT_STATUS=$(git status --untracked-files=normal --porcelain=v2 | grep -v ' hooks/build' || true)
   if [[ ! -z "$GIT_STATUS" ]]; then
     SOURCE_COMMIT="$SOURCE_COMMIT-dirty"
   fi
