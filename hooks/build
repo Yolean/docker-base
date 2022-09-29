@@ -41,6 +41,7 @@ runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
 git-http-readonly
+headless-chrome
 "
 
 XTAG=""
