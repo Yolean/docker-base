@@ -46,11 +46,8 @@ RUN runtimeDeps='procps ca-certificates' \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
 # Add Chrome as a user
-RUN usermod -a -G audio,video nobody \
+RUN usermod -a -G audio,video -d /home/nobody nobody \
   && mkdir -p /home/nobody && chown -R nobody:nogroup /home/nobody
-
-# Fixes startup warning mkdir: cannot create directory '/nonexistent': Permission denied
-RUN mkdir /nonexistent && chown nobody:nogroup /nonexistent
 
 # Run Chrome non-privileged
 USER nobody:nogroup
