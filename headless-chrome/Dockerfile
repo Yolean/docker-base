@@ -23,7 +23,7 @@
 # Base docker image
 FROM ubuntu:22.04@sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1
 ARG chrome_stage=stable
-ARG chrome_build=106.0.5249.61-1
+ARG chrome_build=106.0.5249.119-1
 
 ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
 
@@ -48,6 +48,9 @@ RUN runtimeDeps='procps ca-certificates' \
 # Add Chrome as a user
 RUN usermod -a -G audio,video nobody \
   && mkdir -p /home/nobody && chown -R nobody:nogroup /home/nobody
+
+# Fixes startup warning mkdir: cannot create directory '/nonexistent': Permission denied
+RUN mkdir /nonexistent && chown nobody:nogroup /nonexistent
 
 # Run Chrome non-privileged
 USER nobody:nogroup
