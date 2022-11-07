@@ -10,6 +10,7 @@ RUN set -ex; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
 COPY httpd.conf conf/httpd.conf
+COPY extra/* conf/extra/
 
 VOLUME /srv/git
 
