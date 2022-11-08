@@ -49,7 +49,7 @@ retries=3
 until git fetch --depth=1 origin --update-head-ok --force $REVISION; do
   [ $retries -gt 0 ] || exit 1
   retries=$(( $retries - 1 ))
-  wait=$((10 + $RANDOM % 20))
+  wait=$((10 + $RANDOM % 50))
   echo "Git failed, retrying in ${wait}s"
   sleep $wait
 done
