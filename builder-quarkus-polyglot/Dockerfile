@@ -1,4 +1,4 @@
-FROM maven:3.8.4-eclipse-temurin-11@sha256:3aa27fd4c83c86357477daf9ac23dc67708b567c70047fa73f57fb919563ec6d as maven
+FROM maven:3.8.6-eclipse-temurin-17-focal@sha256:3ffb55e4a6e29756f332abf1503ce0b295662f7233611123f496efcf77ec420c as maven
 
 FROM yolean/builder-base
 
@@ -15,7 +15,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
-ARG graalvm_version=22.2.0
+ARG graalvm_version=22.3.0
 ARG graalvm_variant=java17
 ARG graalvm_releases=graalvm/graalvm-ce-builds
 ARG graalvm_build=

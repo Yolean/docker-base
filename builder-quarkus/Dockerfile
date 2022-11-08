@@ -1,9 +1,9 @@
-FROM --platform=$TARGETPLATFORM maven:3.8.6-eclipse-temurin-17-focal@sha256:7e5f7c6ba30e475e4a93a3a868f41bad7b5f8d48808f2c4db714279eed5241c6 as maven
+FROM --platform=$TARGETPLATFORM maven:3.8.6-eclipse-temurin-17-focal@sha256:3ffb55e4a6e29756f332abf1503ce0b295662f7233611123f496efcf77ec420c as maven
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
 ARG JAVA_VERSION=java17
-ARG MANDREL_VERSION=22.2.0.0-Final
+ARG MANDREL_VERSION=22.3.0.0-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \
