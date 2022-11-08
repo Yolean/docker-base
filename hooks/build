@@ -21,6 +21,7 @@ builder-base-gcc
 builder-tooling
 builder-node
 builder-quarkus
+git-init
 toil
 node-distroless
 "
@@ -36,7 +37,6 @@ runtime-quarkus-dev
 "
 
 AMD64ONLY="
-git-init
 runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
