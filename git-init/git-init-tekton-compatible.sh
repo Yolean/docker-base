@@ -31,12 +31,27 @@ REVISION="$4"
 CLONEPATH="$6"
 [ -z "$CLONEPATH" ] && echo "Sixth arg should be clonepath" && exit 1
 
-retries=3
+[ -d $CLONEPATH ] || mkdir -p $CLONEPATH
 
-until git clone --depth 1 --branch "$REVISION" "$URL" $CLONEPATH; do
+cd $CLONEPATH
+
+# https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L94
+git config --add --global safe.directory $CLONEPATH
+
+git init
+
+git remote add origin $URL
+
+# https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L285
+git config core.sparsecheckout true
+
+retries=3
+until git fetch --depth=1 origin --update-head-ok --force $REVISION; do
   [ $retries -gt 0 ] || exit 1
   retries=$(( $retries - 1 ))
   wait=$((10 + $RANDOM % 20))
   echo "Git failed, retrying in ${wait}s"
   sleep $wait
 done
+
+git checkout -f $REVISION
