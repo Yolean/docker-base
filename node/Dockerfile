@@ -9,3 +9,5 @@ RUN runtimeDeps='procps git curl ca-certificates' \
 CMD [ "node" ]
 
 RUN chmod g+w /usr/src && chgrp nogroup /usr/src
+
+RUN corepack enable && corepack prepare yarn@4.0.0-rc.27 --activate
