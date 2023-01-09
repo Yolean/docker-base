@@ -23,6 +23,7 @@ builder-node
 builder-quarkus
 git-init
 toil
+toil-network
 node-distroless
 "
 
