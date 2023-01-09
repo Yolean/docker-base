@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM yolean/toil
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='iproute2 traceroute net-tools dnsutils tshark'; \
+  runDeps='iproute2 traceroute net-tools dnsutils tshark iputils-ping python3'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
