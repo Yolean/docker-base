@@ -1,4 +1,4 @@
-FROM maven:3.8.6-eclipse-temurin-17-focal@sha256:3ffb55e4a6e29756f332abf1503ce0b295662f7233611123f496efcf77ec420c as maven
+FROM maven:3.8.6-eclipse-temurin-17-focal@sha256:058bec37658bbf804ea61434c97dfdc23da50957e330bf696b18f73708f519cb as maven
 
 FROM yolean/builder-base
 
