@@ -1,9 +1,9 @@
 FROM --platform=$TARGETPLATFORM yolean/node:root
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=v2.14.0 \
+  NODE_RDKAFKA_VERSION=v2.14.5 \
   SEMVER_VERSION=7.3.8 \
-  SNAPPY_VERSION=7.2.1
+  SNAPPY_VERSION=7.2.2
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
