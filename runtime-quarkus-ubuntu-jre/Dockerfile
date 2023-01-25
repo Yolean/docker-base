@@ -5,8 +5,8 @@ RUN echo "JAVA_VERSION=$JAVA_VERSION"
 FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
-# Path must be that of runtime-quarkus + $JAVA_HOME/bin
-ENV JAVA_VERSION=jdk-17.0.5+8 \
+# Path must be that of runtime-quarkus-dev + $JAVA_HOME/bin
+ENV JAVA_VERSION=jdk-17.0.6+10 \
   JAVA_HOME=/opt/java/openjdk \
   PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 

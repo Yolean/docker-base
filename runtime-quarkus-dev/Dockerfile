@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM yolean/builder-quarkus as maven
 RUN mkdir -p /home/nonroot/.m2
 
 # Note the hardcoded JAVA_VERSION string below, and in runtime-quarkus-ubuntu-jre
-FROM --platform=$TARGETPLATFORM eclipse-temurin:17.0.5_8-jdk-focal@sha256:da53fe840b71b23909869adae4020df1626f4c1b8583b8b70a15f8aa19d9da18 as jdk
+FROM --platform=$TARGETPLATFORM eclipse-temurin:17.0.6_10-jdk@sha256:f6562feb32844d0059616d6e54c6cc3127ccf77fb594ccb98cc4279ca15887ed as jdk
 
 RUN echo "JAVA_VERSION=$JAVA_VERSION"
 
@@ -11,7 +11,7 @@ FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus + $JAVA_HOME/bin
-ENV JAVA_VERSION=jdk-17.0.5+8 \
+ENV JAVA_VERSION=jdk-17.0.6+10 \
   JAVA_HOME=/opt/java/openjdk \
   MAVEN_HOME=/usr/share/maven \
   MAVEN_CONFIG=/home/nonroot/.m2 \
