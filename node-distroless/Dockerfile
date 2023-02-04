@@ -1,3 +1,3 @@
-FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs18-debian11:nonroot@sha256:cdf44fb555e4b0ebc1bc0a6600e363a076ad8c42d4338ed6c580dcf8b8707eca
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs18-debian11:nonroot@sha256:42d184d162228ed24c916d12d6ba7c6288273709d64d520e7e27bace28cffb8f
 
 CMD [ "--enable-source-maps", "/app/main.js" ]
