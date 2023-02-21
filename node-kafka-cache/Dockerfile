@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM yolean/node-kafka:f48b684806fb4ef6900a759934070054eef854b7-root
+FROM --platform=$TARGETPLATFORM yolean/node-kafka:root
 
 ENV KAFKA_CACHE_VERSION=Yolean/kafka-cache#4db623eee2faf25f5bfcd4f578822234f2b14aae
 
