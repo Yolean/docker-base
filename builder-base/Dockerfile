@@ -13,6 +13,7 @@ RUN set -e; \
   npm config list; \
   mkdir -p home/nonroot/.cache/npm; \
   mv $HOME/.npmrc home/nonroot/.npmrc; \
+  (cd usr/local/src/ystack/bin/; ln -s /usr/local/lib/node_modules/yarn/bin/yarn); \
   chown root home; chown -R nonroot:nogroup home/nonroot
 
 FROM base
@@ -23,4 +24,4 @@ ENV \
   CI=true \
   YSTACK_BIN_DOWNLOAD_CACHE=/home/nonroot/.cache/ystack-bin
 
-RUN npm install --ignore-scripts -g yarn@1.22.19
+RUN npm install -g --ignore-scripts --no-bin-links yarn@1.22.19
