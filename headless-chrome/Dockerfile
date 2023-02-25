@@ -21,7 +21,7 @@
 #
 
 # Base docker image
-FROM ubuntu:22.04@sha256:4b1d0c4a2d2aaf63b37111f34eb9fa89fa1bf53dd6e4ca954d47caebca4005c2
+FROM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f
 ARG chrome_stage=stable
 ARG chrome_build=109.0.5414.74-1
 
