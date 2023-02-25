@@ -18,6 +18,7 @@ fi
 MULTIARCH_NONROOT="
 builder-base
 builder-base-gcc
+builder-base-gcloud
 builder-tooling
 builder-node
 builder-quarkus
