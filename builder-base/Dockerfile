@@ -22,3 +22,5 @@ WORKDIR /workspace
 ENV \
   CI=true \
   YSTACK_BIN_DOWNLOAD_CACHE=/home/nonroot/.cache/ystack-bin
+
+RUN npm install --ignore-scripts -g yarn@1.22.19
