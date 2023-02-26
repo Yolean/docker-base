@@ -10,4 +10,4 @@ CMD [ "node" ]
 
 RUN chmod g+w /usr/src && chgrp nogroup /usr/src
 
-RUN corepack enable && corepack prepare yarn@4.0.0-rc.36 && corepack prepare pnpm@7.26.0
+ENV npm_config_update_notifier=false
