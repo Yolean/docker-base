@@ -33,6 +33,7 @@ java
 node
 node-kafka
 node-kafka-cache
+node-watchexec
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
