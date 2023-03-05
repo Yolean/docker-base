@@ -14,4 +14,12 @@ RUN set -ex; \
   \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='rsync'; \
+  \
+  apt-get update && apt-get install -y $runDeps --no-install-recommends; \
+  \
+  rm -rf /var/lib/apt/lists; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 USER nonroot:nogroup
