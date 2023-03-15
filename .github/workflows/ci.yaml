@@ -33,5 +33,5 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          yolean/builder-base:latest
-          yolean/builder-base:${{ github.sha }}
+          ghcr.io/yolean/builder-base:latest
+          ghcr.io/yolean/builder-base:${{ github.sha }}
