@@ -34,4 +34,4 @@ jobs:
         push: true
         tags: |
           yolean/builder-base:latest
-          yolean/builder-base:${{ github.event.ref }}
+          yolean/builder-base:${{ github.sha }}
