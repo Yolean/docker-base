@@ -6,7 +6,7 @@
 # Should correspond to builder-base, i.e. be updated with new ystack-runner
 FROM --platform=$TARGETPLATFORM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f \
   as base
-FROM --platform=$TARGETPLATFORM node:18.14.2-bullseye-slim@sha256:81b43146e32b3704663eb243d092b82592eab50f683498c5db9bda07d4ee7e46 \
+FROM --platform=$TARGETPLATFORM node:18.15.0-bullseye-slim@sha256:7d67f2765f8d1b13f3833001bebbc6513581ef3f300aa4b1019a0b6dff2c0b25 \
   as node
 
 # Both the official node image and github.com/GoogleContainerTools/distroless run bullseye
