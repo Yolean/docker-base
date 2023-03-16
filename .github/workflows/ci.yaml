@@ -1,9 +1,12 @@
 name: ci
 
-on:
-  push:
-    branches:
-    - ghcr
+# Found no convenient way to configure public access
+# on:
+#   push:
+#     branches:
+#     - ghcr
+
+# Note: below was a test, does not support our nonroot append that ./hooks/build does
 
 jobs:
   docker:
