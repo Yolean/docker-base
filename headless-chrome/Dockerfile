@@ -23,7 +23,7 @@
 # Base docker image
 FROM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f
 ARG chrome_stage=stable
-ARG chrome_build=110.0.5481.177-1
+ARG chrome_build=111.0.5563.110-1
 
 ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
 
