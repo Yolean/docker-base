@@ -28,7 +28,7 @@ ARG chrome_build=111.0.5563.110-1
 ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
 
 # Install deps + add Chrome Stable + purge all the things
-RUN runtimeDeps='procps ca-certificates' \
+RUN runtimeDeps='procps ca-certificates libva2' \
   && buildDeps='apt-transport-https curl gnupg' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
