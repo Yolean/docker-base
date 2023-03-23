@@ -1,26 +1,3 @@
-# Run Chrome Headless in a container
-#
-# What was once a container using the experimental build of headless_shell from
-# tip, this container now runs and exposes stable Chrome headless via
-# google-chome --headless.
-#
-# What's New
-#
-# 1. Pulls from Chrome Stable
-# 2. You can now use the ever-awesome Jessie Frazelle seccomp profile for Chrome.
-#     wget https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json -O ~/chrome.json
-#
-#
-# To run (without seccomp):
-# docker run -d -p 9222:9222 --cap-add=SYS_ADMIN justinribeiro/chrome-headless
-#
-# To run a better way (with seccomp):
-# docker run -d -p 9222:9222 --security-opt seccomp=$HOME/chrome.json justinribeiro/chrome-headless
-#
-# Basic use: open Chrome, navigate to http://localhost:9222/
-#
-
-# Base docker image
 FROM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f
 ARG chrome_stage=stable
 ARG chrome_build=111.0.5563.110-1
@@ -45,19 +22,16 @@ RUN runtimeDeps='procps ca-certificates' \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
-# Add Chrome as a user
-RUN usermod -a -G audio,video -d /home/nobody nobody \
-  && mkdir -p /home/nobody && chown -R nobody:nogroup /home/nobody
+RUN grep 'nonroot:x:65532' /etc/passwd || \
+  echo 'nonroot:x:65532:65534:nonroot:/home/nonroot:/usr/sbin/nologin' >> /etc/passwd && \
+  mkdir -p /home/nonroot && touch /home/nonroot/.bash_history && chown -R 65532:65534 /home/nonroot && \
+  usermod -a -G audio,video nonroot
+USER nonroot:nogroup
 
-# Run Chrome non-privileged
-USER nobody:nogroup
-
-# Expose port 9222
 EXPOSE 9222
 
-# Autorun chrome headless with no GPU
 ENTRYPOINT [ "google-chrome" ]
-CMD [ "--headless", \
+CMD [ "--headless=new", \
   "--disable-gpu", \
   "--remote-debugging-address=0.0.0.0", \
   "--remote-debugging-port=9222", \
@@ -66,6 +40,6 @@ CMD [ "--headless", \
   "--disable-extensions", \
   "--disable-translate", \
   "--disable-sync", \
-  "--user-data-dir=/home/nobody/userdata", \
+  "--user-data-dir=/home/nonroot/userdata", \
   "--enable-logging", \
   "--v=2" ]
