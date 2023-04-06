@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='libsnappy1v5 libsnappy-jni liblz4-1 liblz4-jni libzstd1 libfreetype6'; \
+  runDeps='libsnappy1v5 libsnappy-jni liblz4-1 liblz4-jni libzstd1 libfreetype6 fontconfig'; \
   apt-get update && apt-get install -y $runDeps --no-install-recommends; \
   \
   rm -rf /var/lib/apt/lists; \
