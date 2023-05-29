@@ -5,9 +5,9 @@ FROM --platform=$TARGETPLATFORM liftm/kafkacat:latest@sha256:8658c1fa53632764bfc
 # images above do not support arm64
 
 ARG TARGETARCH
-FROM --platform=$TARGETPLATFORM grafana/logcli:2.7.1-$TARGETARCH as logcli
+FROM --platform=$TARGETPLATFORM grafana/logcli:2.8.2-$TARGETARCH as logcli
 
-FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2023-01-11T03-14-16Z@sha256:1f374e2f61a8a4902ed528fb1d19f93a44b3d81a158b003779f85883833990c3 as mc
+FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2023-05-26T23-31-54Z@sha256:f66e5e41e34e15db8cc7b34fdcb7c4113faaa2a4d9156036b0bbde641ae8be26 as mc
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as apt
 
