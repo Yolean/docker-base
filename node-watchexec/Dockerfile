@@ -1,3 +1,3 @@
 # syntax=docker/dockerfile:1.4
 
-FROM --platform=$TARGETPLATFORM ghcr.io/turbokube/nodejs-watch:533ced15db31f01f901f98b2dbbc909d3c50b1a5@sha256:8096487f49ae0264c5869d59d3bc34b70ef15744f5e3b3b75f6a5096c0a7108e
+FROM --platform=$TARGETPLATFORM ghcr.io/turbokube/nodejs-watch:38f064020d1bafedf0e785bbadacdc78320b28c1@sha256:a57ed5b3331135c4b4e534d74b6d4ec959a6129a0c29c82eabee4bac6272dee7
