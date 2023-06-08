@@ -11,6 +11,8 @@ RUN set -ex; \
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg > /usr/share/keyrings/cloud.google.gpg; \
   \
   apt-get update && apt-get install -y $runDeps --no-install-recommends; \
+  gcloud version; \
+  gsutil version; \
   \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
