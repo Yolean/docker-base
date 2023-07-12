@@ -67,11 +67,13 @@ for CONTEXT in $MULTIARCH_TONONROOT; do
   ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
   cat ./$CONTEXT/Dockerfile | \
     docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    --output type=registry,oci-mediatypes=false \
     -t yolean/$CONTEXT:root -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root ./$CONTEXT
 done
 for CONTEXT in $MULTIARCH_TONONROOT; do
   cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
     docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    --output type=registry,oci-mediatypes=false \
     -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
 done
 
