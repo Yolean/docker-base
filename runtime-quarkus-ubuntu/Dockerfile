@@ -1,5 +1,5 @@
 # ystack/runner
-FROM --platform=$TARGETPLATFORM ubuntu:22.04@sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21
+FROM --platform=$TARGETPLATFORM ubuntu:22.04@sha256:0bced47fffa3361afa981854fcabcd4577cd43cebbb808cea2b1f33a3dd7f508
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
