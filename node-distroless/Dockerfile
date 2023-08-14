@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM cgr.dev/chainguard/node:18.17@sha256:0d469193352e30e18a4eb50e32d3dac008d153cb0e3f63d18f2ff622d971e2e9
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs18-debian11@sha256:dd8857b47881d5db49ff47089de4866178b71b24558a8583c20250754a387b7d
 
 WORKDIR /app
 CMD [ "--enable-source-maps", "./main.js" ]
