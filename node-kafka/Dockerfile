@@ -1,8 +1,8 @@
 FROM --platform=$TARGETPLATFORM yolean/node:root
 
 ENV NODE_PATH=/usr/local/lib/node_modules \
-  NODE_RDKAFKA_VERSION=v2.16.1 \
-  SEMVER_VERSION=7.3.8 \
+  NODE_RDKAFKA_VERSION=v2.17.0 \
+  SEMVER_VERSION=7.5.4 \
   SNAPPY_VERSION=7.2.2
 
 RUN set -ex; \
