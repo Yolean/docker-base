@@ -1,20 +1,20 @@
 FROM --platform=linux/amd64 solsson/kafka:native-cli@sha256:16813cae4712b1b3933a4205850300043193f2932b0de4603d9bc07da2dcf033 as kafka-cli
 
-FROM --platform=$TARGETPLATFORM liftm/kafkacat:latest@sha256:8658c1fa53632764bfcc3f9fad3dbf8b1d1a74f05244cd3a0ce9825e3344dc98 as kafkacat-static
+FROM --platform=$TARGETPLATFORM liftm/kafkacat:1.7.0@sha256:8658c1fa53632764bfcc3f9fad3dbf8b1d1a74f05244cd3a0ce9825e3344dc98 as kafkacat-static
 
 # images above do not support arm64
 
 ARG TARGETARCH
-FROM --platform=$TARGETPLATFORM grafana/logcli:2.8.2-$TARGETARCH as logcli
+FROM --platform=$TARGETPLATFORM grafana/logcli:2.9.1-$TARGETARCH as logcli
 
-FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2023-05-26T23-31-54Z@sha256:f66e5e41e34e15db8cc7b34fdcb7c4113faaa2a4d9156036b0bbde641ae8be26 as mc
+FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2023-09-22T05-07-46Z@sha256:814b17be3f895a51295113aecea806b83e74f25a3048dea443935f3dc066cd90 as mc
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as apt
 
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='netcat-openbsd dnsutils findutils bsdextrautils'; \
+  runDeps='netcat-openbsd dnsutils findutils bsdextrautils zip'; \
   buildDeps=''; \
   apt-get update; \
   apt-get install -y --no-install-recommends $runDeps $buildDeps; \
