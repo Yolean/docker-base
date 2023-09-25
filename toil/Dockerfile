@@ -49,6 +49,7 @@ RUN set -e; \
     /usr/bin/nslookup \
     /usr/bin/find \
     /usr/bin/xargs \
+    /usr/bin/zip \
     /opt/toil/bin/;
 
 # TODO verify that symlinks are preserved
@@ -86,4 +87,5 @@ RUN set -ex; \
   jq --version; \
   yq --version; \
   logcli --version; \
+  zip --version | grep 'This is Zip'; \
   pwd && touch workspace-file && rm workspace-file
