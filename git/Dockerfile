@@ -1,4 +1,4 @@
-FROM ubuntu:22.04@sha256:0bced47fffa3361afa981854fcabcd4577cd43cebbb808cea2b1f33a3dd7f508
+FROM ubuntu:22.04@sha256:aabed3296a3d45cede1dc866a24476c4d7e093aa806263c27ddaadbdce3c1054
 
 RUN groupadd --gid 1000 git \
   && useradd --uid 1000 --gid git --shell /bin/bash --create-home git
