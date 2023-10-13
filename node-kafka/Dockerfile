@@ -7,7 +7,7 @@ ENV NODE_PATH=/usr/local/lib/node_modules \
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='libssl1.1 libsasl2-2 zlib1g libsnappy1v5 liblz4-1 libzstd1'; \
+  runDeps='libssl3 libsasl2-2 zlib1g libsnappy1v5 liblz4-1 libzstd1'; \
   buildDeps=' \
     build-essential \
     python3 \
