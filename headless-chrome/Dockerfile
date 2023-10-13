@@ -1,6 +1,6 @@
 FROM ubuntu:22.04@sha256:aabed3296a3d45cede1dc866a24476c4d7e093aa806263c27ddaadbdce3c1054
 ARG chrome_stage=stable
-ARG chrome_build=117.0.5938.149-1
+ARG chrome_build=118.0.5993.70-1
 
 ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
 
