@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM maven:3.9.1-eclipse-temurin-17@sha256:608d1a553f8b135159b6c3c55b0b0150443f83bae6cdc7463112a8b29acc8874 as maven
+FROM --platform=$TARGETPLATFORM maven:3.9.5-eclipse-temurin-21@sha256:e0900e5953fddc181fdbe449ba8c27f124470fb545fbbb29f39f50d6093c9b18 as maven
 
 FROM yolean/builder-base
 
