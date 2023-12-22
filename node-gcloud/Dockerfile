@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM yolean/node:177518b0a77298d34f0caf1d0fcdc13750c355a8-root
+FROM --platform=$TARGETPLATFORM yolean/node:root
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
