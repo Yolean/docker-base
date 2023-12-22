@@ -17,10 +17,15 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
+ARG TARGETARCH
+ARG PROTOBUF_VERSION=25.1
 RUN set -ex; \
+  ARCH=$TARGETARCH; \
+  [ "$TARGETARCH" != "arm64" ] || ARCH=aarch_64; \
+  [ "$TARGETARCH" != "amd64" ] || ARCH=x86_64; \
   mkdir /opt/protobuf; \
   cd /opt/protobuf; \
-  curl -sL -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v25.1/protoc-25.1-linux-x86_64.zip; \
+  curl -sL -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v$PROTOBUF_VERSION/protoc-$PROTOBUF_VERSION-linux-$ARCH.zip; \
   unzip protoc.zip; \
   ln -s /opt/protobuf/bin/protoc /usr/local/bin/protoc; \
   rm protoc.zip

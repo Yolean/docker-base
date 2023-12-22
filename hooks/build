@@ -34,6 +34,7 @@ node
 node-kafka
 node-kafka-cache
 node-watchexec
+node-gcloud
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
@@ -46,7 +47,6 @@ runtime-quarkus-deno
 runtime-deno
 git-http-readonly
 headless-chrome
-node-gcloud
 "
 
 XTAG=""
