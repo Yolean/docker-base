@@ -46,6 +46,7 @@ runtime-quarkus-deno
 runtime-deno
 git-http-readonly
 headless-chrome
+node-gcloud
 "
 
 XTAG=""
