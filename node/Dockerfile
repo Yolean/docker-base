@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM node:20.10.0-bookworm-slim@sha256:5c714c3e90f66a2cbfa266b90a4d7adcd63453cd730aa2d13cba84b260bea2e6
+FROM --platform=$TARGETPLATFORM node:20.11.0-bookworm-slim@sha256:2f451571a2e424b7aed654ca404331bf1ebf1ae3b4794bef0618d123d7a670e4
 
 RUN runtimeDeps='procps git curl ca-certificates' \
   && set -ex \
