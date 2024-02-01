@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM maven:3.9.5-eclipse-temurin-21@sha256:e0900e5953fddc181fdbe449ba8c27f124470fb545fbbb29f39f50d6093c9b18 as maven
+FROM --platform=$TARGETPLATFORM maven:3.9.6-eclipse-temurin-21@sha256:a7fc7af5e97f7dc47f36a96fe1a08d7bccb9c5eebdb600522818087e960a3c71 as maven
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
