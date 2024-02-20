@@ -2,7 +2,7 @@ FROM yolean/builder-quarkus as libs
 
 RUN y-deno -V
 
-FROM gcr.io/distroless/static-debian11:nonroot@sha256:80c956fb0836a17a565c43a4026c9c80b2013c83bea09f74fa4da195a59b7a99
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian12:nonroot@sha256:aa09b5ebfd7181b30717b95a057557389135ac4df8aa78dd07ab8b50ca9954c6
 
 COPY --from=libs \
   /usr/lib/x86_64-linux-gnu/libgcc_s.so.* \
