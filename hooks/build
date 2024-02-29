@@ -15,6 +15,10 @@ if [[ ! -z "$SOURCE_COMMIT" ]]; then
   fi
 fi
 
+NOARCH="
+scratch
+"
+
 MULTIARCH_NONROOT="
 builder-base
 builder-base-gcc
@@ -56,6 +60,13 @@ XTAG=""
 cat ./Dockerfile | \
   docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM \
   -t yolean/docker-base -t ${PREFIX}yolean/docker-base:$SOURCE_COMMIT$XTAG -
+
+for CONTEXT in $NOARCH; do
+  ! grep -r ' --platform' ./$CONTEXT
+  cat ./$CONTEXT/Dockerfile | \
+    docker buildx build $BUILDX_PUSH --progress=plain -f - \
+    -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
+done
 
 for CONTEXT in $MULTIARCH_NONROOT; do
   ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')

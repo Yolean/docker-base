@@ -1,0 +1,3 @@
+FROM scratch
+
+USER 65532:65534
