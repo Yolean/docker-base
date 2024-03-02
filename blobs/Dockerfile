@@ -1,10 +1,4 @@
-#
-# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
-#
-# PLEASE DO NOT EDIT IT DIRECTLY.
-#
-
-FROM alpine:3.19
+FROM --platform=$TARGETPLATFORM alpine:3.19@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
 
 RUN set -eux; \
 	apk add --no-cache \
@@ -61,6 +55,8 @@ RUN set -eux; \
 # (has to be set in the config stage for making sure "AUTOCONF_TIMESTAMP" is embedded correctly)
 	\
 	setConfs=' \
+		CONFIG_LS=y \
+		CONFIG_CP=y \
 		CONFIG_AR=y \
 		CONFIG_FEATURE_AR_CREATE=y \
 		CONFIG_FEATURE_AR_LONG_FILENAMES=y \
@@ -79,7 +75,7 @@ RUN set -eux; \
 		CONFIG_FEATURE_WTMP \
 	'; \
 	\
-	make defconfig; \
+	make allnoconfig; \
 	\
 	for conf in $unsetConfs; do \
 		sed -i \
@@ -96,114 +92,30 @@ RUN set -eux; \
 		if ! grep -q "^$confV\$" .config; then \
 			echo "$confV" >> .config; \
 		fi; \
-	done; \
-	\
-	make oldconfig; \
-	\
-# trust, but verify
-	for conf in $unsetConfs; do \
-		! grep -q "^$conf=" .config; \
-	done; \
-	for confV in $setConfs; do \
-		grep -q "^$confV\$" .config; \
-	done
+	done;
 
 RUN set -eux; \
 	nproc="$(nproc)"; \
-	make -j "$nproc" busybox; \
-	./busybox --help; \
-	mkdir -p rootfs/bin; \
-	ln -vL busybox rootfs/bin/; \
-	\
-# copy simplified getconf port from Alpine
-# https://github.com/alpinelinux/aports/commits/HEAD/main/musl/getconf.c
-	curl -fsSL \
-		"https://github.com/alpinelinux/aports/raw/48b16204aeeda5bc1f87e49c6b8e23d9abb07c73/main/musl/getconf.c" \
-		-o /usr/src/getconf.c \
-	; \
-	echo 'd87d0cbb3690ae2c5d8cc218349fd8278b93855dd625deaf7ae50e320aad247c */usr/src/getconf.c' | sha256sum -c -; \
-	gcc -o rootfs/bin/getconf -static -Os /usr/src/getconf.c; \
-	chroot rootfs /bin/getconf _NPROCESSORS_ONLN; \
-	\
-# TODO make this create symlinks instead so the output tarball is cleaner (but "-s" outputs absolute symlinks which is kind of annoying to deal with -- we should also consider letting busybox determine the "install paths"; see "busybox --list-full")
-	chroot rootfs /bin/busybox --install /bin
+	make -j "$nproc" busybox;
 
-# install a few extra files from buildroot (/etc/passwd, etc)
+FROM --platform=$TARGETPLATFORM alpine:3.19@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b as bin
+
+WORKDIR /target
+
+COPY --from=0 /usr/src/busybox/busybox ./busybox
+
 RUN set -eux; \
-	buildrootVersion='2023.11.1'; \
-	for file in \
-		system/device_table.txt \
-		system/skeleton/etc/group \
-		system/skeleton/etc/passwd \
-		system/skeleton/etc/shadow \
-	; do \
-		dir="$(dirname "$file")"; \
-		mkdir -p "../buildroot/$dir"; \
-		curl -fL -o "../buildroot/$file" "https://git.busybox.net/buildroot/plain/$file?id=$buildrootVersion"; \
-		[ -s "../buildroot/$file" ]; \
-	done; \
-	\
-	mkdir -p rootfs/etc; \
-	ln -vL \
-		../buildroot/system/skeleton/etc/group \
-		../buildroot/system/skeleton/etc/passwd \
-		../buildroot/system/skeleton/etc/shadow \
-		rootfs/etc/ \
-	; \
-# CVE-2019-5021, https://github.com/docker-library/official-images/pull/5880#issuecomment-490681907
-	grep -E '^root::' rootfs/etc/shadow; \
-	sed -ri -e 's/^root::/root:*:/' rootfs/etc/shadow; \
-	grep -E '^root:[*]:' rootfs/etc/shadow; \
-# set expected permissions, etc too (https://git.busybox.net/buildroot/tree/system/device_table.txt)
-	awk ' \
-		!/^#/ { \
-			if ($2 != "d" && $2 != "f") { \
-				printf "error: unknown type \"%s\" encountered in line %d: %s\n", $2, NR, $0 > "/dev/stderr"; \
-				exit 1; \
-			} \
-			sub(/^\/?/, "rootfs/", $1); \
-			if ($2 == "d") { \
-				printf "mkdir -p %s\n", $1; \
-			} \
-			printf "chmod %s %s\n", $3, $1; \
-		} \
-	' ../buildroot/system/device_table.txt | sh -eux
+  ln -s ./busybox ./cp; \
+  ln -s ./busybox ./ls; \
+  ls -lh .
 
-# create missing home directories and ensure /usr/bin/env exists
-RUN set -eux; \
-	cd rootfs; \
-	for userHome in $(awk -F ':' '{ print $3 ":" $4 "=" $6 }' etc/passwd); do \
-		user="${userHome%%=*}"; \
-		home="${userHome#*=}"; \
-		home="./${home#/}"; \
-		if [ ! -d "$home" ]; then \
-			mkdir -p "$home"; \
-			chown "$user" "$home"; \
-			chmod 755 "$home"; \
-		fi; \
-	done; \
-	if [ ! -s usr/bin/env ] && [ -s bin/env ]; then \
-		mkdir -p usr/bin; \
-		ln -s ../../bin/env usr/bin/; \
-	fi
-
-# test and make sure it works
-RUN chroot rootfs /usr/bin/env sh -xec 'true'
-
-# ensure correct timezone (UTC)
-RUN set -eux; \
-	ln -vL /usr/share/zoneinfo/UTC rootfs/etc/localtime; \
-	[ "$(chroot rootfs date +%Z)" = 'UTC' ]
-
-# test and make sure DNS works too
-RUN cp -L /etc/resolv.conf rootfs/etc/; \
-	chroot rootfs /bin/sh -xec 'nslookup google.com'; \
-	rm rootfs/etc/resolv.conf
-
-# vim:set ft=dockerfile:
-
-FROM scratch
+FROM --platform=$TARGETPLATFORM scratch
 
 USER 65532:65534
 
-COPY --from=0 . .
+COPY --from=bin /target /bin
+
+WORKDIR /blobs
+ENTRYPOINT [ "/bin/cp" ]
+# our binary has no help section
+CMD [ "requires-cp-args", "/tmp/to/somewhere" ]
