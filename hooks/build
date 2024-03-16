@@ -26,6 +26,7 @@ git-init
 toil
 toil-network
 node-distroless
+blobs
 "
 
 MULTIARCH_TONONROOT="
@@ -42,7 +43,6 @@ toil-storage
 "
 
 AMD64ONLY="
-scratch
 runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
