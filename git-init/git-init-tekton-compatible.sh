@@ -55,4 +55,4 @@ until git fetch --depth=1 origin --update-head-ok --force $REVISION; do
   sleep $wait
 done
 
-git checkout -f $REVISION
+git checkout -f -B $REVISION origin/$REVISION
