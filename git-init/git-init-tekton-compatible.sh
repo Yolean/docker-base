@@ -55,4 +55,6 @@ until git fetch --depth=1 origin --update-head-ok --force $REVISION; do
   sleep $wait
 done
 
-git checkout -f -B $REVISION origin/$REVISION
+git rev-parse --verify "$REVISION^{commit}" 2>/dev/null \
+  && git checkout -f $REVISION \
+  || git checkout -f -B $REVISION origin/$REVISION
