@@ -38,9 +38,10 @@ cd $CLONEPATH
 # https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L94
 git config --add --global safe.directory $CLONEPATH
 
-git init
-
-git remote add origin $URL
+[ -d "$CLONEPATH/.git" ] && git remote -v && git remote set-url origin $URL || {
+  git init
+  git remote add origin $URL
+}
 
 # https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L285
 git config core.sparsecheckout true
