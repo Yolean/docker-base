@@ -38,9 +38,10 @@ cd $CLONEPATH
 # https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L94
 git config --add --global safe.directory $CLONEPATH
 
-git init
-
-git remote add origin $URL
+[ -d "$CLONEPATH/.git" ] && git remote -v && git remote set-url origin $URL || {
+  git init
+  git remote add origin $URL
+}
 
 # https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L285
 git config core.sparsecheckout true
@@ -54,4 +55,6 @@ until git fetch --depth=1 origin --update-head-ok --force $REVISION; do
   sleep $wait
 done
 
-git checkout -f $REVISION
+git show-ref "origin/$REVISION" \
+  && git checkout -f -B $REVISION origin/$REVISION \
+  || git checkout -f $REVISION
