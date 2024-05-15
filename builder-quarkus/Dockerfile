@@ -16,7 +16,7 @@ RUN set -ex; \
   curl -o $MANDREL_DIST -sLSf $MANDREL_DIST_URL; \
   echo "$MANDREL_DIST_SHA256" | sha256sum -c -; \
   mkdir ./mandrel; \
-  cat $MANDREL_DIST | tar xzf - --strip-components=1 -C ./mandrel
+  tar xzf $MANDREL_DIST --strip-components=1 -C ./mandrel
 
 RUN rm -v /home/nonroot/mandrel/lib/src.zip
 
