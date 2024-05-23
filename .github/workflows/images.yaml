@@ -32,3 +32,56 @@ jobs:
       run: |
         TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
+    -
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    -
+      name: Build and push builder-base
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base
+        tags: |
+          ghcr.io/yolean/builder-base:latest
+          ghcr.io/yolean/builder-base:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push builder-base-gcc
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base-gcc
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:latest
+        tags: |
+          ghcr.io/yolean/builder-base-gcc:latest
+          ghcr.io/yolean/builder-base-gcc:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push builder-quarkus
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-quarkus
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:latest
+          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc:latest
+        tags: |
+          ghcr.io/yolean/builder-quarkus:latest
+          ghcr.io/yolean/builder-quarkus:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
