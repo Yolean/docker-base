@@ -23,13 +23,12 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     -
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.15
+        go-version: 1.22
     -
-      uses: imjasonh/setup-crane@v0.1
+      uses: imjasonh/setup-crane@v0.3
     -
-      run: >-
-        crane cp          docker.io/yolean/kafka-keyvalue:7fa31f42731fc20a77988b478a3896732cc3dc88
-          ghcr.io/${{ github.repository }}/kafka-keyvalue:7fa31f42731fc20a77988b478a3896732cc3dc88
-        ;
+      run: |
+        TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
+        crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
