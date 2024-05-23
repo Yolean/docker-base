@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM maven:3.9.6-eclipse-temurin-21@sha256:a7fc7af5e9
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
 ARG JAVA_VERSION=java21
-ARG MANDREL_VERSION=23.1.2.0-Final
+ARG MANDREL_VERSION=23.1.3.1-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \
@@ -16,7 +16,7 @@ RUN set -ex; \
   curl -o $MANDREL_DIST -sLSf $MANDREL_DIST_URL; \
   echo "$MANDREL_DIST_SHA256" | sha256sum -c -; \
   mkdir ./mandrel; \
-  cat $MANDREL_DIST | tar xzf - --strip-components=1 -C ./mandrel
+  tar xzf $MANDREL_DIST --strip-components=1 -C ./mandrel
 
 RUN rm -v /home/nonroot/mandrel/lib/src.zip
 

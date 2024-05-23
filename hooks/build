@@ -54,28 +54,29 @@ XTAG=""
 
 [ -n "$NOPUSH" ] || BUILDX_PUSH="--push"
 
+export SOURCE_DATE_EPOCH=0
+OUTPUT="type=registry,oci-mediatypes=true"
+
 cat ./Dockerfile | \
-  docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM \
+  docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM --output "$OUTPUT" \
   -t yolean/docker-base -t ${PREFIX}yolean/docker-base:$SOURCE_COMMIT$XTAG -
 
 for CONTEXT in $MULTIARCH_NONROOT; do
   ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
   cat ./$CONTEXT/Dockerfile | \
-    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - --output "$OUTPUT" \
     -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
 done
 
 for CONTEXT in $MULTIARCH_TONONROOT; do
   ! (grep -r FROM ./$CONTEXT | grep -v 'FROM --platform=')
   cat ./$CONTEXT/Dockerfile | \
-    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
-    --output type=registry,oci-mediatypes=false \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - --output "$OUTPUT" \
     -t yolean/$CONTEXT:root -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG-root ./$CONTEXT
 done
 for CONTEXT in $MULTIARCH_TONONROOT; do
   cat ./$CONTEXT/Dockerfile ./nonroot-footer.Dockerfile | \
-    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - \
-    --output type=registry,oci-mediatypes=false \
+    docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM -f - --output "$OUTPUT" \
     -t yolean/$CONTEXT -t ${PREFIX}yolean/$CONTEXT:$SOURCE_COMMIT$XTAG ./$CONTEXT
 done
 

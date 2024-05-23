@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM golang:1.21-bookworm@sha256:d8c365d63879c2312e332cb796961f2695dd65124ceb3c0247d9c5426b7dde5f as golang
+FROM --platform=$TARGETPLATFORM golang:1.21-bookworm@sha256:9070cb6a424004bb46987bfee510666a362d6a332a6949b33b2b644a0e21d196 as golang
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base-gcc
 
