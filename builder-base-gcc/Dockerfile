@@ -5,7 +5,7 @@ FROM --platform=$TARGETPLATFORM yolean/builder-base
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='libsnappy1v5 libsnappy-jni liblz4-1 liblz4-jni libzstd1 libfreetype6'; \
+  runDeps='libsnappy1v5 libsnappy-jni liblz4-1 liblz4-jni libzstd1 libfreetype6 fontconfig'; \
   buildDeps='gcc g++ libc-dev make zlib1g-dev libsnappy-dev liblz4-dev libzstd-dev libfreetype6-dev'; \
   apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
