@@ -55,7 +55,7 @@ XTAG=""
 [ -n "$NOPUSH" ] || BUILDX_PUSH="--push"
 
 export SOURCE_DATE_EPOCH=0
-OUTPUT="type=registry,oci-mediatypes=true,rewrite-timestamp=true,unpack=false"
+OUTPUT="type=registry,oci-mediatypes=true"
 
 cat ./Dockerfile | \
   docker buildx build $BUILDX_PUSH --progress=plain $PLATFORM --output "$OUTPUT" \
