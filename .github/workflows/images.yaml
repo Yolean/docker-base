@@ -99,3 +99,17 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    -
+      name: Build and push runtime-quarkus
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: runtime-quarkus
+        tags: |
+          ghcr.io/yolean/runtime-quarkus:latest
+          ghcr.io/yolean/runtime-quarkus:${{ github.sha }}
+        platforms: linux/amd64
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
