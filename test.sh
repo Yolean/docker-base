@@ -28,6 +28,7 @@ toil
 toil-network
 node-distroless
 blobs
+headless-chrome
 "
 
 MULTIARCH_TONONROOT="
@@ -48,7 +49,6 @@ runtime-quarkus
 runtime-quarkus-deno
 runtime-deno
 git-http-readonly
-headless-chrome
 "
 
 BEGIN="    ### build steps below are generated ###"
