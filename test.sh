@@ -55,7 +55,9 @@ for CONTEXT in $MULTIARCH_NONROOT; do
 done
 
 for CONTEXT in $MULTIARCH_TONONROOT; do
-  echo "# MULTIARCH_TONONROOT $CONTEXT"
+  mkdir -p to-nonroot/$CONTEXT
+  echo "FROM --platform=\$TARGETPLATFORM yolean/$CONTEXT:root" > to-nonroot/$CONTEXT/Dockerfile
+  cat nonroot-footer.Dockerfile >> to-nonroot/$CONTEXT/Dockerfile
 done
 
 for CONTEXT in $AMD64ONLY; do
