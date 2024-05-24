@@ -85,3 +85,17 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    -
+      name: Build and push headless-chrome
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: headless-chrome
+        tags: |
+          ghcr.io/yolean/headless-chrome:latest
+          ghcr.io/yolean/headless-chrome:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
