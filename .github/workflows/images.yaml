@@ -41,6 +41,20 @@ jobs:
 
     ### build steps below are generated ###
     -
+      name: Build and push docker-base latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: docker-base
+        tags: |
+          ghcr.io/yolean/docker-base:latest
+          ghcr.io/yolean/docker-base:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
       name: Build and push builder-base latest
       uses: docker/build-push-action@v5
       env:
@@ -410,6 +424,8 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
     -
       name: Build and push runtime-quarkus-ubuntu latest
       uses: docker/build-push-action@v5

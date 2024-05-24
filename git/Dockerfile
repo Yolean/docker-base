@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ubuntu:24.04@sha256:562456a05a0dbd62a671c1854868862a4687bf979a96d48ae8e766642cd911e8
+FROM --platform=$TARGETPLATFORM yolean/docker-base
 
 RUN groupadd --gid 1000 git \
   && useradd --uid 1000 --gid git --shell /bin/bash --create-home git

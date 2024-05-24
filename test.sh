@@ -16,6 +16,7 @@ if [[ ! -z "$SOURCE_COMMIT" ]]; then
 fi
 
 MULTIARCH_NONROOT="
+docker-base
 builder-base
 builder-base-gcc
 builder-base-gcloud
