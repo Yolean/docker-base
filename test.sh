@@ -29,6 +29,8 @@ toil-network
 node-distroless
 blobs
 headless-chrome
+git-http-readonly
+runtime-quarkus
 "
 
 MULTIARCH_TONONROOT="
@@ -44,11 +46,9 @@ runtime-quarkus-dev
 toil-storage
 "
 
-AMD64ONLY="
-runtime-quarkus
+DEPRECATED="
 runtime-quarkus-deno
 runtime-deno
-git-http-readonly
 "
 
 BEGIN="    ### build steps below are generated ###"
@@ -102,10 +102,6 @@ for CONTEXT in $MULTIARCH_TONONROOT; do
   add_dependencies "$CONTEXT" >> $ACTIONS
   base_action "to-nonroot/$CONTEXT" "$CONTEXT" latest >> $ACTIONS
   add_dependencies "to-nonroot/$CONTEXT" >> $ACTIONS
-done
-
-for CONTEXT in $AMD64ONLY; do
-  echo "# TODO does $CONTEXT really need to be amd64-only?" >&2
 done
 
 cp $ACTIONS $CURRENT

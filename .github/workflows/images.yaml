@@ -225,6 +225,50 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     -
+      name: Build and push headless-chrome latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: headless-chrome
+        tags: |
+          ghcr.io/yolean/headless-chrome:latest
+          ghcr.io/yolean/headless-chrome:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+    -
+      name: Build and push git-http-readonly latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: git-http-readonly
+        tags: |
+          ghcr.io/yolean/git-http-readonly:latest
+          ghcr.io/yolean/git-http-readonly:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push runtime-quarkus latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: runtime-quarkus
+        tags: |
+          ghcr.io/yolean/runtime-quarkus:latest
+          ghcr.io/yolean/runtime-quarkus:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
       name: Build and push java root
       uses: docker/build-push-action@v5
       env:

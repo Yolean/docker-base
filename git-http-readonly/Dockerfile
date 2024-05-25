@@ -1,4 +1,4 @@
-FROM httpd:2.4.58-bookworm@sha256:ba846154ade27292d216cce2d21f1c7e589f3b66a4a643bff0cdd348efd17aa3
+FROM --platform=$TARGETPLATFORM httpd:2.4.58-bookworm@sha256:ba846154ade27292d216cce2d21f1c7e589f3b66a4a643bff0cdd348efd17aa3
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
