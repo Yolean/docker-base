@@ -84,3 +84,131 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    -
+      name: Build and push java root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: java
+        tags: |
+          ghcr.io/yolean/java:root
+          ghcr.io/yolean/java:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push java latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/java
+        tags: |
+          ghcr.io/yolean/java:latest
+          ghcr.io/yolean/java:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/java:root=docker-image://ghcr.io/yolean/java:root
+    -
+      name: Build and push runtime-quarkus-ubuntu root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: runtime-quarkus-ubuntu
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+    -
+      name: Build and push runtime-quarkus-ubuntu latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/runtime-quarkus-ubuntu
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-ubuntu:latest
+          ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+    -
+      name: Build and push runtime-quarkus-ubuntu-jre root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: runtime-quarkus-ubuntu-jre
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/java:root=docker-image://ghcr.io/yolean/java:root
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+    -
+      name: Build and push runtime-quarkus-ubuntu-jre latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/runtime-quarkus-ubuntu-jre
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:latest
+          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/runtime-quarkus-ubuntu-jre:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+    -
+      name: Build and push runtime-quarkus-dev root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: runtime-quarkus-dev
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-dev:root
+          ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+    -
+      name: Build and push runtime-quarkus-dev latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/runtime-quarkus-dev
+        tags: |
+          ghcr.io/yolean/runtime-quarkus-dev:latest
+          ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/runtime-quarkus-dev:root=docker-image://ghcr.io/yolean/runtime-quarkus-dev:root
