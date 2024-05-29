@@ -29,7 +29,6 @@ jobs:
     -
       uses: imjasonh/setup-crane@v0.3
     -
-      # note that images added here must be made public manually
       run: |
         TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
         TAG_HOOK=76984f89554bd8b2beadb086edc998cc36ab381c
