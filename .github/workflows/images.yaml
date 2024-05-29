@@ -29,9 +29,14 @@ jobs:
     -
       uses: imjasonh/setup-crane@v0.3
     -
+      # note that images added here must be made public manually
       run: |
         TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
+        TAG_HOOK=76984f89554bd8b2beadb086edc998cc36ab381c
+        TAG_MARIADB=10.11.8-jammy
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
+        crane cp docker.io/yolean/kafka-hook:$TAG_HOOK ghcr.io/yolean/kafka-hook:$TAG_HOOK
+        crane cp mariadb:$TAG_MARIADB ghcr.io/yolean/mariadb:$TAG_MARIADB
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
