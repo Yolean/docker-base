@@ -39,6 +39,7 @@ node
 node-kafka
 node-kafka-cache
 node-watchexec
+node-kafka-watch
 node-gcloud
 runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
