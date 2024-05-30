@@ -34,10 +34,12 @@ jobs:
         TAG_HOOK=76984f89554bd8b2beadb086edc998cc36ab381c
         TAG_KAFKA=2.5.1-kafka-server-start
         TAG_ZOOKEEPER=2.5.1-zookeeper-server-start
+        TAG_INITUTILS=initutils-nonroot@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
         crane cp docker.io/yolean/kafka-hook:$TAG_HOOK ghcr.io/yolean/kafka-hook:$TAG_HOOK
         crane cp solsson/kafka:$TAG_KAFKA ghcr.io/yolean/kafka:$TAG_KAFKA
         crane cp solsson/kafka:$TAG_ZOOKEEPER ghcr.io/yolean/kafka:$TAG_ZOOKEEPER
+        crane cp solsson/kafka:$TAG_INITUTILS ghcr.io/yolean/kafka:$TAG_INITUTILS
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
