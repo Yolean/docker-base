@@ -6,8 +6,9 @@ RUN runtimeDeps='procps git curl ca-certificates' \
   && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
   && rm -rf /var/log/apt /var/log/dpkg.log /var/log/alternatives.log
 
-CMD [ "node" ]
-
 RUN chmod g+w /usr/src && chgrp nogroup /usr/src
 
 ENV npm_config_update_notifier=false
+
+ENTRYPOINT [ "/usr/local/bin/node" ]
+WORKDIR /app
