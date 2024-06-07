@@ -1,6 +1,6 @@
 FROM --platform=$TARGETPLATFORM yolean/docker-base
 ARG chrome_stage=stable
-ARG chrome_build=125.0.6422.112-1
+ARG chrome_build=125.0.6422.141-1
 
 ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
 
