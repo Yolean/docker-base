@@ -1,8 +1,9 @@
 FROM --platform=$TARGETPLATFORM yolean/docker-base
 ARG chrome_stage=stable
-ARG chrome_build=125.0.6422.141-1
+#ARG chrome_pin="=125.0.6422.141-1"
+ARG chrome_pin
 
-ENV CHROME_VERSION="${chrome_stage}=${chrome_build}"
+ENV CHROME_VERSION="${chrome_stage}${chrome_pin}"
 
 # Install deps + add Chrome Stable + purge all the things
 RUN runtimeDeps='procps ca-certificates' \
