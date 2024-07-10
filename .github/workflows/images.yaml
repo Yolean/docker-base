@@ -48,6 +48,7 @@ jobs:
         crane cp envoyproxy/envoy-distroless:$TAG_ENVOY ghcr.io/yolean/envoy-distroless:$TAG_ENVOY
         crane cp curlimages/curl:$TAG_CURL ghcr.io/yolean/curl:$TAG_CURL
         crane cp mailgun/kafka-pixy:0.17.0@sha256:0b5f4795c0b0d80729fa7415ec70ae4d411e152c6149656dddf01b18184792e0 ghcr.io/yolean/kafka-pixy:0.17.0
+        crane cp docker.io/yolean/runtime-deno:2c6e176109a4cb1850cb7f8fa56411d370e3f705@sha256:5aeb0b9191bb8c0f1f4b46fb4e9a03857d5b78007a1b960dcced9404dd368bc9 ghcr.io/yolean/runtime-deno:2c6e176109a4cb1850cb7f8fa56411d370e3f705
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
