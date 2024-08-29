@@ -45,6 +45,7 @@ runtime-quarkus-ubuntu
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
 toil-storage
+curl-yq
 "
 
 DEPRECATED="

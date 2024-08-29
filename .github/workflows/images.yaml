@@ -36,7 +36,7 @@ jobs:
         TAG_ZOOKEEPER=2.5.1-zookeeper-server-start
         TAG_INITUTILS=initutils-nonroot@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
         TAG_ENVOY=v1.31.0
-        TAG_CURL=8.8.0
+        TAG_CURL=8.9.1
         TAG_BUSYBOX=1.36.1-glibc
         TAG_TINYGO=0.32.0
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
@@ -639,3 +639,35 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/toil-storage:root=docker-image://ghcr.io/yolean/toil-storage:root
+    -
+      name: Build and push curl-yq root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: curl-yq
+        tags: |
+          ghcr.io/yolean/curl-yq:root
+          ghcr.io/yolean/curl-yq:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+    -
+      name: Build and push curl-yq latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/curl-yq
+        tags: |
+          ghcr.io/yolean/curl-yq:latest
+          ghcr.io/yolean/curl-yq:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
