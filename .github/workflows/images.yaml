@@ -31,7 +31,7 @@ jobs:
     -
       run: |
         TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
-        TAG_HOOK=92363d7d1771abc780e7559c778215be61f934d4
+        TAG_HOOK=92363d7d1771abc780e7559c778215be61f934d4@sha256:41a147ef46267905b73112b848af75b14c8e1629db5c86b6683ca6c31fc54425
         TAG_KAFKA=2.5.1-kafka-server-start
         TAG_ZOOKEEPER=2.5.1-zookeeper-server-start
         TAG_INITUTILS=initutils-nonroot@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
