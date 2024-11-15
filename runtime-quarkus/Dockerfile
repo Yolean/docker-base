@@ -1,6 +1,6 @@
 # For JNI/snappy such as kafka clients use runtime-quarkus-ubuntu instead
 
-FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian12:nonroot@sha256:e9ac71e2b8e279a8372741b7a0293afda17650d926900233ec3a7b2b7c22a246
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian12:nonroot@sha256:d71f4b239be2d412017b798a0a401c44c3049a3ca454838473a4c32ed076bfea
 
 ENTRYPOINT ["/usr/local/bin/quarkus", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager"]
 CMD ["-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=8080"]
