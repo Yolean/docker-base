@@ -569,6 +569,9 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/runtime-deno=docker-image://ghcr.io/yolean/runtime-deno
+          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu
     -
       name: Build and push runtime-quarkus-deno latest
       uses: docker/build-push-action@v5
