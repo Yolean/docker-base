@@ -1,15 +1,9 @@
-FROM yolean/builder-quarkus as libs
-
-RUN y-deno -V
+FROM denoland/deno:distroless-2.1.1@sha256:8c7fbba4e216e9535ac9869744ce36e225814aa3adc7754fdeb5930a2a86f34f AS deno
 
 FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian12:nonroot@sha256:d71f4b239be2d412017b798a0a401c44c3049a3ca454838473a4c32ed076bfea
 
-COPY --from=libs \
-  /usr/lib/x86_64-linux-gnu/libgcc_s.so.* \
-  /usr/lib/x86_64-linux-gnu/
+COPY --from=deno \
+  /bin/deno /usr/local/bin/deno
 
-COPY --from=libs \
-  /usr/local/src/ystack/bin/deno /deno
-
-ENTRYPOINT ["/deno"]
+ENTRYPOINT ["/usr/local/bin/deno"]
 CMD ["-V"]

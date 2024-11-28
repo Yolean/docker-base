@@ -31,6 +31,7 @@ blobs
 headless-chrome
 git-http-readonly
 runtime-quarkus
+runtime-deno
 "
 
 MULTIARCH_TONONROOT="
@@ -42,6 +43,7 @@ node-watchexec
 node-kafka-watch
 node-gcloud
 runtime-quarkus-ubuntu
+runtime-quarkus-deno
 runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
 toil-storage
