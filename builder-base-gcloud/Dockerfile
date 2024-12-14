@@ -12,7 +12,7 @@ FROM --platform=$TARGETPLATFORM yolean/builder-base
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='python3 rsync'; \
+  runDeps='python3 rsync openssh-client'; \
   \
   apt-get update && apt-get install -y --no-install-recommends $runDeps $buildDeps; \
   \
