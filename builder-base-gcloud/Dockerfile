@@ -1,11 +1,13 @@
-# based on https://hub.docker.com/r/google/cloud-sdk this seems to be the only debian based tag that supports arm
-#FROM --platform=$TARGETPLATFORM google/cloud-sdk:debian_component_based as cloud-sdk
 FROM --platform=$TARGETPLATFORM google/cloud-sdk:slim as cloud-sdk
 
-# RUN mv /google-cloud-sdk /google-cloud-sdk-full \
-#   && mkdir -p /google-cloud-sdk/bin \
-#   && cp /google-cloud-sdk-full/bin/gsutil /google-cloud-sdk/bin/ \
-#   && gsutil version && false
+RUN ls -l /usr/lib/google-cloud-sdk \
+  && ls -l /usr/lib/google-cloud-sdk/platform \
+  && cd /usr/lib/google-cloud-sdk && rm -rf \
+    platform/anthoscli_licenses \
+    platform/bq \
+    platform/bundledpythonunix \
+    platform/ext-runtime \
+    lib/googlecloudsdk/appengine
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base
 
@@ -20,9 +22,9 @@ RUN set -ex; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 USER nonroot:nogroup
 
-COPY --from=cloud-sdk /usr/lib/google-cloud-sdk/platform/gsutil /usr/local/gsutil
-COPY --from=cloud-sdk /usr/lib/google-cloud-sdk/platform/bundledpythonunix /usr/local/bundledpythonunix
+COPY --from=cloud-sdk /usr/lib/google-cloud-sdk /usr/lib/google-cloud-sdk
+COPY --from=cloud-sdk /root/.config/gcloud /home/nonroot/.config/gcloud
 
-ENV PATH="${PATH}:/usr/local/gsutil"
+ENV PATH="${PATH}:/usr/lib/google-cloud-sdk/bin"
 
 RUN gsutil version
