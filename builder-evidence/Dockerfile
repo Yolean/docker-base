@@ -16,7 +16,7 @@ ENV NODE_PATH=/usr/local/lib/node_modules
 RUN npm install -g --ignore-scripts node-gyp@latest
 RUN npm install -g duckdb@latest
 
-FROM --platform=$TARGETPLATFORM yolean/builder-base
+FROM --platform=$TARGETPLATFORM yolean/builder-base-gcloud
 
 RUN y-parquet-tools -h
 COPY --from=node-gyp /usr/local/bin/duckdb /usr/local/bin/duckdb

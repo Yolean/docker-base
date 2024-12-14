@@ -30,11 +30,10 @@ COPY --from=dockerclient /usr/local/bin/* /usr/local/bin/
 COPY --from=dockerclient /usr/local/libexec/docker /usr/local/libexec/docker
 COPY --chown=nonroot:nogroup y-build-* /usr/local/bin/
 
-RUN [ "$PATH" = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin" ]
 ENV \
   CI=true \
   GRAALVM_HOME=/opt/mandrel \
   JAVA_HOME=/opt/mandrel \
   MAVEN_HOME=/usr/share/maven \
   MAVEN_CONFIG=/home/nonroot/.m2 \
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/ystack/bin:/usr/share/maven/bin:/opt/mandrel/bin
+  PATH="${PATH}:/usr/share/maven/bin:/opt/mandrel/bin"

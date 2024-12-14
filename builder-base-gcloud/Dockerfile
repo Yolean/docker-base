@@ -1,20 +1,28 @@
+# based on https://hub.docker.com/r/google/cloud-sdk this seems to be the only debian based tag that supports arm
+#FROM --platform=$TARGETPLATFORM google/cloud-sdk:debian_component_based as cloud-sdk
+FROM --platform=$TARGETPLATFORM google/cloud-sdk:slim as cloud-sdk
+
+# RUN mv /google-cloud-sdk /google-cloud-sdk-full \
+#   && mkdir -p /google-cloud-sdk/bin \
+#   && cp /google-cloud-sdk-full/bin/gsutil /google-cloud-sdk/bin/ \
+#   && gsutil version && false
+
 FROM --platform=$TARGETPLATFORM yolean/builder-base
 
 USER root
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
-  runDeps='python3 google-cloud-cli rsync'; \
-  buildDeps='gnupg2'; \
-  \
-  apt-get update && apt-get install -y --no-install-recommends $buildDeps; \
-  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list; \
-  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor > /usr/share/keyrings/cloud.google.gpg; \
+  runDeps='python3 rsync'; \
   \
   apt-get update && apt-get install -y --no-install-recommends $runDeps $buildDeps; \
-  gcloud version; \
-  gsutil version; \
   \
-  apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 USER nonroot:nogroup
+
+COPY --from=cloud-sdk /usr/lib/google-cloud-sdk/platform/gsutil /usr/local/gsutil
+COPY --from=cloud-sdk /usr/lib/google-cloud-sdk/platform/bundledpythonunix /usr/local/bundledpythonunix
+
+ENV PATH="${PATH}:/usr/local/gsutil"
+
+RUN gsutil version
