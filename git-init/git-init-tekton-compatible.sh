@@ -31,7 +31,7 @@ REVISION="$4"
 CLONEPATH="$6"
 [ -z "$CLONEPATH" ] && echo "Sixth arg should be clonepath" && exit 1
 
-[ -d $CLONEPATH ] || mkdir -p $CLONEPATH
+[ -d $CLONEPATH ] || mkdir -m 775 -p $CLONEPATH
 
 cd $CLONEPATH
 
