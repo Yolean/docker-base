@@ -31,12 +31,9 @@ REVISION="$4"
 CLONEPATH="$6"
 [ -z "$CLONEPATH" ] && echo "Sixth arg should be clonepath" && exit 1
 
-[ -d $CLONEPATH ] || mkdir -m 775 -p $CLONEPATH
+[ -d $CLONEPATH ] || mkdir -m 700 -p $CLONEPATH
 
 cd $CLONEPATH
-
-# https://github.com/tektoncd/pipeline/blob/v0.41.0/pkg/git/git.go#L94
-git config --add --global safe.directory $CLONEPATH
 
 [ -d "$CLONEPATH/.git" ] && git remote -v && git remote set-url origin $URL || {
   git init
