@@ -40,6 +40,7 @@ jobs:
         TAG_CURL=8.9.1
         TAG_BUSYBOX=1.36.1-glibc
         TAG_TINYGO=0.32.0
+        crane cp yolean/node:6d1e70d271d9e3747e597e7098a4ee3553a00546 ghcr.io/yolean/node:6d1e70d271d9e3747e597e7098a4ee3553a00546
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
         crane digest docker.io/yolean/kafka-hook:$TAG_HOOK
         crane cp docker.io/yolean/kafka-hook:$TAG_HOOK ghcr.io/yolean/kafka-hook:$TAG_HOOK
