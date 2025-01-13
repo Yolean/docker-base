@@ -16,44 +16,15 @@ if [[ ! -z "$SOURCE_COMMIT" ]]; then
 fi
 
 MULTIARCH_NONROOT="
-docker-base
-builder-base
-builder-base-gcc
-builder-base-gcloud
-builder-tooling
-builder-node
-builder-quarkus
-builder-evidence
-git-init
-toil
-toil-network
-node-distroless
-blobs
-headless-chrome
-git-http-readonly
-runtime-quarkus
-runtime-deno
 "
 
 MULTIARCH_TONONROOT="
-java
 node
 node-kafka
 node-kafka-cache
-node-watchexec
-node-kafka-watch
-node-gcloud
-runtime-quarkus-ubuntu
-runtime-quarkus-deno
-runtime-quarkus-ubuntu-jre
-runtime-quarkus-dev
-toil-storage
-curl-yq
 "
 
 DEPRECATED="
-runtime-quarkus-deno
-runtime-deno
 "
 
 BEGIN="    ### build steps below are generated ###"
