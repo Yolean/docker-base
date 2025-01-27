@@ -446,6 +446,38 @@ jobs:
         build-contexts: |
           yolean/node-kafka-cache:root=docker-image://ghcr.io/yolean/node-kafka-cache:root
     -
+      name: Build and push node-kafka-sqlite root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: node-kafka-sqlite
+        tags: |
+          ghcr.io/yolean/node-kafka-sqlite:root
+          ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+    -
+      name: Build and push node-kafka-sqlite latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/node-kafka-sqlite
+        tags: |
+          ghcr.io/yolean/node-kafka-sqlite:latest
+          ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node-kafka-sqlite:root=docker-image://ghcr.io/yolean/node-kafka-sqlite:root
+    -
       name: Build and push node-watchexec root
       uses: docker/build-push-action@v5
       env:

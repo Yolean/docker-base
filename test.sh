@@ -40,6 +40,7 @@ java
 node
 node-kafka
 node-kafka-cache
+node-kafka-sqlite
 node-watchexec
 node-kafka-watch
 node-gcloud
