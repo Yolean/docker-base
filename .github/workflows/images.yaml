@@ -541,6 +541,38 @@ jobs:
         build-contexts: |
           yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:root
     -
+      name: Build and push node-vitest root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: node-vitest
+        tags: |
+          ghcr.io/yolean/node-vitest:root
+          ghcr.io/yolean/node-vitest:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+    -
+      name: Build and push node-vitest latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/node-vitest
+        tags: |
+          ghcr.io/yolean/node-vitest:latest
+          ghcr.io/yolean/node-vitest:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:root
+    -
       name: Build and push runtime-quarkus-ubuntu root
       uses: docker/build-push-action@v5
       env:
