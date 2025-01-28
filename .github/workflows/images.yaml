@@ -527,38 +527,6 @@ jobs:
         build-contexts: |
           yolean/node-kafka-watch:root=docker-image://ghcr.io/yolean/node-kafka-watch:root
     -
-      name: Build and push node-gcloud root
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: node-gcloud
-        tags: |
-          ghcr.io/yolean/node-gcloud:root
-          ghcr.io/yolean/node-gcloud:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
-    -
-      name: Build and push node-gcloud latest
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: to-nonroot/node-gcloud
-        tags: |
-          ghcr.io/yolean/node-gcloud:latest
-          ghcr.io/yolean/node-gcloud:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:root
-    -
       name: Build and push node-vitest root
       uses: docker/build-push-action@v5
       env:
