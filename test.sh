@@ -28,7 +28,6 @@ git-init
 toil
 toil-network
 node-distroless
-blobs
 headless-chrome
 git-http-readonly
 runtime-quarkus
