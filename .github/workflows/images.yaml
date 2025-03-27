@@ -802,6 +802,7 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
     -
       name: Build and push duckdb latest
       uses: docker/build-push-action@v5
