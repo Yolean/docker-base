@@ -368,38 +368,6 @@ jobs:
         build-contexts: |
           yolean/node:root=docker-image://ghcr.io/yolean/node:root
     -
-      name: Build and push node-vitest root
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: node-vitest
-        tags: |
-          ghcr.io/yolean/node-vitest:root
-          ghcr.io/yolean/node-vitest:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
-    -
-      name: Build and push node-vitest latest
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: to-nonroot/node-vitest
-        tags: |
-          ghcr.io/yolean/node-vitest:latest
-          ghcr.io/yolean/node-vitest:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:root
-    -
       name: Build and push node-kafka root
       uses: docker/build-push-action@v5
       env:
@@ -558,6 +526,70 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/node-kafka-watch:root=docker-image://ghcr.io/yolean/node-kafka-watch:root
+    -
+      name: Build and push node-gcloud root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: node-gcloud
+        tags: |
+          ghcr.io/yolean/node-gcloud:root
+          ghcr.io/yolean/node-gcloud:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+    -
+      name: Build and push node-gcloud latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/node-gcloud
+        tags: |
+          ghcr.io/yolean/node-gcloud:latest
+          ghcr.io/yolean/node-gcloud:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:root
+    -
+      name: Build and push node-vitest root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: node-vitest
+        tags: |
+          ghcr.io/yolean/node-vitest:root
+          ghcr.io/yolean/node-vitest:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+    -
+      name: Build and push node-vitest latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/node-vitest
+        tags: |
+          ghcr.io/yolean/node-vitest:latest
+          ghcr.io/yolean/node-vitest:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:root
     -
       name: Build and push runtime-quarkus-ubuntu root
       uses: docker/build-push-action@v5
@@ -755,16 +787,34 @@ jobs:
         build-contexts: |
           yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
     -
-      name: Build and push blobs latest
+      name: Build and push duckdb root
       uses: docker/build-push-action@v5
       env:
         SOURCE_DATE_EPOCH: 0
       with:
-        context: blobs
+        context: duckdb
         tags: |
-          ghcr.io/yolean/blobs:latest
-          ghcr.io/yolean/blobs:${{ github.sha }}
+          ghcr.io/yolean/duckdb:root
+          ghcr.io/yolean/duckdb:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+    -
+      name: Build and push duckdb latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/duckdb
+        tags: |
+          ghcr.io/yolean/duckdb:latest
+          ghcr.io/yolean/duckdb:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root

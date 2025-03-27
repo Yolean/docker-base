@@ -50,6 +50,7 @@ runtime-quarkus-ubuntu-jre
 runtime-quarkus-dev
 toil-storage
 curl-yq
+duckdb
 "
 
 DEPRECATED="
