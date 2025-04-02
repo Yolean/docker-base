@@ -77,19 +77,37 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     -
-      name: Build and push builder-base latest
+      name: Build and push homedir root
       uses: docker/build-push-action@v5
       env:
         SOURCE_DATE_EPOCH: 0
       with:
-        context: builder-base
+        context: homedir
         tags: |
-          ghcr.io/yolean/builder-base:latest
-          ghcr.io/yolean/builder-base:${{ github.sha }}
+          ghcr.io/yolean/homedir:root
+          ghcr.io/yolean/homedir:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+    -
+      name: Build and push homedir latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/homedir
+        tags: |
+          ghcr.io/yolean/homedir:latest
+          ghcr.io/yolean/homedir:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:root
     -
       name: Build and push duckdb root
       uses: docker/build-push-action@v5
@@ -105,7 +123,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-contexts: |
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/homedir=docker-image://ghcr.io/yolean/homedir
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
     -
       name: Build and push duckdb latest
@@ -123,6 +141,20 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root
+    -
+      name: Build and push builder-base latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base
+        tags: |
+          ghcr.io/yolean/builder-base:latest
+          ghcr.io/yolean/builder-base:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
     -
       name: Build and push builder-base-gcc latest
       uses: docker/build-push-action@v5
