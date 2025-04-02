@@ -15,7 +15,7 @@ RUN set -ex; \
 RUN echo '#!/bin/sh' > /tmp/xdg-open && chmod u+x /tmp/xdg-open
 
 # TODO needs a bit more distro than gcr.io/distroless/base but not this much
-FROM --platform=$TARGETPLATFORM yolean/docker-base
+FROM --platform=$TARGETPLATFORM yolean/homedir
 
 # TODO note
 # Failed to download extension "ui" at URL "http://extensions.duckdb.org/v1.2.1/linux_arm64_gcc4/ui.duckdb_extension.gz" (HTTP 403)

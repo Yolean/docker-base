@@ -15,6 +15,7 @@ if [[ ! -z "$SOURCE_COMMIT" ]]; then
   fi
 fi
 
+# note that docker-base isn't actually nonroot, we just want to build that first
 MULTIARCH_NONROOT="
 docker-base
 builder-base
@@ -35,6 +36,7 @@ runtime-deno
 "
 
 MULTIARCH_TONONROOT="
+homedir
 java
 node
 node-kafka
