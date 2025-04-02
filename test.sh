@@ -91,7 +91,7 @@ EOF
 
 function add_dependencies {
   local CONTEXT=$1
-  local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
+  local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' -e 'FROM --platform=$BUILDPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
   [ -z "$DEPENDENCIES" ] || echo "        build-contexts: |"
   for NAME in $DEPENDENCIES; do
     echo "          $NAME=docker-image://ghcr.io/$NAME"

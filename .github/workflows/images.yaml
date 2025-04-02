@@ -77,71 +77,6 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     -
-      name: Build and push homedir root
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: homedir
-        tags: |
-          ghcr.io/yolean/homedir:root
-          ghcr.io/yolean/homedir:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
-    -
-      name: Build and push homedir latest
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: to-nonroot/homedir
-        tags: |
-          ghcr.io/yolean/homedir:latest
-          ghcr.io/yolean/homedir:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:root
-    -
-      name: Build and push duckdb root
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: duckdb
-        tags: |
-          ghcr.io/yolean/duckdb:root
-          ghcr.io/yolean/duckdb:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/homedir=docker-image://ghcr.io/yolean/homedir
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-    -
-      name: Build and push duckdb latest
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: to-nonroot/duckdb
-        tags: |
-          ghcr.io/yolean/duckdb:latest
-          ghcr.io/yolean/duckdb:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root
-    -
       name: Build and push builder-base latest
       uses: docker/build-push-action@v5
       env:
@@ -372,6 +307,38 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    -
+      name: Build and push homedir root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: homedir
+        tags: |
+          ghcr.io/yolean/homedir:root
+          ghcr.io/yolean/homedir:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+    -
+      name: Build and push homedir latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/homedir
+        tags: |
+          ghcr.io/yolean/homedir:latest
+          ghcr.io/yolean/homedir:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:root
     -
       name: Build and push java root
       uses: docker/build-push-action@v5
@@ -851,3 +818,36 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
+    -
+      name: Build and push duckdb root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: duckdb
+        tags: |
+          ghcr.io/yolean/duckdb:root
+          ghcr.io/yolean/duckdb:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/homedir=docker-image://ghcr.io/yolean/homedir
+    -
+      name: Build and push duckdb latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/duckdb
+        tags: |
+          ghcr.io/yolean/duckdb:latest
+          ghcr.io/yolean/duckdb:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root
