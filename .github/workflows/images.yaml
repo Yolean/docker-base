@@ -77,6 +77,116 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     -
+      name: Build and push builder-base latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base
+        tags: |
+          ghcr.io/yolean/builder-base:latest
+          ghcr.io/yolean/builder-base:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push builder-base-gcc latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base-gcc
+        tags: |
+          ghcr.io/yolean/builder-base-gcc:latest
+          ghcr.io/yolean/builder-base-gcc:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+    -
+      name: Build and push builder-base-gcloud latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-base-gcloud
+        tags: |
+          ghcr.io/yolean/builder-base-gcloud:latest
+          ghcr.io/yolean/builder-base-gcloud:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+    -
+      name: Build and push builder-tooling latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-tooling
+        tags: |
+          ghcr.io/yolean/builder-tooling:latest
+          ghcr.io/yolean/builder-tooling:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+    -
+      name: Build and push builder-node latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-node
+        tags: |
+          ghcr.io/yolean/builder-node:latest
+          ghcr.io/yolean/builder-node:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    -
+      name: Build and push builder-quarkus latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-quarkus
+        tags: |
+          ghcr.io/yolean/builder-quarkus:latest
+          ghcr.io/yolean/builder-quarkus:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+    -
+      name: Build and push builder-evidence latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: builder-evidence
+        tags: |
+          ghcr.io/yolean/builder-evidence:latest
+          ghcr.io/yolean/builder-evidence:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+          yolean/builder-base-gcloud=docker-image://ghcr.io/yolean/builder-base-gcloud
+    -
       name: Build and push git-init latest
       uses: docker/build-push-action@v5
       env:
