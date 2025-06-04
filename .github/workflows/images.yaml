@@ -40,6 +40,7 @@ jobs:
         TAG_CURL=8.9.1
         TAG_BUSYBOX=1.36.1-glibc
         TAG_TINYGO=0.32.0
+        TAG_KAFKACAT=1.7.0@sha256:8658c1fa53632764bfcc3f9fad3dbf8b1d1a74f05244cd3a0ce9825e3344dc98
         crane cp docker.io/yolean/kafka-keyvalue:$TAG_KKV ghcr.io/yolean/kafka-keyvalue:$TAG_KKV
         crane digest docker.io/yolean/kafka-hook:$TAG_HOOK
         crane cp docker.io/yolean/kafka-hook:$TAG_HOOK ghcr.io/yolean/kafka-hook:$TAG_HOOK
@@ -54,6 +55,7 @@ jobs:
         crane cp busybox:$TAG_BUSYBOX ghcr.io/yolean/busybox:$TAG_BUSYBOX
         crane cp mailgun/kafka-pixy:0.17.0@sha256:0b5f4795c0b0d80729fa7415ec70ae4d411e152c6149656dddf01b18184792e0 ghcr.io/yolean/kafka-pixy:0.17.0
         crane cp tinygo/tinygo:$TAG_TINYGO ghcr.io/yolean/tinygo:$TAG_TINYGO
+        crane cp liftm/kafkacat:$TAG_KAFKACAT ghcr.io/yolean/kafkacat:$TAG_KAFKACAT
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
