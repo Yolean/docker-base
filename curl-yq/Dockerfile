@@ -1,4 +1,4 @@
-ARG TAG_CURL=8.9.1
+ARG TAG_CURL=8.14.1
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as ystack-runner
 

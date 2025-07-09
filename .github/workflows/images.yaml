@@ -37,7 +37,7 @@ jobs:
         TAG_ZOOKEEPER=2.5.1-zookeeper-server-start
         TAG_INITUTILS=initutils-nonroot@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
         TAG_ENVOY=v1.34.1
-        TAG_CURL=8.9.1
+        TAG_CURL=8.14.1
         TAG_BUSYBOX=1.36.1-glibc
         TAG_TINYGO=0.32.0
         TAG_KAFKACAT=1.7.0@sha256:8658c1fa53632764bfcc3f9fad3dbf8b1d1a74f05244cd3a0ce9825e3344dc98
