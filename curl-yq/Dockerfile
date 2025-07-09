@@ -11,3 +11,4 @@ ENTRYPOINT ["/usr/bin/curl"]
 
 # so we get root/nonroot build
 USER root
+RUN apk add --no-cache bash
