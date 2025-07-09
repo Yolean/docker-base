@@ -93,6 +93,38 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     -
+      name: Build and push curl-yq root
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: curl-yq
+        tags: |
+          ghcr.io/yolean/curl-yq:root
+          ghcr.io/yolean/curl-yq:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+    -
+      name: Build and push curl-yq latest
+      uses: docker/build-push-action@v5
+      env:
+        SOURCE_DATE_EPOCH: 0
+      with:
+        context: to-nonroot/curl-yq
+        tags: |
+          ghcr.io/yolean/curl-yq:latest
+          ghcr.io/yolean/curl-yq:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-contexts: |
+          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
+    -
       name: Build and push builder-base-gcc latest
       uses: docker/build-push-action@v5
       env:
@@ -788,38 +820,6 @@ jobs:
         cache-to: type=gha,mode=max
         build-contexts: |
           yolean/toil-storage:root=docker-image://ghcr.io/yolean/toil-storage:root
-    -
-      name: Build and push curl-yq root
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: curl-yq
-        tags: |
-          ghcr.io/yolean/curl-yq:root
-          ghcr.io/yolean/curl-yq:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-    -
-      name: Build and push curl-yq latest
-      uses: docker/build-push-action@v5
-      env:
-        SOURCE_DATE_EPOCH: 0
-      with:
-        context: to-nonroot/curl-yq
-        tags: |
-          ghcr.io/yolean/curl-yq:latest
-          ghcr.io/yolean/curl-yq:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-contexts: |
-          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
     -
       name: Build and push duckdb root
       uses: docker/build-push-action@v5
