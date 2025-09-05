@@ -96,8 +96,6 @@ function base_action {
           type=gha,scope=$CACHE_KEY_PREFIX
           type=gha,scope=buildx-$NAME
         cache-to: type=gha,mode=max,scope=$CACHE_KEY_PREFIX
-        provenance: false
-        sbom: false
 EOF
   
   # Add build-contexts if there are dependencies

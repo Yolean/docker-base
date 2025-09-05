@@ -92,8 +92,6 @@ jobs:
           type=gha,scope=buildx-docker-base-latest
           type=gha,scope=buildx-docker-base
         cache-to: type=gha,mode=max,scope=buildx-docker-base-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -114,8 +112,6 @@ jobs:
           type=gha,scope=buildx-builder-base-latest
           type=gha,scope=buildx-builder-base
         cache-to: type=gha,mode=max,scope=buildx-builder-base-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -136,8 +132,6 @@ jobs:
           type=gha,scope=buildx-builder-base-gcc-latest
           type=gha,scope=buildx-builder-base-gcc
         cache-to: type=gha,mode=max,scope=buildx-builder-base-gcc-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
       continue-on-error: false
@@ -160,8 +154,6 @@ jobs:
           type=gha,scope=buildx-builder-base-gcloud-latest
           type=gha,scope=buildx-builder-base-gcloud
         cache-to: type=gha,mode=max,scope=buildx-builder-base-gcloud-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
       continue-on-error: false
@@ -184,8 +176,6 @@ jobs:
           type=gha,scope=buildx-builder-tooling-latest
           type=gha,scope=buildx-builder-tooling
         cache-to: type=gha,mode=max,scope=buildx-builder-tooling-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
       continue-on-error: false
@@ -208,8 +198,6 @@ jobs:
           type=gha,scope=buildx-builder-node-latest
           type=gha,scope=buildx-builder-node
         cache-to: type=gha,mode=max,scope=buildx-builder-node-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -230,8 +218,6 @@ jobs:
           type=gha,scope=buildx-builder-quarkus-latest
           type=gha,scope=buildx-builder-quarkus
         cache-to: type=gha,mode=max,scope=buildx-builder-quarkus-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
@@ -255,8 +241,6 @@ jobs:
           type=gha,scope=buildx-builder-evidence-latest
           type=gha,scope=buildx-builder-evidence
         cache-to: type=gha,mode=max,scope=buildx-builder-evidence-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
           yolean/builder-base-gcloud=docker-image://ghcr.io/yolean/builder-base-gcloud
@@ -280,8 +264,6 @@ jobs:
           type=gha,scope=buildx-git-init-latest
           type=gha,scope=buildx-git-init
         cache-to: type=gha,mode=max,scope=buildx-git-init-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
       continue-on-error: false
@@ -304,8 +286,6 @@ jobs:
           type=gha,scope=buildx-toil-latest
           type=gha,scope=buildx-toil
         cache-to: type=gha,mode=max,scope=buildx-toil-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
@@ -329,8 +309,6 @@ jobs:
           type=gha,scope=buildx-toil-network-latest
           type=gha,scope=buildx-toil-network
         cache-to: type=gha,mode=max,scope=buildx-toil-network-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/toil=docker-image://ghcr.io/yolean/toil
       continue-on-error: false
@@ -353,8 +331,6 @@ jobs:
           type=gha,scope=buildx-node-distroless-latest
           type=gha,scope=buildx-node-distroless
         cache-to: type=gha,mode=max,scope=buildx-node-distroless-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -375,8 +351,6 @@ jobs:
           type=gha,scope=buildx-headless-chrome-latest
           type=gha,scope=buildx-headless-chrome
         cache-to: type=gha,mode=max,scope=buildx-headless-chrome-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
       continue-on-error: false
@@ -399,8 +373,6 @@ jobs:
           type=gha,scope=buildx-git-http-readonly-latest
           type=gha,scope=buildx-git-http-readonly
         cache-to: type=gha,mode=max,scope=buildx-git-http-readonly-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -421,8 +393,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-latest
           type=gha,scope=buildx-runtime-quarkus
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -443,8 +413,6 @@ jobs:
           type=gha,scope=buildx-runtime-deno-latest
           type=gha,scope=buildx-runtime-deno
         cache-to: type=gha,mode=max,scope=buildx-runtime-deno-latest
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -465,8 +433,6 @@ jobs:
           type=gha,scope=buildx-homedir-root
           type=gha,scope=buildx-homedir
         cache-to: type=gha,mode=max,scope=buildx-homedir-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
       continue-on-error: false
@@ -489,8 +455,6 @@ jobs:
           type=gha,scope=buildx-homedir-latest
           type=gha,scope=buildx-homedir
         cache-to: type=gha,mode=max,scope=buildx-homedir-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/homedir=docker-image://ghcr.io/yolean/homedir:root
       continue-on-error: false
@@ -513,8 +477,6 @@ jobs:
           type=gha,scope=buildx-java-root
           type=gha,scope=buildx-java
         cache-to: type=gha,mode=max,scope=buildx-java-root
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -535,8 +497,6 @@ jobs:
           type=gha,scope=buildx-java-latest
           type=gha,scope=buildx-java
         cache-to: type=gha,mode=max,scope=buildx-java-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/java=docker-image://ghcr.io/yolean/java:root
       continue-on-error: false
@@ -559,8 +519,6 @@ jobs:
           type=gha,scope=buildx-node-root
           type=gha,scope=buildx-node
         cache-to: type=gha,mode=max,scope=buildx-node-root
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -581,8 +539,6 @@ jobs:
           type=gha,scope=buildx-node-latest
           type=gha,scope=buildx-node
         cache-to: type=gha,mode=max,scope=buildx-node-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node=docker-image://ghcr.io/yolean/node:root
       continue-on-error: false
@@ -605,8 +561,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-root
           type=gha,scope=buildx-node-kafka
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node=docker-image://ghcr.io/yolean/node:root
       continue-on-error: false
@@ -629,8 +583,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-latest
           type=gha,scope=buildx-node-kafka
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
       continue-on-error: false
@@ -653,8 +605,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-cache-root
           type=gha,scope=buildx-node-kafka-cache
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-cache-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
       continue-on-error: false
@@ -677,8 +627,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-cache-latest
           type=gha,scope=buildx-node-kafka-cache
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-cache-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka-cache=docker-image://ghcr.io/yolean/node-kafka-cache:root
       continue-on-error: false
@@ -701,8 +649,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-sqlite-root
           type=gha,scope=buildx-node-kafka-sqlite
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-sqlite-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
       continue-on-error: false
@@ -725,8 +671,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-sqlite-latest
           type=gha,scope=buildx-node-kafka-sqlite
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-sqlite-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka-sqlite=docker-image://ghcr.io/yolean/node-kafka-sqlite:root
       continue-on-error: false
@@ -749,8 +693,6 @@ jobs:
           type=gha,scope=buildx-node-watchexec-root
           type=gha,scope=buildx-node-watchexec
         cache-to: type=gha,mode=max,scope=buildx-node-watchexec-root
-        provenance: false
-        sbom: false
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -771,8 +713,6 @@ jobs:
           type=gha,scope=buildx-node-watchexec-latest
           type=gha,scope=buildx-node-watchexec
         cache-to: type=gha,mode=max,scope=buildx-node-watchexec-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-watchexec=docker-image://ghcr.io/yolean/node-watchexec:root
       continue-on-error: false
@@ -795,8 +735,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-watch-root
           type=gha,scope=buildx-node-kafka-watch
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-watch-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-watchexec=docker-image://ghcr.io/yolean/node-watchexec:root
           yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
@@ -820,8 +758,6 @@ jobs:
           type=gha,scope=buildx-node-kafka-watch-latest
           type=gha,scope=buildx-node-kafka-watch
         cache-to: type=gha,mode=max,scope=buildx-node-kafka-watch-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-kafka-watch=docker-image://ghcr.io/yolean/node-kafka-watch:root
       continue-on-error: false
@@ -844,8 +780,6 @@ jobs:
           type=gha,scope=buildx-node-gcloud-root
           type=gha,scope=buildx-node-gcloud
         cache-to: type=gha,mode=max,scope=buildx-node-gcloud-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node=docker-image://ghcr.io/yolean/node:root
       continue-on-error: false
@@ -868,8 +802,6 @@ jobs:
           type=gha,scope=buildx-node-gcloud-latest
           type=gha,scope=buildx-node-gcloud
         cache-to: type=gha,mode=max,scope=buildx-node-gcloud-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-gcloud=docker-image://ghcr.io/yolean/node-gcloud:root
       continue-on-error: false
@@ -892,8 +824,6 @@ jobs:
           type=gha,scope=buildx-node-vitest-root
           type=gha,scope=buildx-node-vitest
         cache-to: type=gha,mode=max,scope=buildx-node-vitest-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node=docker-image://ghcr.io/yolean/node:root
       continue-on-error: false
@@ -916,8 +846,6 @@ jobs:
           type=gha,scope=buildx-node-vitest-latest
           type=gha,scope=buildx-node-vitest
         cache-to: type=gha,mode=max,scope=buildx-node-vitest-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/node-vitest=docker-image://ghcr.io/yolean/node-vitest:root
       continue-on-error: false
@@ -940,8 +868,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-ubuntu-root
           type=gha,scope=buildx-runtime-quarkus-ubuntu
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
       continue-on-error: false
@@ -964,8 +890,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-ubuntu-latest
           type=gha,scope=buildx-runtime-quarkus-ubuntu
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
       continue-on-error: false
@@ -988,8 +912,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-deno-root
           type=gha,scope=buildx-runtime-quarkus-deno
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-deno-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/runtime-deno=docker-image://ghcr.io/yolean/runtime-deno
           yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu
@@ -1013,8 +935,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-deno-latest
           type=gha,scope=buildx-runtime-quarkus-deno
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-deno-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/runtime-quarkus-deno=docker-image://ghcr.io/yolean/runtime-quarkus-deno:root
       continue-on-error: false
@@ -1037,8 +957,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-ubuntu-jre-root
           type=gha,scope=buildx-runtime-quarkus-ubuntu-jre
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-jre-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/java=docker-image://ghcr.io/yolean/java:root
           yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
@@ -1062,8 +980,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-ubuntu-jre-latest
           type=gha,scope=buildx-runtime-quarkus-ubuntu-jre
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-jre-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/runtime-quarkus-ubuntu-jre=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
       continue-on-error: false
@@ -1086,8 +1002,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-dev-root
           type=gha,scope=buildx-runtime-quarkus-dev
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-dev-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
           yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
@@ -1111,8 +1025,6 @@ jobs:
           type=gha,scope=buildx-runtime-quarkus-dev-latest
           type=gha,scope=buildx-runtime-quarkus-dev
         cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-dev-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/runtime-quarkus-dev=docker-image://ghcr.io/yolean/runtime-quarkus-dev:root
       continue-on-error: false
@@ -1135,8 +1047,6 @@ jobs:
           type=gha,scope=buildx-toil-storage-root
           type=gha,scope=buildx-toil-storage
         cache-to: type=gha,mode=max,scope=buildx-toil-storage-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/toil=docker-image://ghcr.io/yolean/toil
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
@@ -1160,8 +1070,6 @@ jobs:
           type=gha,scope=buildx-toil-storage-latest
           type=gha,scope=buildx-toil-storage
         cache-to: type=gha,mode=max,scope=buildx-toil-storage-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/toil-storage=docker-image://ghcr.io/yolean/toil-storage:root
       continue-on-error: false
@@ -1184,8 +1092,6 @@ jobs:
           type=gha,scope=buildx-curl-yq-root
           type=gha,scope=buildx-curl-yq
         cache-to: type=gha,mode=max,scope=buildx-curl-yq-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
       continue-on-error: false
@@ -1208,8 +1114,6 @@ jobs:
           type=gha,scope=buildx-curl-yq-latest
           type=gha,scope=buildx-curl-yq
         cache-to: type=gha,mode=max,scope=buildx-curl-yq-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/curl-yq=docker-image://ghcr.io/yolean/curl-yq:root
       continue-on-error: false
@@ -1232,8 +1136,6 @@ jobs:
           type=gha,scope=buildx-duckdb-root
           type=gha,scope=buildx-duckdb
         cache-to: type=gha,mode=max,scope=buildx-duckdb-root
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/homedir=docker-image://ghcr.io/yolean/homedir
@@ -1257,8 +1159,6 @@ jobs:
           type=gha,scope=buildx-duckdb-latest
           type=gha,scope=buildx-duckdb
         cache-to: type=gha,mode=max,scope=buildx-duckdb-latest
-        provenance: false
-        sbom: false
         build-contexts: |
           yolean/duckdb=docker-image://ghcr.io/yolean/duckdb:root
       continue-on-error: false
