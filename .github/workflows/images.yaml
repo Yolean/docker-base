@@ -4,6 +4,13 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild all images'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   publish:
@@ -11,13 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+      contents: read
+      attestations: write
+      id-token: write
     steps:
     -
       name: Checkout
       uses: actions/checkout@v4
     -
       name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
+      uses: docker/login-action@v3.5.0
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
@@ -58,17 +68,19 @@ jobs:
         crane cp liftm/kafkacat:$TAG_KAFKACAT ghcr.io/yolean/kafkacat:$TAG_KAFKACAT
     -
       name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+      uses: docker/setup-qemu-action@v3.6.0
     -
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v3.11.1
 
     ### build steps below are generated ###
     -
       name: Build and push docker-base latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: docker-base
         tags: |
@@ -76,13 +88,21 @@ jobs:
           ghcr.io/yolean/docker-base:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-docker-base-latest
+          type=gha,scope=buildx-docker-base
+        cache-to: type=gha,mode=max,scope=buildx-docker-base-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-base latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-base
         tags: |
@@ -90,13 +110,21 @@ jobs:
           ghcr.io/yolean/builder-base:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-base-latest
+          type=gha,scope=buildx-builder-base
+        cache-to: type=gha,mode=max,scope=buildx-builder-base-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-base-gcc latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-base-gcc
         tags: |
@@ -104,15 +132,23 @@ jobs:
           ghcr.io/yolean/builder-base-gcc:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-base-gcc-latest
+          type=gha,scope=buildx-builder-base-gcc
+        cache-to: type=gha,mode=max,scope=buildx-builder-base-gcc-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-base-gcloud latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-base-gcloud
         tags: |
@@ -120,15 +156,23 @@ jobs:
           ghcr.io/yolean/builder-base-gcloud:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-base-gcloud-latest
+          type=gha,scope=buildx-builder-base-gcloud
+        cache-to: type=gha,mode=max,scope=buildx-builder-base-gcloud-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-tooling latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-tooling
         tags: |
@@ -136,15 +180,23 @@ jobs:
           ghcr.io/yolean/builder-tooling:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-tooling-latest
+          type=gha,scope=buildx-builder-tooling
+        cache-to: type=gha,mode=max,scope=buildx-builder-tooling-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-node latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-node
         tags: |
@@ -152,13 +204,21 @@ jobs:
           ghcr.io/yolean/builder-node:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-node-latest
+          type=gha,scope=buildx-builder-node
+        cache-to: type=gha,mode=max,scope=buildx-builder-node-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-quarkus latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-quarkus
         tags: |
@@ -166,16 +226,24 @@ jobs:
           ghcr.io/yolean/builder-quarkus:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-quarkus-latest
+          type=gha,scope=buildx-builder-quarkus
+        cache-to: type=gha,mode=max,scope=buildx-builder-quarkus-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push builder-evidence latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: builder-evidence
         tags: |
@@ -183,16 +251,24 @@ jobs:
           ghcr.io/yolean/builder-evidence:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-builder-evidence-latest
+          type=gha,scope=buildx-builder-evidence
+        cache-to: type=gha,mode=max,scope=buildx-builder-evidence-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
           yolean/builder-base-gcloud=docker-image://ghcr.io/yolean/builder-base-gcloud
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push git-init latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: git-init
         tags: |
@@ -200,15 +276,23 @@ jobs:
           ghcr.io/yolean/git-init:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-git-init-latest
+          type=gha,scope=buildx-git-init
+        cache-to: type=gha,mode=max,scope=buildx-git-init-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push toil latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: toil
         tags: |
@@ -216,16 +300,24 @@ jobs:
           ghcr.io/yolean/toil:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-toil-latest
+          type=gha,scope=buildx-toil
+        cache-to: type=gha,mode=max,scope=buildx-toil-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push toil-network latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: toil-network
         tags: |
@@ -233,15 +325,23 @@ jobs:
           ghcr.io/yolean/toil-network:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-toil-network-latest
+          type=gha,scope=buildx-toil-network
+        cache-to: type=gha,mode=max,scope=buildx-toil-network-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/toil=docker-image://ghcr.io/yolean/toil
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-distroless latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-distroless
         tags: |
@@ -249,13 +349,21 @@ jobs:
           ghcr.io/yolean/node-distroless:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-distroless-latest
+          type=gha,scope=buildx-node-distroless
+        cache-to: type=gha,mode=max,scope=buildx-node-distroless-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push headless-chrome latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: headless-chrome
         tags: |
@@ -263,15 +371,23 @@ jobs:
           ghcr.io/yolean/headless-chrome:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-headless-chrome-latest
+          type=gha,scope=buildx-headless-chrome
+        cache-to: type=gha,mode=max,scope=buildx-headless-chrome-latest
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push git-http-readonly latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: git-http-readonly
         tags: |
@@ -279,13 +395,21 @@ jobs:
           ghcr.io/yolean/git-http-readonly:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-git-http-readonly-latest
+          type=gha,scope=buildx-git-http-readonly
+        cache-to: type=gha,mode=max,scope=buildx-git-http-readonly-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-quarkus
         tags: |
@@ -293,13 +417,21 @@ jobs:
           ghcr.io/yolean/runtime-quarkus:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-latest
+          type=gha,scope=buildx-runtime-quarkus
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-deno latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-deno
         tags: |
@@ -307,13 +439,21 @@ jobs:
           ghcr.io/yolean/runtime-deno:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-deno-latest
+          type=gha,scope=buildx-runtime-deno
+        cache-to: type=gha,mode=max,scope=buildx-runtime-deno-latest
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push homedir root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: homedir
         tags: |
@@ -321,15 +461,23 @@ jobs:
           ghcr.io/yolean/homedir:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-homedir-root
+          type=gha,scope=buildx-homedir
+        cache-to: type=gha,mode=max,scope=buildx-homedir-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push homedir latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/homedir
         tags: |
@@ -337,15 +485,23 @@ jobs:
           ghcr.io/yolean/homedir:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-homedir-latest
+          type=gha,scope=buildx-homedir
+        cache-to: type=gha,mode=max,scope=buildx-homedir-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:root
+          yolean/homedir=docker-image://ghcr.io/yolean/homedir:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push java root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: java
         tags: |
@@ -353,13 +509,21 @@ jobs:
           ghcr.io/yolean/java:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-java-root
+          type=gha,scope=buildx-java
+        cache-to: type=gha,mode=max,scope=buildx-java-root
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push java latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/java
         tags: |
@@ -367,15 +531,23 @@ jobs:
           ghcr.io/yolean/java:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-java-latest
+          type=gha,scope=buildx-java
+        cache-to: type=gha,mode=max,scope=buildx-java-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/java:root=docker-image://ghcr.io/yolean/java:root
+          yolean/java=docker-image://ghcr.io/yolean/java:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node
         tags: |
@@ -383,13 +555,21 @@ jobs:
           ghcr.io/yolean/node:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-root
+          type=gha,scope=buildx-node
+        cache-to: type=gha,mode=max,scope=buildx-node-root
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node
         tags: |
@@ -397,15 +577,23 @@ jobs:
           ghcr.io/yolean/node:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-latest
+          type=gha,scope=buildx-node
+        cache-to: type=gha,mode=max,scope=buildx-node-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node=docker-image://ghcr.io/yolean/node:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-kafka
         tags: |
@@ -413,15 +601,23 @@ jobs:
           ghcr.io/yolean/node-kafka:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-root
+          type=gha,scope=buildx-node-kafka
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node=docker-image://ghcr.io/yolean/node:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-kafka
         tags: |
@@ -429,15 +625,23 @@ jobs:
           ghcr.io/yolean/node-kafka:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-latest
+          type=gha,scope=buildx-node-kafka
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-cache root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-kafka-cache
         tags: |
@@ -445,15 +649,23 @@ jobs:
           ghcr.io/yolean/node-kafka-cache:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-cache-root
+          type=gha,scope=buildx-node-kafka-cache
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-cache-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-cache latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-kafka-cache
         tags: |
@@ -461,15 +673,23 @@ jobs:
           ghcr.io/yolean/node-kafka-cache:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-cache-latest
+          type=gha,scope=buildx-node-kafka-cache
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-cache-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka-cache:root=docker-image://ghcr.io/yolean/node-kafka-cache:root
+          yolean/node-kafka-cache=docker-image://ghcr.io/yolean/node-kafka-cache:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-sqlite root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-kafka-sqlite
         tags: |
@@ -477,15 +697,23 @@ jobs:
           ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-sqlite-root
+          type=gha,scope=buildx-node-kafka-sqlite
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-sqlite-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-sqlite latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-kafka-sqlite
         tags: |
@@ -493,15 +721,23 @@ jobs:
           ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-sqlite-latest
+          type=gha,scope=buildx-node-kafka-sqlite
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-sqlite-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka-sqlite:root=docker-image://ghcr.io/yolean/node-kafka-sqlite:root
+          yolean/node-kafka-sqlite=docker-image://ghcr.io/yolean/node-kafka-sqlite:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-watchexec root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-watchexec
         tags: |
@@ -509,13 +745,21 @@ jobs:
           ghcr.io/yolean/node-watchexec:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-watchexec-root
+          type=gha,scope=buildx-node-watchexec
+        cache-to: type=gha,mode=max,scope=buildx-node-watchexec-root
+        provenance: false
+        sbom: false
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-watchexec latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-watchexec
         tags: |
@@ -523,15 +767,23 @@ jobs:
           ghcr.io/yolean/node-watchexec:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-watchexec-latest
+          type=gha,scope=buildx-node-watchexec
+        cache-to: type=gha,mode=max,scope=buildx-node-watchexec-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:root
+          yolean/node-watchexec=docker-image://ghcr.io/yolean/node-watchexec:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-watch root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-kafka-watch
         tags: |
@@ -539,16 +791,24 @@ jobs:
           ghcr.io/yolean/node-kafka-watch:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-watch-root
+          type=gha,scope=buildx-node-kafka-watch
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-watch-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:root
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-watchexec=docker-image://ghcr.io/yolean/node-watchexec:root
+          yolean/node-kafka=docker-image://ghcr.io/yolean/node-kafka:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-kafka-watch latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-kafka-watch
         tags: |
@@ -556,15 +816,23 @@ jobs:
           ghcr.io/yolean/node-kafka-watch:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-watch-latest
+          type=gha,scope=buildx-node-kafka-watch
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-watch-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-kafka-watch:root=docker-image://ghcr.io/yolean/node-kafka-watch:root
+          yolean/node-kafka-watch=docker-image://ghcr.io/yolean/node-kafka-watch:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-gcloud root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-gcloud
         tags: |
@@ -572,15 +840,23 @@ jobs:
           ghcr.io/yolean/node-gcloud:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-gcloud-root
+          type=gha,scope=buildx-node-gcloud
+        cache-to: type=gha,mode=max,scope=buildx-node-gcloud-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node=docker-image://ghcr.io/yolean/node:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-gcloud latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-gcloud
         tags: |
@@ -588,15 +864,23 @@ jobs:
           ghcr.io/yolean/node-gcloud:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-gcloud-latest
+          type=gha,scope=buildx-node-gcloud
+        cache-to: type=gha,mode=max,scope=buildx-node-gcloud-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:root
+          yolean/node-gcloud=docker-image://ghcr.io/yolean/node-gcloud:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-vitest root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: node-vitest
         tags: |
@@ -604,15 +888,23 @@ jobs:
           ghcr.io/yolean/node-vitest:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-vitest-root
+          type=gha,scope=buildx-node-vitest
+        cache-to: type=gha,mode=max,scope=buildx-node-vitest-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node=docker-image://ghcr.io/yolean/node:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push node-vitest latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/node-vitest
         tags: |
@@ -620,15 +912,23 @@ jobs:
           ghcr.io/yolean/node-vitest:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-node-vitest-latest
+          type=gha,scope=buildx-node-vitest
+        cache-to: type=gha,mode=max,scope=buildx-node-vitest-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:root
+          yolean/node-vitest=docker-image://ghcr.io/yolean/node-vitest:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-ubuntu root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-quarkus-ubuntu
         tags: |
@@ -636,15 +936,23 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-root
+          type=gha,scope=buildx-runtime-quarkus-ubuntu
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-ubuntu latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/runtime-quarkus-ubuntu
         tags: |
@@ -652,15 +960,23 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-latest
+          type=gha,scope=buildx-runtime-quarkus-ubuntu
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-deno root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-quarkus-deno
         tags: |
@@ -668,16 +984,24 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-deno:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-deno-root
+          type=gha,scope=buildx-runtime-quarkus-deno
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-deno-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/runtime-deno=docker-image://ghcr.io/yolean/runtime-deno
           yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-deno latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/runtime-quarkus-deno
         tags: |
@@ -685,15 +1009,23 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-deno:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-deno-latest
+          type=gha,scope=buildx-runtime-quarkus-deno
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-deno-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/runtime-quarkus-deno:root=docker-image://ghcr.io/yolean/runtime-quarkus-deno:root
+          yolean/runtime-quarkus-deno=docker-image://ghcr.io/yolean/runtime-quarkus-deno:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-ubuntu-jre root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-quarkus-ubuntu-jre
         tags: |
@@ -701,16 +1033,24 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-jre-root
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-jre
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-jre-root
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/java:root=docker-image://ghcr.io/yolean/java:root
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/java=docker-image://ghcr.io/yolean/java:root
+          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-ubuntu-jre latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/runtime-quarkus-ubuntu-jre
         tags: |
@@ -718,15 +1058,23 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-jre-latest
+          type=gha,scope=buildx-runtime-quarkus-ubuntu-jre
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-ubuntu-jre-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/runtime-quarkus-ubuntu-jre:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+          yolean/runtime-quarkus-ubuntu-jre=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-dev root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: runtime-quarkus-dev
         tags: |
@@ -734,16 +1082,24 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-dev-root
+          type=gha,scope=buildx-runtime-quarkus-dev
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-dev-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push runtime-quarkus-dev latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/runtime-quarkus-dev
         tags: |
@@ -751,15 +1107,23 @@ jobs:
           ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-runtime-quarkus-dev-latest
+          type=gha,scope=buildx-runtime-quarkus-dev
+        cache-to: type=gha,mode=max,scope=buildx-runtime-quarkus-dev-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/runtime-quarkus-dev:root=docker-image://ghcr.io/yolean/runtime-quarkus-dev:root
+          yolean/runtime-quarkus-dev=docker-image://ghcr.io/yolean/runtime-quarkus-dev:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push toil-storage root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: toil-storage
         tags: |
@@ -767,16 +1131,24 @@ jobs:
           ghcr.io/yolean/toil-storage:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-toil-storage-root
+          type=gha,scope=buildx-toil-storage
+        cache-to: type=gha,mode=max,scope=buildx-toil-storage-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/toil=docker-image://ghcr.io/yolean/toil
           yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push toil-storage latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/toil-storage
         tags: |
@@ -784,15 +1156,23 @@ jobs:
           ghcr.io/yolean/toil-storage:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-toil-storage-latest
+          type=gha,scope=buildx-toil-storage
+        cache-to: type=gha,mode=max,scope=buildx-toil-storage-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/toil-storage:root=docker-image://ghcr.io/yolean/toil-storage:root
+          yolean/toil-storage=docker-image://ghcr.io/yolean/toil-storage:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push curl-yq root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: curl-yq
         tags: |
@@ -800,15 +1180,23 @@ jobs:
           ghcr.io/yolean/curl-yq:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-curl-yq-root
+          type=gha,scope=buildx-curl-yq
+        cache-to: type=gha,mode=max,scope=buildx-curl-yq-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push curl-yq latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/curl-yq
         tags: |
@@ -816,15 +1204,23 @@ jobs:
           ghcr.io/yolean/curl-yq:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-curl-yq-latest
+          type=gha,scope=buildx-curl-yq
+        cache-to: type=gha,mode=max,scope=buildx-curl-yq-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
+          yolean/curl-yq=docker-image://ghcr.io/yolean/curl-yq:root
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push duckdb root
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: duckdb
         tags: |
@@ -832,16 +1228,24 @@ jobs:
           ghcr.io/yolean/duckdb:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-duckdb-root
+          type=gha,scope=buildx-duckdb
+        cache-to: type=gha,mode=max,scope=buildx-duckdb-root
+        provenance: false
+        sbom: false
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
           yolean/homedir=docker-image://ghcr.io/yolean/homedir
+      continue-on-error: false
+      timeout-minutes: 45
     -
       name: Build and push duckdb latest
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: to-nonroot/duckdb
         tags: |
@@ -849,7 +1253,13 @@ jobs:
           ghcr.io/yolean/duckdb:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=buildx-duckdb-latest
+          type=gha,scope=buildx-duckdb
+        cache-to: type=gha,mode=max,scope=buildx-duckdb-latest
+        provenance: false
+        sbom: false
         build-contexts: |
-          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root
+          yolean/duckdb=docker-image://ghcr.io/yolean/duckdb:root
+      continue-on-error: false
+      timeout-minutes: 45
