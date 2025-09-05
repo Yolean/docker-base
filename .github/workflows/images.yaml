@@ -261,7 +261,7 @@ jobs:
         tags: |
           ghcr.io/yolean/headless-chrome:latest
           ghcr.io/yolean/headless-chrome:${{ github.sha }}
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
