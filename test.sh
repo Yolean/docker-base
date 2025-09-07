@@ -60,6 +60,9 @@ runtime-quarkus-deno
 runtime-deno
 "
 
+# Images that are only buildable on amd64
+SINGLE_ARCH_AMD64="headless-chrome"
+
 BEGIN="    ### build steps below are generated ###"
 CURRENT=.github/workflows/images.yaml
 ACTIONS=$(mktemp)
@@ -77,6 +80,15 @@ function base_action {
   # Get dependencies for build-contexts
   local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' -e 'FROM --platform=$BUILDPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
   
+  # Determine platforms (override if in SINGLE_ARCH_AMD64)
+  local PLATFORMS="linux/amd64,linux/arm64/v8"
+  for ONLY_AMD64 in $SINGLE_ARCH_AMD64; do
+    if [ "$NAME" = "$ONLY_AMD64" ]; then
+      PLATFORMS="linux/amd64"
+      break
+    fi
+  done
+
   cat <<EOF
     -
       name: Build and push $NAME $TAG
@@ -90,7 +102,7 @@ function base_action {
         tags: |
           ghcr.io/yolean/$NAME:$TAG
           ghcr.io/yolean/$NAME:\${{ github.sha }}$TAGSUFFIX
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: $PLATFORMS
         push: true
         cache-from: |
           type=gha,scope=$CACHE_KEY_PREFIX
