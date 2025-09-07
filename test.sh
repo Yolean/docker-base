@@ -60,6 +60,9 @@ runtime-quarkus-deno
 runtime-deno
 "
 
+# Images that are only buildable on amd64
+SINGLE_ARCH_AMD64="headless-chrome"
+
 BEGIN="    ### build steps below are generated ###"
 CURRENT=.github/workflows/images.yaml
 ACTIONS=$(mktemp)
@@ -71,36 +74,60 @@ function base_action {
   local TAG=$3
   local TAGSUFFIX=""
   [ "$TAG" = "latest" ] || local TAGSUFFIX="-$TAG"
+  # Create cache key that includes context for better cache scoping
+  local CACHE_KEY_PREFIX="buildx-$NAME-$TAG"
+  
+  # Get dependencies for build-contexts
+  local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' -e 'FROM --platform=$BUILDPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
+  
+  # Determine platforms (override if in SINGLE_ARCH_AMD64)
+  local PLATFORMS="linux/amd64,linux/arm64/v8"
+  for ONLY_AMD64 in $SINGLE_ARCH_AMD64; do
+    if [ "$NAME" = "$ONLY_AMD64" ]; then
+      PLATFORMS="linux/amd64"
+      break
+    fi
+  done
+
   cat <<EOF
     -
       name: Build and push $NAME $TAG
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6.18.0
       env:
         SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
       with:
         context: $CONTEXT
         tags: |
           ghcr.io/yolean/$NAME:$TAG
           ghcr.io/yolean/$NAME:\${{ github.sha }}$TAGSUFFIX
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: $PLATFORMS
         push: true
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: |
+          type=gha,scope=$CACHE_KEY_PREFIX
+          type=gha,scope=buildx-$NAME
+        cache-to: type=gha,mode=max,scope=$CACHE_KEY_PREFIX
+EOF
+  
+  # Add build-contexts if there are dependencies
+  if [ ! -z "$DEPENDENCIES" ]; then
+    echo "        build-contexts: |"
+    for NAME_FULL in $DEPENDENCIES; do
+      echo "          $NAME_FULL=docker-image://ghcr.io/$NAME_FULL"
+    done
+  fi
+  
+  cat <<EOF
+      continue-on-error: false
+      timeout-minutes: 45
 EOF
 }
 
-function add_dependencies {
-  local CONTEXT=$1
-  local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' -e 'FROM --platform=$BUILDPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
-  [ -z "$DEPENDENCIES" ] || echo "        build-contexts: |"
-  for NAME in $DEPENDENCIES; do
-    echo "          $NAME=docker-image://ghcr.io/$NAME"
-  done
-}
+
 
 for CONTEXT in $MULTIARCH_NONROOT; do
   base_action "$CONTEXT" "$CONTEXT" latest >> $ACTIONS
-  add_dependencies "$CONTEXT" >> $ACTIONS
 done
 
 for CONTEXT in $MULTIARCH_TONONROOT; do
@@ -108,9 +135,7 @@ for CONTEXT in $MULTIARCH_TONONROOT; do
   echo "FROM --platform=\$TARGETPLATFORM yolean/$CONTEXT:root" > to-nonroot/$CONTEXT/Dockerfile
   cat nonroot-footer.Dockerfile >> to-nonroot/$CONTEXT/Dockerfile
   base_action "$CONTEXT" "$CONTEXT" root >> $ACTIONS
-  add_dependencies "$CONTEXT" >> $ACTIONS
   base_action "to-nonroot/$CONTEXT" "$CONTEXT" latest >> $ACTIONS
-  add_dependencies "to-nonroot/$CONTEXT" >> $ACTIONS
 done
 
 cp $ACTIONS $CURRENT
