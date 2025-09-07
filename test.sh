@@ -114,9 +114,7 @@ EOF
   if [ ! -z "$DEPENDENCIES" ]; then
     echo "        build-contexts: |"
     for NAME_FULL in $DEPENDENCIES; do
-      # Extract image name without tag
-      local IMAGE_NAME=$(echo "$NAME_FULL" | cut -d':' -f1)
-      echo "          $IMAGE_NAME=docker-image://ghcr.io/$NAME_FULL"
+      echo "          $NAME_FULL=docker-image://ghcr.io/$NAME_FULL"
     done
   fi
   
