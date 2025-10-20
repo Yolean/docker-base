@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs24-debian12:nonroot@sha256:20a51c926c0bb68a9b1f7059c81516da002655f8a896a2cb7bc56b56974782b3
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs24-debian12:nonroot@sha256:1399bb61af6b38c31ce4d3770546736a691a3ac70bcba84454a24469911fa260
 
 WORKDIR /app
 CMD [ "./main.js" ]
