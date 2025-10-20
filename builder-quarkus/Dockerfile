@@ -1,16 +1,16 @@
-FROM --platform=$TARGETPLATFORM maven:3.9.9-eclipse-temurin-21@sha256:9ae8f001f2d978fdfe36052cc9950eda99929d410e2b1f03bd35c09f49890fc9 as maven
+FROM --platform=$TARGETPLATFORM maven:3.9.11-eclipse-temurin-25@sha256:3d35095b456f61758a4b3f62c746bffd369d5cabaf6c04ea4387a96dc6640972 as maven
 
-FROM docker:28.0.1-cli@sha256:18018c4b6e75bab6b93e04159c83778c98b60b0f95c762967bb501d684553daf AS dockerclient
+FROM docker:28.5.1-cli@sha256:55e613fd4f85d921ce1ba31a1fbdab404fbf992c7ec7750940ad965102ece800 AS dockerclient
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
-ARG JAVA_VERSION=java21
-ARG MANDREL_VERSION=23.1.8.0-Final
+ARG MANDREL_JAVA_VERSION=java25
+ARG MANDREL_VERSION=25.0.0.1-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \
   [ "$TARGETARCH" != "arm64" ] || ARCH=aarch64; \
-  MANDREL_DIST=mandrel-$JAVA_VERSION-linux-$ARCH-$MANDREL_VERSION.tar.gz; \
+  MANDREL_DIST=mandrel-$MANDREL_JAVA_VERSION-linux-$ARCH-$MANDREL_VERSION.tar.gz; \
   MANDREL_DIST_URL=https://github.com/graalvm/mandrel/releases/download/mandrel-$MANDREL_VERSION/$MANDREL_DIST; \
   MANDREL_DIST_SHA256=$(curl -sLSf "$MANDREL_DIST_URL.sha256"); \
   [ -n "$MANDREL_DIST_SHA256" ]; \
