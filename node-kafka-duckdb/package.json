@@ -1,7 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "@duckdb/node-bindings": "1.4.1-r.4",
-    "sqlite3": "5.1.7"
+    "@duckdb/node-bindings": "1.4.1-r.4"
   }
 }

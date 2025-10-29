@@ -679,6 +679,50 @@ jobs:
       continue-on-error: false
       timeout-minutes: 45
     -
+      name: Build and push node-kafka-duckdb root
+      uses: docker/build-push-action@v6.18.0
+      env:
+        SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
+      with:
+        context: node-kafka-duckdb
+        tags: |
+          ghcr.io/yolean/node-kafka-duckdb:root
+          ghcr.io/yolean/node-kafka-duckdb:${{ github.sha }}-root
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-duckdb-root
+          type=gha,scope=buildx-node-kafka-duckdb
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-duckdb-root
+        build-contexts: |
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+      continue-on-error: false
+      timeout-minutes: 45
+    -
+      name: Build and push node-kafka-duckdb latest
+      uses: docker/build-push-action@v6.18.0
+      env:
+        SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
+      with:
+        context: to-nonroot/node-kafka-duckdb
+        tags: |
+          ghcr.io/yolean/node-kafka-duckdb:latest
+          ghcr.io/yolean/node-kafka-duckdb:${{ github.sha }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: true
+        cache-from: |
+          type=gha,scope=buildx-node-kafka-duckdb-latest
+          type=gha,scope=buildx-node-kafka-duckdb
+        cache-to: type=gha,mode=max,scope=buildx-node-kafka-duckdb-latest
+        build-contexts: |
+          yolean/node-kafka-duckdb:root=docker-image://ghcr.io/yolean/node-kafka-duckdb:root
+      continue-on-error: false
+      timeout-minutes: 45
+    -
       name: Build and push node-watchexec root
       uses: docker/build-push-action@v6.18.0
       env:
