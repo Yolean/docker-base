@@ -5,9 +5,9 @@ ARG TARGETARCH
 USER root
 RUN set -ex; \
   ARCH=$TARGETARCH; \
-  [ "$TARGETARCH" != "arm64" ] || ARCH=aarch64; \
-  curl -sLS -o /tmp/duckdb.zip https://github.com/duckdb/duckdb/releases/download/v1.1.3/duckdb_cli-linux-$ARCH.zip; \
-  cd /usr/local/bin && unzip /tmp/duckdb.zip; \
+  curl -sLS https://github.com/duckdb/duckdb/releases/download/v1.4.2/duckdb_cli-linux-$ARCH.gz \
+    | gunzip > /usr/local/bin/duckdb; \
+  chmod +x /usr/local/bin/duckdb; \
   duckdb --version
 USER nonroot:nogroup
 
