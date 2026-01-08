@@ -24,7 +24,6 @@ builder-base-gcloud
 builder-tooling
 builder-node
 builder-quarkus
-builder-evidence
 git-init
 toil
 toil-network
