@@ -49,7 +49,7 @@ jobs:
         TAG_KAFKA=2.5.1-kafka-server-start
         TAG_ZOOKEEPER=2.5.1-zookeeper-server-start
         TAG_INITUTILS=initutils-nonroot@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
-        TAG_ENVOY=v1.36.4
+        TAG_ENVOY=v1.37.0
         TAG_CURL=8.14.1
         TAG_BUSYBOX=1.36.1-glibc
         TAG_TINYGO=0.32.0
