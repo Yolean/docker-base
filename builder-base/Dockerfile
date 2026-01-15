@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/yolean/ystack-runner:0823293ffd8b4d46f910106bef8def47d483bd8b@sha256:ea5d260a4f23d36d3de95181af562a4af2cec83c663f821c6dcd86a3b51a541c \
+FROM --platform=$TARGETPLATFORM ghcr.io/yolean/ystack-runner:5325a2989022dd138130ef332455b1e32f4a0d9f@sha256:5382a12a296b95352dad1557e33fe4df9b056d14f10228ece93209a9f2987613 \
   as base
 
 FROM base as nonroot

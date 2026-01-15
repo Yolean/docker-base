@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM node:24.12.0-trixie-slim@sha256:b05474903f463ce4064c09986525e6588c3e66c51b69be9c93a39fb359f883ce
+FROM --platform=$TARGETPLATFORM node:24.13.0-trixie-slim@sha256:a16979bcaf12a2fd24888eb8e89874b11bd1038a3e3f1881c26a5e2b8fb92b5c
 
 RUN runtimeDeps='procps git curl ca-certificates' \
   && set -ex \
