@@ -1,6 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "@duckdb/node-bindings": "1.4.2-r.1"
+    "@duckdb/node-bindings": "1.4.3-r.3"
   }
 }
