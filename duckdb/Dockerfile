@@ -20,6 +20,15 @@ FROM --platform=$TARGETPLATFORM yolean/homedir
 # Failed to download extension "ui" at URL "http://extensions.duckdb.org/v1.2.1/linux_arm64_gcc4/ui.duckdb_extension.gz" (HTTP 403)
 # Extension "ui" is an existing extension.
 
+RUN set -ex; \
+  export DEBIAN_FRONTEND=noninteractive; \
+  runDeps='socat ca-certificates'; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends $runDeps; \
+  \
+  rm -rf /var/lib/apt/lists/*; \
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
+
 COPY --from=0 /tmp/duckdb /tmp/xdg-open /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/duckdb"]
