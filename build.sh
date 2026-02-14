@@ -69,7 +69,7 @@ build_image() {
 
   local BUILD_CONTEXT_ARGS=""
   for DEP_FULL in $DEPENDENCIES; do
-    BUILD_CONTEXT_ARGS="$BUILD_CONTEXT_ARGS --build-context $DEP_FULL=docker-image://yolean/$DEP_FULL"
+    BUILD_CONTEXT_ARGS="$BUILD_CONTEXT_ARGS --build-context $DEP_FULL=docker-image://$DEP_FULL"
   done
 
   echo "==> Building yolean/$NAME:$IMG_TAG from $CONTEXT/"
