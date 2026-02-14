@@ -1,11 +1,11 @@
-FROM --platform=$TARGETPLATFORM maven:3.9.11-eclipse-temurin-25@sha256:3d35095b456f61758a4b3f62c746bffd369d5cabaf6c04ea4387a96dc6640972 as maven
+FROM --platform=$TARGETPLATFORM maven:3.9.12-eclipse-temurin-25@sha256:b8187abd63cd4ee8c596aae910ce698a10db6d27ad5be08d574f3b928526724e as maven
 
-FROM docker:28.5.1-cli@sha256:55e613fd4f85d921ce1ba31a1fbdab404fbf992c7ec7750940ad965102ece800 AS dockerclient
+FROM docker:29.2.1-cli@sha256:1d6d751f1d68d1a5142c23c730ef5ecc976a8e050fa08c3cdb09f7e2e54a4439 AS dockerclient
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
 ARG MANDREL_JAVA_VERSION=java25
-ARG MANDREL_VERSION=25.0.0.1-Final
+ARG MANDREL_VERSION=25.0.2.0-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \

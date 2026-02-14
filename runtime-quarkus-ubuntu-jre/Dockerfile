@@ -6,7 +6,7 @@ FROM --platform=$TARGETPLATFORM yolean/runtime-quarkus-ubuntu:root
 
 # Version here must match that of JRE above
 # Path must be that of runtime-quarkus-dev + $JAVA_HOME/bin
-ENV JAVA_VERSION=jdk-25+36 \
+ENV JAVA_VERSION=jdk-25.0.2+10 \
   JAVA_HOME=/opt/java/openjdk \
   PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
