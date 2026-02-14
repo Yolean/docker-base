@@ -2,6 +2,9 @@
 [ -z "$DEBUG" ] || set -x
 set -eo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/images.sh"
+
 [ -n "$PLATFORMS" ] || PLATFORMS="linux/amd64,linux/arm64/v8"
 [ -n "$PLATFORM" ] || PLATFORM="--platform=$PLATFORMS"
 
@@ -15,54 +18,6 @@ if [[ ! -z "$SOURCE_COMMIT" ]]; then
   fi
 fi
 
-# note that docker-base isn't actually nonroot, we just want to build that first
-MULTIARCH_NONROOT="
-docker-base
-builder-base
-builder-base-gcc
-builder-base-gcloud
-builder-tooling
-builder-node
-builder-quarkus
-git-init
-toil
-toil-network
-node-distroless
-headless-chrome
-git-http-readonly
-runtime-quarkus
-runtime-deno
-"
-
-MULTIARCH_TONONROOT="
-homedir
-java
-node
-node-kafka
-node-kafka-cache
-node-kafka-sqlite
-node-kafka-duckdb
-node-watchexec
-node-kafka-watch
-node-gcloud
-node-vitest
-runtime-quarkus-ubuntu
-runtime-quarkus-deno
-runtime-quarkus-ubuntu-jre
-runtime-quarkus-dev
-toil-storage
-curl-yq
-duckdb
-"
-
-DEPRECATED="
-runtime-quarkus-deno
-runtime-deno
-"
-
-# Images that are only buildable on amd64
-SINGLE_ARCH_AMD64="headless-chrome"
-
 BEGIN="    ### build steps below are generated ###"
 CURRENT=.github/workflows/images.yaml
 ACTIONS=$(mktemp)
@@ -74,12 +29,10 @@ function base_action {
   local TAG=$3
   local TAGSUFFIX=""
   [ "$TAG" = "latest" ] || local TAGSUFFIX="-$TAG"
-  # Create cache key that includes context for better cache scoping
-  local CACHE_KEY_PREFIX="buildx-$NAME-$TAG"
-  
+
   # Get dependencies for build-contexts
-  local DEPENDENCIES="$((grep -e 'FROM --platform=$TARGETPLATFORM yolean/' -e 'FROM --platform=$BUILDPLATFORM yolean/' $CONTEXT/Dockerfile || true) | cut -d' ' -f3)"
-  
+  local DEPENDENCIES="$(get_yolean_deps "$CONTEXT/Dockerfile")"
+
   # Determine platforms (override if in SINGLE_ARCH_AMD64)
   local PLATFORMS="linux/amd64,linux/arm64/v8"
   for ONLY_AMD64 in $SINGLE_ARCH_AMD64; do
@@ -104,12 +57,10 @@ function base_action {
           ghcr.io/yolean/$NAME:\${{ github.sha }}$TAGSUFFIX
         platforms: $PLATFORMS
         push: true
-        cache-from: |
-          type=gha,scope=$CACHE_KEY_PREFIX
-          type=gha,scope=buildx-$NAME
-        cache-to: type=gha,mode=max,scope=$CACHE_KEY_PREFIX
+        cache-from: type=registry,ref=ghcr.io/yolean/$NAME:_buildcache$TAGSUFFIX
+        cache-to: type=registry,ref=ghcr.io/yolean/$NAME:_buildcache$TAGSUFFIX,mode=max
 EOF
-  
+
   # Add build-contexts if there are dependencies
   if [ ! -z "$DEPENDENCIES" ]; then
     echo "        build-contexts: |"
@@ -117,7 +68,7 @@ EOF
       echo "          $NAME_FULL=docker-image://ghcr.io/$NAME_FULL"
     done
   fi
-  
+
   cat <<EOF
       continue-on-error: false
       timeout-minutes: 45
@@ -130,10 +81,9 @@ for CONTEXT in $MULTIARCH_NONROOT; do
   base_action "$CONTEXT" "$CONTEXT" latest >> $ACTIONS
 done
 
+generate_nonroot_dockerfiles
+
 for CONTEXT in $MULTIARCH_TONONROOT; do
-  mkdir -p to-nonroot/$CONTEXT
-  echo "FROM --platform=\$TARGETPLATFORM yolean/$CONTEXT:root" > to-nonroot/$CONTEXT/Dockerfile
-  cat nonroot-footer.Dockerfile >> to-nonroot/$CONTEXT/Dockerfile
   base_action "$CONTEXT" "$CONTEXT" root >> $ACTIONS
   base_action "to-nonroot/$CONTEXT" "$CONTEXT" latest >> $ACTIONS
 done
