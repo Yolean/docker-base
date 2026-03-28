@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM yolean/builder-base
 ARG TARGETARCH
-ARG DUCKDB_TAG=v1.5.0
+ARG DUCKDB_TAG=v1.5.1
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \

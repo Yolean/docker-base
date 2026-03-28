@@ -26,7 +26,6 @@ java
 node
 node-kafka
 node-kafka-cache
-node-kafka-sqlite
 node-kafka-duckdb
 node-watchexec
 node-kafka-watch

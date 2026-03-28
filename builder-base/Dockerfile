@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/yolean/ystack-runner:3481f4e5d3483a27837e533e76f1cacc35358b05@sha256:5d33478edc7e77485e6ba20a7173e34f8b8cb76fc0d2f1867a8bd64a5a7fcaf3 \
+FROM --platform=$TARGETPLATFORM ghcr.io/yolean/ystack-runner:5035755bd8ade59842c4bfefad52de071dcf36c6@sha256:591e593fd7014f866b0f6bd645ff8282bee52e2a5a41b0dda2d449162cd6698b \
   as base
 
 FROM base as nonroot
@@ -10,7 +10,6 @@ RUN set -e; \
   mkdir -p usr/local/src/ystack/bin && chown nonroot usr/local/src/ystack/bin; \
   mkdir -p home/nonroot/.cache/ystack-bin; \
   mkdir -p home/nonroot/.cache/npm; \
-  (cd usr/local/src/ystack/bin/; ln -s /usr/local/lib/node_modules/yarn/bin/yarn); \
   chown root home; chown -R nonroot:nogroup home/nonroot
 
 FROM base
@@ -22,4 +21,3 @@ ENV \
   YSTACK_BIN_DOWNLOAD_CACHE=/home/nonroot/.cache/ystack-bin \
   npm_config_update_notifier=false
 
-RUN npm install -g --ignore-scripts --no-bin-links yarn@1.22.19
