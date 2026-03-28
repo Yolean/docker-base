@@ -563,46 +563,6 @@ jobs:
       continue-on-error: false
       timeout-minutes: 45
     -
-      name: Build and push node-kafka-sqlite root
-      uses: docker/build-push-action@v6.18.0
-      env:
-        SOURCE_DATE_EPOCH: 0
-        BUILDKIT_PROGRESS: plain
-        DOCKER_BUILDKIT: 1
-      with:
-        context: node-kafka-sqlite
-        tags: |
-          ghcr.io/yolean/node-kafka-sqlite:root
-          ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}-root
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-sqlite:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-sqlite:_buildcache-root,mode=max
-        build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
-      continue-on-error: false
-      timeout-minutes: 45
-    -
-      name: Build and push node-kafka-sqlite latest
-      uses: docker/build-push-action@v6.18.0
-      env:
-        SOURCE_DATE_EPOCH: 0
-        BUILDKIT_PROGRESS: plain
-        DOCKER_BUILDKIT: 1
-      with:
-        context: to-nonroot/node-kafka-sqlite
-        tags: |
-          ghcr.io/yolean/node-kafka-sqlite:latest
-          ghcr.io/yolean/node-kafka-sqlite:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-sqlite:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-sqlite:_buildcache,mode=max
-        build-contexts: |
-          yolean/node-kafka-sqlite:root=docker-image://ghcr.io/yolean/node-kafka-sqlite:root
-      continue-on-error: false
-      timeout-minutes: 45
-    -
       name: Build and push node-kafka-duckdb root
       uses: docker/build-push-action@v6.18.0
       env:
