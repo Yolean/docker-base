@@ -1,6 +1,6 @@
 FROM --platform=$TARGETPLATFORM maven:3.9.12-eclipse-temurin-25@sha256:b8187abd63cd4ee8c596aae910ce698a10db6d27ad5be08d574f3b928526724e as maven
 
-FROM docker:29.2.1-cli@sha256:1d6d751f1d68d1a5142c23c730ef5ecc976a8e050fa08c3cdb09f7e2e54a4439 AS dockerclient
+FROM docker:29.3.1-cli@sha256:70303ed0d265aee7bf4be0ddffe20b0b6e4f69ffa125e2a20cbb3718b99688db AS dockerclient
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
