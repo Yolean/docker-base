@@ -362,24 +362,6 @@ jobs:
       continue-on-error: false
       timeout-minutes: 45
     -
-      name: Build and push envoy-distroless latest
-      uses: docker/build-push-action@v6.18.0
-      env:
-        SOURCE_DATE_EPOCH: 0
-        BUILDKIT_PROGRESS: plain
-        DOCKER_BUILDKIT: 1
-      with:
-        context: envoy-distroless
-        tags: |
-          ghcr.io/yolean/envoy-distroless:latest
-          ghcr.io/yolean/envoy-distroless:${{ github.sha }}
-        platforms: linux/amd64,linux/arm64/v8
-        push: true
-        cache-from: type=registry,ref=ghcr.io/yolean/envoy-distroless:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/envoy-distroless:_buildcache,mode=max
-      continue-on-error: false
-      timeout-minutes: 45
-    -
       name: Build and push homedir root
       uses: docker/build-push-action@v6.18.0
       env:

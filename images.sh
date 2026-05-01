@@ -18,7 +18,6 @@ headless-chrome
 git-http-readonly
 runtime-quarkus
 runtime-deno
-envoy-distroless
 "
 
 MULTIARCH_TONONROOT="
