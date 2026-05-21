@@ -11,8 +11,9 @@ RUN runtimeDeps='procps ca-certificates' \
   && set -ex \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update && apt-get install -y $runtimeDeps $buildDeps --no-install-recommends \
-  && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+  && install -d -m 0755 /etc/apt/keyrings \
+  && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
+  && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
   && apt-get update \
   && apt-get -s install google-chrome-stable | grep chrome \
   && apt-get -s install google-chrome-beta | grep chrome \
