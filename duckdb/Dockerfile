@@ -13,10 +13,14 @@
 ARG DUCKDB_TAG=v1.5.3
 # Query-farm/tributary branch tracking the duckdb 1.5 line, pinned for reproducibility.
 ARG TRIBUTARY_REF=aaedad15bfb43b15c678c93baad41251117f0574
-# Out-of-tree httpfs pin — matches duckdb/.github/config/extensions/httpfs.cmake for v1.5.3.
-ARG HTTPFS_GIT_TAG=52afb4204a3238d6ee132e83340f8d68c40ee91c
+# paleolimbot/duckdb-nanoarrow ref — the "arrow"/"arrow-ipc" community extension
+# (Apache Arrow IPC). Tracks its community-extensions release.
+ARG NANOARROW_REF=42e4199a67c4cd0789087562a025e87e7130fdc3
 # vcpkg commit used by duckdb's v1.5 extension-ci-tools.
 ARG VCPKG_COMMIT=84bab45d415d22042bd0b9081aea57f362da3f35
+# httpfs is not pinned here: its version is taken from duckdb's own
+# .github/config/extensions/httpfs.cmake in the checked-out DUCKDB_TAG, so it
+# always matches the duckdb release.
 
 # --- Per-arch manylinux base selection (same images extension-ci-tools builds on) ---
 FROM quay.io/pypa/manylinux_2_28_x86_64 AS toolchain-amd64
@@ -47,12 +51,12 @@ ENV VCPKG_ROOT=/vcpkg \
     PATH=/vcpkg:$PATH
 RUN git config --global --add safe.directory '*'
 
-# --- Build: compile duckdb with tributary + httpfs + json statically linked ---
+# --- Build: compile duckdb with tributary + httpfs + nanoarrow statically linked ---
 FROM toolchain AS build
 ARG TARGETARCH
 ARG DUCKDB_TAG
 ARG TRIBUTARY_REF
-ARG HTTPFS_GIT_TAG
+ARG NANOARROW_REF
 WORKDIR /src
 RUN git clone --recurse-submodules --shallow-submodules \
       https://github.com/Query-farm/tributary.git . \
@@ -60,9 +64,21 @@ RUN git clone --recurse-submodules --shallow-submodules \
  && git -C duckdb fetch --depth 1 origin tag ${DUCKDB_TAG} \
  && git -C duckdb checkout ${DUCKDB_TAG}
 
-# Add httpfs (out-of-tree in 1.5) and openssl (its vcpkg dependency).
-RUN printf '\n# Bundled by yolean/docker-base for https:// and gs:// support\nduckdb_extension_load(httpfs\n  GIT_URL https://github.com/duckdb/duckdb-httpfs\n  GIT_TAG %s\n)\n' "${HTTPFS_GIT_TAG}" >> extension_config.cmake \
- && jq '.dependencies += ["openssl"]' vcpkg.json > vcpkg.json.tmp && mv vcpkg.json.tmp vcpkg.json
+# Add the extensions we want statically linked beyond tributary's own config:
+#   httpfs   — https:// and gcs gs:// access; out-of-tree in 1.5, pinned by
+#              duckdb itself so it always matches DUCKDB_TAG
+#   nanoarrow — Apache Arrow IPC ("arrow"/"arrow-ipc")
+# httpfs pulls in openssl, which we add to the vcpkg manifest.
+RUN cat >> extension_config.cmake <<EOF
+
+# Bundled by yolean/docker-base
+include(/src/duckdb/.github/config/extensions/httpfs.cmake)
+duckdb_extension_load(nanoarrow
+  GIT_URL https://github.com/paleolimbot/duckdb-nanoarrow
+  GIT_TAG ${NANOARROW_REF}
+)
+EOF
+RUN jq '.dependencies += ["openssl"]' vcpkg.json > vcpkg.json.tmp && mv vcpkg.json.tmp vcpkg.json
 
 # `make release` builds the whole tree and only fails on `plan_serializer`, a dev
 # tool (gated by BUILD_SHELL, but not a dependency of the `duckdb` binary) that
@@ -86,7 +102,7 @@ RUN --mount=type=cache,target=/ccache,id=duckdb-ccache-${TARGETARCH} \
     cmake --build build/release --target duckdb; \
     test -x build/release/duckdb; \
     strip build/release/duckdb; \
-    ./build/release/duckdb -c "SELECT extension_name FROM duckdb_extensions() WHERE extension_name IN ('tributary','httpfs') AND loaded ORDER BY 1;"
+    ./build/release/duckdb -c "SELECT extension_name FROM duckdb_extensions() WHERE extension_name IN ('tributary','httpfs','nanoarrow') AND loaded ORDER BY 1;"
 
 # Stage the runtime artifacts here (as root) since the runtime image is nonroot.
 RUN install -D build/release/duckdb /out/usr/local/bin/duckdb \
