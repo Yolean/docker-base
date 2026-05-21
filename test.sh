@@ -45,7 +45,7 @@ function base_action {
   cat <<EOF
     -
       name: Build and push $NAME $TAG
-      uses: docker/build-push-action@v6.18.0
+      uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
       env:
         SOURCE_DATE_EPOCH: 0
         BUILDKIT_PROGRESS: plain
