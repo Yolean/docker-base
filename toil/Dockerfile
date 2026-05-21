@@ -23,37 +23,25 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt /root/.gnupg
 
+# Stage the binaries plus their shared-library closure under /usr/lib so the
+# final image can run them without installing the packages. Deriving the libs
+# from ldd (rather than a hardcoded list) keeps this working across Ubuntu and
+# bind9 upgrades, which rename the bind9 sonames and shift dependencies (e.g.
+# 9.20 dropped libirs/libbind9 and added liburcu/libjemalloc).
 RUN set -e; \
   PKG_PREFIX="$(uname -m)-linux-gnu"; \
   mkdir -p /opt/toil/lib/$PKG_PREFIX /opt/toil/bin; \
-  cp -dav \
-    /usr/lib/$PKG_PREFIX/libbsd.so.* \
-    /usr/lib/$PKG_PREFIX/libedit.so.* \
-    /usr/lib/$PKG_PREFIX/libmd.so.* \
-    /usr/lib/$PKG_PREFIX/libdns-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libirs-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libbind9-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libns-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libisc-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libisccfg-*-Ubuntu.so \
-    /usr/lib/$PKG_PREFIX/libjson-c.so.* \
-    /usr/lib/$PKG_PREFIX/libxml2.so.* \
-    /usr/lib/$PKG_PREFIX/libmaxminddb.so.* \
-    /usr/lib/$PKG_PREFIX/liblmdb.so.* \
-    /usr/lib/$PKG_PREFIX/libuv.so.* \
-    /usr/lib/$PKG_PREFIX/libicuuc.so.* \
-    /usr/lib/$PKG_PREFIX/libicudata.so.* \
-    /opt/toil/lib/$PKG_PREFIX/; \
   cp \
     /usr/bin/nc* \
     /usr/bin/nslookup \
     /usr/bin/find \
     /usr/bin/xargs \
     /usr/bin/zip \
-    /opt/toil/bin/;
-
-# TODO verify that symlinks are preserved
-#RUN ls -l /opt/toil/lib/$(uname -m)-linux-gnu/libxml2* && false
+    /opt/toil/bin/; \
+  ldd /opt/toil/bin/* \
+    | awk '$3 ~ /^\/usr\/lib\// { print $3 }' \
+    | sort -u \
+    | while read -r lib; do cp -L "$lib" /opt/toil/lib/$PKG_PREFIX/; done
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base
 
