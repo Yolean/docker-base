@@ -21,3 +21,7 @@ ENV \
   YSTACK_BIN_DOWNLOAD_CACHE=/home/nonroot/.cache/ystack-bin \
   npm_config_update_notifier=false
 
+USER root
+RUN npm install -g --ignore-scripts pnpm@11.13.0
+USER nonroot:nogroup
+
