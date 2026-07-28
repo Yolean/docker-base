@@ -22,7 +22,7 @@ RUN set -ex; \
 
 RUN rm -v /home/nonroot/mandrel/lib/src.zip
 
-FROM --platform=$TARGETPLATFORM yolean/builder-base-gcc
+FROM --platform=$TARGETPLATFORM yolean/builder-tooling
 
 COPY --from=maven /usr/share/maven /usr/share/maven
 COPY --from=mandrel /home/nonroot/mandrel /opt/mandrel

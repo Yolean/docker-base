@@ -205,7 +205,7 @@ jobs:
         cache-to: type=registry,ref=ghcr.io/yolean/builder-quarkus:_buildcache,mode=max
         build-contexts: |
           yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+          yolean/builder-tooling=docker-image://ghcr.io/yolean/builder-tooling
       continue-on-error: false
       timeout-minutes: 45
     -
