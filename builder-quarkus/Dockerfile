@@ -5,7 +5,7 @@ FROM docker:29.3.1-cli@sha256:70303ed0d265aee7bf4be0ddffe20b0b6e4f69ffa125e2a20c
 FROM --platform=$TARGETPLATFORM yolean/builder-base as mandrel
 ARG TARGETARCH
 ARG MANDREL_JAVA_VERSION=java25
-ARG MANDREL_VERSION=25.0.2.0-Final
+ARG MANDREL_VERSION=25.0.3.0-Final
 
 RUN set -ex; \
   ARCH=$TARGETARCH; \
