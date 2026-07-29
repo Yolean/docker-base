@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM maven:3.9.12-eclipse-temurin-25@sha256:b8187abd63cd4ee8c596aae910ce698a10db6d27ad5be08d574f3b928526724e as maven
+FROM --platform=$TARGETPLATFORM maven:3.9.16-eclipse-temurin-25@sha256:7e461cec477077c1d9e50b13df8aef9018764410f4c4cd7c34803f10c4c99e4c as maven
 
 FROM docker:29.3.1-cli@sha256:70303ed0d265aee7bf4be0ddffe20b0b6e4f69ffa125e2a20cbb3718b99688db AS dockerclient
 
