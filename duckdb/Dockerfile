@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM yolean/builder-base
 ARG TARGETARCH
-ARG DUCKDB_TAG=v1.5.3
+ARG DUCKDB_TAG=v1.5.5
 
 # Prebuilt, official DuckDB CLI plus the prebuilt, signed extensions we bundle for
 # offline use. Nothing is compiled here, so the build is fast and cross-arch safe:
