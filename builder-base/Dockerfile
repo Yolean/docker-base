@@ -22,6 +22,6 @@ ENV \
   npm_config_update_notifier=false
 
 USER root
-RUN npm install -g --ignore-scripts pnpm@11.24.0
+RUN npm install -g --ignore-scripts pnpm@12.3.4
 USER nonroot:nogroup
 
