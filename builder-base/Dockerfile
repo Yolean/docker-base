@@ -26,6 +26,6 @@ USER root
 # binary over the shebang-less placeholder it ships at this path; without it, the
 # placeholder stays, and turbo (spawning via execve, not a shell) can't recover
 # from it the way a shell silently does on ENOEXEC.
-RUN npm install -g --ignore-scripts pnpm@12.3.4 && node "$(npm root -g)/pnpm/install.js"
+RUN npm install -g --ignore-scripts pnpm@12.4.1 && node "$(npm root -g)/pnpm/install.js"
 USER nonroot:nogroup
 
