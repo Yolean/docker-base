@@ -7,7 +7,7 @@ FROM --platform=$TARGETPLATFORM liftm/kafkacat:1.7.0@sha256:8658c1fa53632764bfcc
 ARG TARGETARCH
 FROM --platform=$TARGETPLATFORM grafana/logcli:2.9.1-$TARGETARCH as logcli
 
-FROM --platform=$TARGETPLATFORM minio/mc:RELEASE.2023-09-22T05-07-46Z@sha256:814b17be3f895a51295113aecea806b83e74f25a3048dea443935f3dc066cd90 as mc
+FROM --platform=$TARGETPLATFORM ghcr.io/yolean/mc:RELEASE.2025-07-16T15-35-03Z@sha256:d5bccfe71e95a34b25d626d86621930342553657e8776833b65ae0bc63cf4928 as mc
 
 FROM --platform=$TARGETPLATFORM yolean/builder-base as apt
 
