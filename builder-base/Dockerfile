@@ -22,6 +22,10 @@ ENV \
   npm_config_update_notifier=false
 
 USER root
-RUN npm install -g --ignore-scripts pnpm@12.3.4
+# --ignore-scripts blocks pnpm's own postinstall, which hardlinks the real native
+# binary over the shebang-less placeholder it ships at this path; without it, the
+# placeholder stays, and turbo (spawning via execve, not a shell) can't recover
+# from it the way a shell silently does on ENOEXEC.
+RUN npm install -g --ignore-scripts pnpm@12.3.4 && node "$(npm root -g)/pnpm/install.js"
 USER nonroot:nogroup
 
