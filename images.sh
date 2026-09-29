@@ -10,6 +10,7 @@ builder-base-gcloud
 builder-tooling
 builder-node
 builder-quarkus
+builder-quarkus-cross
 git-init
 toil
 toil-network
@@ -46,7 +47,8 @@ runtime-deno
 "
 
 # Images that are only buildable on amd64
-SINGLE_ARCH_AMD64="headless-chrome"
+# builder-quarkus-cross: an amd64 host cross-compiling for arm64, the reverse is not built (yet)
+SINGLE_ARCH_AMD64="headless-chrome builder-quarkus-cross"
 
 # Generate nonroot Dockerfiles for TONONROOT images
 generate_nonroot_dockerfiles() {

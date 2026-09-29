@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[ -z "$DEBUG" ] || set -x
+
+[ "$1" = "help" ] && echo '
+native-image for a linux platform, cross-compiling when it is not this host'"'"'s:
+
+  y-native-image --platform=linux/arm64 $(cat native-image.args)
+
+--platform takes linux/amd64 or linux/arm64 (/v8 accepted). Without --platform, or for the
+host'"'"'s own platform, this is plain native-image. The cross flags go after the given args.
+Cross builds disable FFM support (-H:-ForeignAPISupport): its stubs are generated for the host ABI.
+' && exit 0
+
+case "$1" in
+  --platform=*) PLATFORM="${1#--platform=}"; shift ;;
+  *) exec native-image "$@" ;;
+esac
+
+case "$PLATFORM" in
+  linux/amd64) TARGET=amd64 ;;
+  linux/arm64|linux/arm64/v8) TARGET=arm64 ;;
+  *) echo "Unsupported platform: $PLATFORM" >&2; exit 1 ;;
+esac
+case "$(uname -m)" in
+  x86_64) HOST=amd64 ;;
+  aarch64) HOST=arm64 ;;
+  *) HOST=$(uname -m) ;;
+esac
+
+[ "$TARGET" != "$HOST" ] || exec native-image "$@"
+
+CROSS=${Y_NATIVE_IMAGE_CROSS:-/opt/native-image-cross/linux-aarch64}
+CROSS_CC=${Y_NATIVE_IMAGE_CROSS_CC:-/usr/bin/aarch64-linux-gnu-gcc}
+if [ "$HOST" != amd64 ] || [ "$TARGET" != arm64 ] || [ ! -d "$CROSS/capcache" ]; then
+  echo "No cross toolchain for $PLATFORM on $HOST in this image" >&2
+  exit 1
+fi
+
+echo "[y-native-image] Cross-compiling for $PLATFORM on $HOST"
+exec native-image "$@" \
+  --target=linux-aarch64 \
+  -H:+UnlockExperimentalVMOptions \
+  -H:-ForeignAPISupport \
+  -H:CAPCacheDir="$CROSS/capcache" \
+  -H:CCompilerPath="$CROSS_CC" \
+  -H:-UnlockExperimentalVMOptions

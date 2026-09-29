@@ -209,6 +209,26 @@ jobs:
       continue-on-error: false
       timeout-minutes: 45
     -
+      name: Build and push builder-quarkus-cross latest
+      uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+      env:
+        SOURCE_DATE_EPOCH: 0
+        BUILDKIT_PROGRESS: plain
+        DOCKER_BUILDKIT: 1
+      with:
+        context: builder-quarkus-cross
+        tags: |
+          ghcr.io/yolean/builder-quarkus-cross:latest
+          ghcr.io/yolean/builder-quarkus-cross:${{ github.sha }}
+        platforms: linux/amd64
+        push: true
+        cache-from: type=registry,ref=ghcr.io/yolean/builder-quarkus-cross:_buildcache
+        cache-to: type=registry,ref=ghcr.io/yolean/builder-quarkus-cross:_buildcache,mode=max
+        build-contexts: |
+          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
+      continue-on-error: false
+      timeout-minutes: 45
+    -
       name: Build and push git-init latest
       uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
       env:
