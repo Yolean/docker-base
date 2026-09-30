@@ -10,6 +10,8 @@ native-image for a linux platform, cross-compiling when it is not this host'"'"'
 --platform takes linux/amd64 or linux/arm64 (/v8 accepted). Without --platform, or for the
 host'"'"'s own platform, this is plain native-image. The cross flags go after the given args.
 Cross builds disable FFM support (-H:-ForeignAPISupport): its stubs are generated for the host ABI.
+Cross builds to arm64 default to -march=armv8.1-a, like a native arm64 build; override with
+env Y_NATIVE_IMAGE_CROSS_MARCH or a -march arg.
 ' && exit 0
 
 case "$1" in
@@ -37,8 +39,15 @@ if [ "$HOST" != amd64 ] || [ "$TARGET" != arm64 ] || [ ! -d "$CROSS/capcache" ];
   exit 1
 fi
 
+# native-image's default on an arm64 host; on amd64 its host feature probe fails and it would
+# fall back to -march=compatibility
+MARCH=-march=${Y_NATIVE_IMAGE_CROSS_MARCH:-armv8.1-a}
+for arg in "$@"; do
+  case "$arg" in -march=*) MARCH="" ;; esac
+done
+
 echo "[y-native-image] Cross-compiling for $PLATFORM on $HOST"
-exec native-image "$@" \
+exec native-image "$@" ${MARCH:+"$MARCH"} \
   --target=linux-aarch64 \
   -H:+UnlockExperimentalVMOptions \
   -H:-ForeignAPISupport \
