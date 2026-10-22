@@ -6,7 +6,6 @@ ARG DUCKDB_TAG=v1.5.5
 # offline use. Nothing is compiled here, so the build is fast and cross-arch safe:
 # the target-arch binary and extensions are only downloaded, never executed.
 #   httpfs    — https:// and Google Cloud Storage gs:// access (also S3); core
-#   nanoarrow — Apache Arrow IPC (the "arrow" alias); community
 RUN set -ex; \
   ARCH=$TARGETARCH; \
   PLATFORM=linux_${ARCH}; \
@@ -18,8 +17,6 @@ RUN set -ex; \
   sha256sum /tmp/duckdb; \
   curl -fL https://extensions.duckdb.org/${DUCKDB_TAG}/${PLATFORM}/httpfs.duckdb_extension.gz \
     | gunzip > $EXT_DIR/httpfs.duckdb_extension; \
-  curl -fL https://community-extensions.duckdb.org/${DUCKDB_TAG}/${PLATFORM}/nanoarrow.duckdb_extension.gz \
-    | gunzip > $EXT_DIR/nanoarrow.duckdb_extension; \
   ls -l $EXT_DIR
 
 # https://github.com/duckdb/duckdb-ui/discussions/84
