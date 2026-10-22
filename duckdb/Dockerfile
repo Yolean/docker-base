@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM yolean/builder-base
 ARG TARGETARCH
-ARG DUCKDB_TAG=v1.5.5
+ARG DUCKDB_TAG=v2.0.0
 
 # Prebuilt, official DuckDB CLI plus the prebuilt, signed extensions we bundle for
 # offline use. Nothing is compiled here, so the build is fast and cross-arch safe:
@@ -11,8 +11,8 @@ RUN set -ex; \
   PLATFORM=linux_${ARCH}; \
   EXT_DIR=/tmp/.duckdb/extensions/${DUCKDB_TAG}/${PLATFORM}; \
   mkdir -p $EXT_DIR; \
-  curl -fL https://github.com/duckdb/duckdb/releases/download/${DUCKDB_TAG}/duckdb_cli-linux-${ARCH}.gz \
-    | gunzip > /tmp/duckdb; \
+  curl -fL https://github.com/duckdb/duckdb/releases/download/${DUCKDB_TAG}/duckdb-cli-linux-${ARCH}.tar.gz \
+    | tar -xz -C /tmp duckdb; \
   chmod +x /tmp/duckdb; \
   sha256sum /tmp/duckdb; \
   curl -fL https://extensions.duckdb.org/${DUCKDB_TAG}/${PLATFORM}/httpfs.duckdb_extension.gz \
