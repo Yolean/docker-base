@@ -32,3 +32,8 @@ regenerate with:
 
 The workflow uses registry-based BuildKit cache (`type=registry`) stored
 as `ghcr.io/yolean/{name}:_buildcache*` manifests.
+
+Only `main` pushes the floating `:latest` and `:root` tags and writes the cache.
+A push to a `hotfix-*` branch builds that branch and pushes `:{sha}` and
+`:{sha}-root` tags only, for patching an older base commit: branch from it,
+narrow `images.sh` to what you need, and regenerate.
