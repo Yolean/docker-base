@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - 'hotfix-*'
   pull_request:
     types: [labeled, synchronize, opened]
   workflow_dispatch:
@@ -18,6 +19,9 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    # Only main moves :latest, :root and the build caches; other refs push :<sha> tags only
+    env:
+      FLOATING: ${{ github.ref == 'refs/heads/main' }}
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'push'))
     permissions:
       packages: write
@@ -42,6 +46,7 @@ jobs:
     -
       uses: imjasonh/setup-crane@6da1ae018866400525525ce74ff892880c099987 # v0.5
     -
+      if: env.FLOATING == 'true'
       run: |
         set -x
         TAG_KKV=7fa31f42731fc20a77988b478a3896732cc3dc88
@@ -83,12 +88,12 @@ jobs:
       with:
         context: docker-base
         tags: |
-          ghcr.io/yolean/docker-base:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/docker-base:latest' || '' }}
           ghcr.io/yolean/docker-base:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/docker-base:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/docker-base:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/docker-base:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -101,12 +106,12 @@ jobs:
       with:
         context: builder-base
         tags: |
-          ghcr.io/yolean/builder-base:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-base:latest' || '' }}
           ghcr.io/yolean/builder-base:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-base:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-base:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-base:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -119,14 +124,14 @@ jobs:
       with:
         context: builder-base-gcc
         tags: |
-          ghcr.io/yolean/builder-base-gcc:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-base-gcc:latest' || '' }}
           ghcr.io/yolean/builder-base-gcc:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-base-gcc:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-base-gcc:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-base-gcc:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -139,14 +144,14 @@ jobs:
       with:
         context: builder-base-gcloud
         tags: |
-          ghcr.io/yolean/builder-base-gcloud:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-base-gcloud:latest' || '' }}
           ghcr.io/yolean/builder-base-gcloud:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-base-gcloud:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-base-gcloud:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-base-gcloud:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -159,14 +164,14 @@ jobs:
       with:
         context: builder-tooling
         tags: |
-          ghcr.io/yolean/builder-tooling:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-tooling:latest' || '' }}
           ghcr.io/yolean/builder-tooling:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-tooling:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-tooling:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-tooling:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc
+          yolean/builder-base-gcc=docker-image://ghcr.io/yolean/builder-base-gcc:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -179,12 +184,12 @@ jobs:
       with:
         context: builder-node
         tags: |
-          ghcr.io/yolean/builder-node:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-node:latest' || '' }}
           ghcr.io/yolean/builder-node:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-node:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-node:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-node:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -197,15 +202,15 @@ jobs:
       with:
         context: builder-quarkus
         tags: |
-          ghcr.io/yolean/builder-quarkus:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-quarkus:latest' || '' }}
           ghcr.io/yolean/builder-quarkus:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-quarkus:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-quarkus:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-quarkus:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-          yolean/builder-tooling=docker-image://ghcr.io/yolean/builder-tooling
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
+          yolean/builder-tooling=docker-image://ghcr.io/yolean/builder-tooling:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -218,14 +223,14 @@ jobs:
       with:
         context: git-init
         tags: |
-          ghcr.io/yolean/git-init:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/git-init:latest' || '' }}
           ghcr.io/yolean/git-init:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/git-init:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/git-init:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/git-init:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -238,15 +243,15 @@ jobs:
       with:
         context: toil
         tags: |
-          ghcr.io/yolean/toil:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/toil:latest' || '' }}
           ghcr.io/yolean/toil:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/toil:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/toil:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/toil:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -259,14 +264,14 @@ jobs:
       with:
         context: toil-network
         tags: |
-          ghcr.io/yolean/toil-network:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/toil-network:latest' || '' }}
           ghcr.io/yolean/toil-network:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/toil-network:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/toil-network:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/toil-network:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/toil=docker-image://ghcr.io/yolean/toil
+          yolean/toil=docker-image://ghcr.io/yolean/toil:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -279,12 +284,12 @@ jobs:
       with:
         context: node-distroless
         tags: |
-          ghcr.io/yolean/node-distroless:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-distroless:latest' || '' }}
           ghcr.io/yolean/node-distroless:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-distroless:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-distroless:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-distroless:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -297,14 +302,14 @@ jobs:
       with:
         context: headless-chrome
         tags: |
-          ghcr.io/yolean/headless-chrome:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/headless-chrome:latest' || '' }}
           ghcr.io/yolean/headless-chrome:${{ github.sha }}
         platforms: linux/amd64
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/headless-chrome:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/headless-chrome:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/headless-chrome:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -317,12 +322,12 @@ jobs:
       with:
         context: git-http-readonly
         tags: |
-          ghcr.io/yolean/git-http-readonly:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/git-http-readonly:latest' || '' }}
           ghcr.io/yolean/git-http-readonly:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/git-http-readonly:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/git-http-readonly:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/git-http-readonly:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -335,12 +340,12 @@ jobs:
       with:
         context: runtime-quarkus
         tags: |
-          ghcr.io/yolean/runtime-quarkus:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus:latest' || '' }}
           ghcr.io/yolean/runtime-quarkus:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -353,12 +358,12 @@ jobs:
       with:
         context: runtime-deno
         tags: |
-          ghcr.io/yolean/runtime-deno:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-deno:latest' || '' }}
           ghcr.io/yolean/runtime-deno:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-deno:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-deno:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-deno:_buildcache,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -371,14 +376,14 @@ jobs:
       with:
         context: homedir
         tags: |
-          ghcr.io/yolean/homedir:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/homedir:root' || '' }}
           ghcr.io/yolean/homedir:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/homedir:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/homedir:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/homedir:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -391,14 +396,14 @@ jobs:
       with:
         context: to-nonroot/homedir
         tags: |
-          ghcr.io/yolean/homedir:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/homedir:latest' || '' }}
           ghcr.io/yolean/homedir:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/homedir:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/homedir:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/homedir:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:root
+          yolean/homedir:root=docker-image://ghcr.io/yolean/homedir:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -411,12 +416,12 @@ jobs:
       with:
         context: java
         tags: |
-          ghcr.io/yolean/java:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/java:root' || '' }}
           ghcr.io/yolean/java:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/java:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/java:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/java:_buildcache-root,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -429,14 +434,14 @@ jobs:
       with:
         context: to-nonroot/java
         tags: |
-          ghcr.io/yolean/java:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/java:latest' || '' }}
           ghcr.io/yolean/java:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/java:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/java:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/java:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/java:root=docker-image://ghcr.io/yolean/java:root
+          yolean/java:root=docker-image://ghcr.io/yolean/java:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -449,12 +454,12 @@ jobs:
       with:
         context: node
         tags: |
-          ghcr.io/yolean/node:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node:root' || '' }}
           ghcr.io/yolean/node:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node:_buildcache-root,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -467,14 +472,14 @@ jobs:
       with:
         context: to-nonroot/node
         tags: |
-          ghcr.io/yolean/node:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node:latest' || '' }}
           ghcr.io/yolean/node:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node:root=docker-image://ghcr.io/yolean/node:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -487,14 +492,14 @@ jobs:
       with:
         context: node-kafka
         tags: |
-          ghcr.io/yolean/node-kafka:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka:root' || '' }}
           ghcr.io/yolean/node-kafka:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node:root=docker-image://ghcr.io/yolean/node:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -507,14 +512,14 @@ jobs:
       with:
         context: to-nonroot/node-kafka
         tags: |
-          ghcr.io/yolean/node-kafka:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka:latest' || '' }}
           ghcr.io/yolean/node-kafka:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -527,14 +532,14 @@ jobs:
       with:
         context: node-kafka-cache
         tags: |
-          ghcr.io/yolean/node-kafka-cache:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-cache:root' || '' }}
           ghcr.io/yolean/node-kafka-cache:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -547,14 +552,14 @@ jobs:
       with:
         context: to-nonroot/node-kafka-cache
         tags: |
-          ghcr.io/yolean/node-kafka-cache:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-cache:latest' || '' }}
           ghcr.io/yolean/node-kafka-cache:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-cache:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka-cache:root=docker-image://ghcr.io/yolean/node-kafka-cache:root
+          yolean/node-kafka-cache:root=docker-image://ghcr.io/yolean/node-kafka-cache:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -567,14 +572,14 @@ jobs:
       with:
         context: node-kafka-duckdb
         tags: |
-          ghcr.io/yolean/node-kafka-duckdb:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-duckdb:root' || '' }}
           ghcr.io/yolean/node-kafka-duckdb:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -587,14 +592,14 @@ jobs:
       with:
         context: to-nonroot/node-kafka-duckdb
         tags: |
-          ghcr.io/yolean/node-kafka-duckdb:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-duckdb:latest' || '' }}
           ghcr.io/yolean/node-kafka-duckdb:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-duckdb:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka-duckdb:root=docker-image://ghcr.io/yolean/node-kafka-duckdb:root
+          yolean/node-kafka-duckdb:root=docker-image://ghcr.io/yolean/node-kafka-duckdb:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -607,12 +612,12 @@ jobs:
       with:
         context: node-watchexec
         tags: |
-          ghcr.io/yolean/node-watchexec:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-watchexec:root' || '' }}
           ghcr.io/yolean/node-watchexec:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache-root,mode=max' || '' }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -625,14 +630,14 @@ jobs:
       with:
         context: to-nonroot/node-watchexec
         tags: |
-          ghcr.io/yolean/node-watchexec:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-watchexec:latest' || '' }}
           ghcr.io/yolean/node-watchexec:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-watchexec:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:root
+          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -645,15 +650,15 @@ jobs:
       with:
         context: node-kafka-watch
         tags: |
-          ghcr.io/yolean/node-kafka-watch:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-watch:root' || '' }}
           ghcr.io/yolean/node-kafka-watch:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:root
-          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:root
+          yolean/node-watchexec:root=docker-image://ghcr.io/yolean/node-watchexec:${{ github.sha }}-root
+          yolean/node-kafka:root=docker-image://ghcr.io/yolean/node-kafka:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -666,14 +671,14 @@ jobs:
       with:
         context: to-nonroot/node-kafka-watch
         tags: |
-          ghcr.io/yolean/node-kafka-watch:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-kafka-watch:latest' || '' }}
           ghcr.io/yolean/node-kafka-watch:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-kafka-watch:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-kafka-watch:root=docker-image://ghcr.io/yolean/node-kafka-watch:root
+          yolean/node-kafka-watch:root=docker-image://ghcr.io/yolean/node-kafka-watch:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -686,14 +691,14 @@ jobs:
       with:
         context: node-gcloud
         tags: |
-          ghcr.io/yolean/node-gcloud:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-gcloud:root' || '' }}
           ghcr.io/yolean/node-gcloud:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node:root=docker-image://ghcr.io/yolean/node:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -706,14 +711,14 @@ jobs:
       with:
         context: to-nonroot/node-gcloud
         tags: |
-          ghcr.io/yolean/node-gcloud:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-gcloud:latest' || '' }}
           ghcr.io/yolean/node-gcloud:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-gcloud:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:root
+          yolean/node-gcloud:root=docker-image://ghcr.io/yolean/node-gcloud:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -726,14 +731,14 @@ jobs:
       with:
         context: node-vitest
         tags: |
-          ghcr.io/yolean/node-vitest:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-vitest:root' || '' }}
           ghcr.io/yolean/node-vitest:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/node:root=docker-image://ghcr.io/yolean/node:root
+          yolean/node:root=docker-image://ghcr.io/yolean/node:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -746,14 +751,14 @@ jobs:
       with:
         context: to-nonroot/node-vitest
         tags: |
-          ghcr.io/yolean/node-vitest:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/node-vitest:latest' || '' }}
           ghcr.io/yolean/node-vitest:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/node-vitest:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:root
+          yolean/node-vitest:root=docker-image://ghcr.io/yolean/node-vitest:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -766,14 +771,14 @@ jobs:
       with:
         context: runtime-quarkus-ubuntu
         tags: |
-          ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-ubuntu:root' || '' }}
           ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -786,14 +791,14 @@ jobs:
       with:
         context: to-nonroot/runtime-quarkus-ubuntu
         tags: |
-          ghcr.io/yolean/runtime-quarkus-ubuntu:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-ubuntu:latest' || '' }}
           ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -806,15 +811,15 @@ jobs:
       with:
         context: runtime-quarkus-deno
         tags: |
-          ghcr.io/yolean/runtime-quarkus-deno:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-deno:root' || '' }}
           ghcr.io/yolean/runtime-quarkus-deno:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/runtime-deno=docker-image://ghcr.io/yolean/runtime-deno
-          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu
+          yolean/runtime-deno=docker-image://ghcr.io/yolean/runtime-deno:${{ github.sha }}
+          yolean/runtime-quarkus-ubuntu=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -827,14 +832,14 @@ jobs:
       with:
         context: to-nonroot/runtime-quarkus-deno
         tags: |
-          ghcr.io/yolean/runtime-quarkus-deno:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-deno:latest' || '' }}
           ghcr.io/yolean/runtime-quarkus-deno:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-deno:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/runtime-quarkus-deno:root=docker-image://ghcr.io/yolean/runtime-quarkus-deno:root
+          yolean/runtime-quarkus-deno:root=docker-image://ghcr.io/yolean/runtime-quarkus-deno:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -847,15 +852,15 @@ jobs:
       with:
         context: runtime-quarkus-ubuntu-jre
         tags: |
-          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root' || '' }}
           ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/java:root=docker-image://ghcr.io/yolean/java:root
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/java:root=docker-image://ghcr.io/yolean/java:${{ github.sha }}-root
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -868,14 +873,14 @@ jobs:
       with:
         context: to-nonroot/runtime-quarkus-ubuntu-jre
         tags: |
-          ghcr.io/yolean/runtime-quarkus-ubuntu-jre:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-ubuntu-jre:latest' || '' }}
           ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-ubuntu-jre:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/runtime-quarkus-ubuntu-jre:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:root
+          yolean/runtime-quarkus-ubuntu-jre:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu-jre:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -888,15 +893,15 @@ jobs:
       with:
         context: runtime-quarkus-dev
         tags: |
-          ghcr.io/yolean/runtime-quarkus-dev:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-dev:root' || '' }}
           ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
-          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:root
+          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus:${{ github.sha }}
+          yolean/runtime-quarkus-ubuntu:root=docker-image://ghcr.io/yolean/runtime-quarkus-ubuntu:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -909,14 +914,14 @@ jobs:
       with:
         context: to-nonroot/runtime-quarkus-dev
         tags: |
-          ghcr.io/yolean/runtime-quarkus-dev:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/runtime-quarkus-dev:latest' || '' }}
           ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/runtime-quarkus-dev:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/runtime-quarkus-dev:root=docker-image://ghcr.io/yolean/runtime-quarkus-dev:root
+          yolean/runtime-quarkus-dev:root=docker-image://ghcr.io/yolean/runtime-quarkus-dev:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -929,15 +934,15 @@ jobs:
       with:
         context: toil-storage
         tags: |
-          ghcr.io/yolean/toil-storage:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/toil-storage:root' || '' }}
           ghcr.io/yolean/toil-storage:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/toil=docker-image://ghcr.io/yolean/toil
-          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base
+          yolean/toil=docker-image://ghcr.io/yolean/toil:${{ github.sha }}
+          yolean/docker-base=docker-image://ghcr.io/yolean/docker-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -950,14 +955,14 @@ jobs:
       with:
         context: to-nonroot/toil-storage
         tags: |
-          ghcr.io/yolean/toil-storage:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/toil-storage:latest' || '' }}
           ghcr.io/yolean/toil-storage:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/toil-storage:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/toil-storage:root=docker-image://ghcr.io/yolean/toil-storage:root
+          yolean/toil-storage:root=docker-image://ghcr.io/yolean/toil-storage:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -970,14 +975,14 @@ jobs:
       with:
         context: curl-yq
         tags: |
-          ghcr.io/yolean/curl-yq:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/curl-yq:root' || '' }}
           ghcr.io/yolean/curl-yq:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -990,14 +995,14 @@ jobs:
       with:
         context: to-nonroot/curl-yq
         tags: |
-          ghcr.io/yolean/curl-yq:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/curl-yq:latest' || '' }}
           ghcr.io/yolean/curl-yq:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/curl-yq:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:root
+          yolean/curl-yq:root=docker-image://ghcr.io/yolean/curl-yq:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -1010,15 +1015,15 @@ jobs:
       with:
         context: duckdb
         tags: |
-          ghcr.io/yolean/duckdb:root
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/duckdb:root' || '' }}
           ghcr.io/yolean/duckdb:${{ github.sha }}-root
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/duckdb:_buildcache-root
-        cache-to: type=registry,ref=ghcr.io/yolean/duckdb:_buildcache-root,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/duckdb:_buildcache-root,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base
-          yolean/homedir=docker-image://ghcr.io/yolean/homedir
+          yolean/builder-base=docker-image://ghcr.io/yolean/builder-base:${{ github.sha }}
+          yolean/homedir=docker-image://ghcr.io/yolean/homedir:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
@@ -1031,13 +1036,13 @@ jobs:
       with:
         context: to-nonroot/duckdb
         tags: |
-          ghcr.io/yolean/duckdb:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/duckdb:latest' || '' }}
           ghcr.io/yolean/duckdb:${{ github.sha }}
         platforms: linux/amd64,linux/arm64/v8
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/duckdb:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/duckdb:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/duckdb:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:root
+          yolean/duckdb:root=docker-image://ghcr.io/yolean/duckdb:${{ github.sha }}-root
       continue-on-error: false
       timeout-minutes: 45

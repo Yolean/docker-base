@@ -53,19 +53,22 @@ function base_action {
       with:
         context: $CONTEXT
         tags: |
-          ghcr.io/yolean/$NAME:$TAG
+          \${{ env.FLOATING == 'true' && 'ghcr.io/yolean/$NAME:$TAG' || '' }}
           ghcr.io/yolean/$NAME:\${{ github.sha }}$TAGSUFFIX
         platforms: $PLATFORMS
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/$NAME:_buildcache$TAGSUFFIX
-        cache-to: type=registry,ref=ghcr.io/yolean/$NAME:_buildcache$TAGSUFFIX,mode=max
+        cache-to: \${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/$NAME:_buildcache$TAGSUFFIX,mode=max' || '' }}
 EOF
 
   # Add build-contexts if there are dependencies
   if [ ! -z "$DEPENDENCIES" ]; then
     echo "        build-contexts: |"
+    # This run's own :<sha> tags, as a floating tag may be another run's or a stale build
     for NAME_FULL in $DEPENDENCIES; do
-      echo "          $NAME_FULL=docker-image://ghcr.io/$NAME_FULL"
+      local DEP_TAGSUFFIX=""
+      [ "$NAME_FULL" = "${NAME_FULL%%:*}" ] || DEP_TAGSUFFIX="-${NAME_FULL#*:}"
+      echo "          $NAME_FULL=docker-image://ghcr.io/${NAME_FULL%%:*}:\${{ github.sha }}$DEP_TAGSUFFIX"
     done
   fi
 
