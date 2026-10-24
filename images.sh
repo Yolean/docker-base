@@ -3,41 +3,15 @@
 
 # note that docker-base isn't actually nonroot, we just want to build that first
 MULTIARCH_NONROOT="
-docker-base
-builder-base
-builder-base-gcc
-builder-base-gcloud
-builder-tooling
-builder-node
-builder-quarkus
-git-init
-toil
-toil-network
 node-distroless
-headless-chrome
-git-http-readonly
-runtime-quarkus
-runtime-deno
 "
 
 MULTIARCH_TONONROOT="
-homedir
-java
 node
 node-kafka
 node-kafka-cache
 node-kafka-duckdb
-node-watchexec
-node-kafka-watch
 node-gcloud
-node-vitest
-runtime-quarkus-ubuntu
-runtime-quarkus-deno
-runtime-quarkus-ubuntu-jre
-runtime-quarkus-dev
-toil-storage
-curl-yq
-duckdb
 "
 
 DEPRECATED="
