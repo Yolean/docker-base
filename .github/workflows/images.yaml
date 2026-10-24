@@ -223,14 +223,14 @@ jobs:
       with:
         context: builder-quarkus-cross
         tags: |
-          ghcr.io/yolean/builder-quarkus-cross:latest
+          ${{ env.FLOATING == 'true' && 'ghcr.io/yolean/builder-quarkus-cross:latest' || '' }}
           ghcr.io/yolean/builder-quarkus-cross:${{ github.sha }}
         platforms: linux/amd64
         push: true
         cache-from: type=registry,ref=ghcr.io/yolean/builder-quarkus-cross:_buildcache
-        cache-to: type=registry,ref=ghcr.io/yolean/builder-quarkus-cross:_buildcache,mode=max
+        cache-to: ${{ env.FLOATING == 'true' && 'type=registry,ref=ghcr.io/yolean/builder-quarkus-cross:_buildcache,mode=max' || '' }}
         build-contexts: |
-          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus
+          yolean/builder-quarkus=docker-image://ghcr.io/yolean/builder-quarkus:${{ github.sha }}
       continue-on-error: false
       timeout-minutes: 45
     -
